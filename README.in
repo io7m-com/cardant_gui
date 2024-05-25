@@ -1,0 +1,16 @@
+
+
+## cardant
+
+The `cardant_gui` package provides a JavaFX UI for the
+[cardant](https://www.io7m.com/software/cardant) inventory server.
+
+## Features
+
+* [OSGi](https://www.osgi.org/)-ready.
+* [JPMS](https://en.wikipedia.org/wiki/Java_Platform_Module_System)-ready.
+* ISC license.
+
+## Usage
+
+See the [documentation](https://www.io7m.com/software/cardant).
