@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <fx:include source="fileSearch.fxml" />
+      <Separator maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefWidth="1.0" />
+    <fx:include source="fileList.fxml" HBox.hgrow="ALWAYS" />
+  </children>
+</HBox>

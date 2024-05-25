@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane prefWidth="512.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGItemAttachmentCellController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="32.0" />
+    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0" />
+      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="8.0" />
+      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" prefWidth="256.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@icons/attachment-32.png" />
+         </image>
+      </ImageView>
+      <Label text="%cardant.itemDetails.attachment.id" GridPane.columnIndex="1" />
+      <Label text="%cardant.itemDetails.attachment.relation" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Label text="%cardant.itemDetails.attachment.description" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Label text="%cardant.itemDetails.attachment.mediaType" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <Label text="%cardant.itemDetails.attachment.size" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <Label text="%cardant.itemDetails.attachment.hashAlgorithm" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <Label text="%cardant.itemDetails.attachment.hashValue" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <TextField fx:id="id" editable="false" maxHeight="1.7976931348623157E308" styleClass="dataField" GridPane.columnIndex="3" />
+      <TextField fx:id="relation" editable="false" layoutX="178.0" layoutY="10.0" maxHeight="1.7976931348623157E308" styleClass="dataField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+      <TextField fx:id="description" editable="false" layoutX="178.0" layoutY="42.0" maxHeight="1.7976931348623157E308" styleClass="dataField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+      <TextField fx:id="mediaType" editable="false" layoutX="178.0" layoutY="74.0" maxHeight="1.7976931348623157E308" styleClass="dataField" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+      <TextField fx:id="size" editable="false" layoutX="178.0" layoutY="106.0" maxHeight="1.7976931348623157E308" styleClass="dataField" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+      <TextField fx:id="hashAlgorithm" editable="false" layoutX="178.0" layoutY="138.0" maxHeight="1.7976931348623157E308" styleClass="dataField" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+      <TextField fx:id="hashValue" editable="false" layoutX="178.0" layoutY="170.0" maxHeight="1.7976931348623157E308" styleClass="dataField" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+   </children>
+   <padding>
+      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+   </padding>
+</GridPane>

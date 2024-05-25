@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.io7m.primogenitor</groupId>
+    <artifactId>com.io7m.primogenitor.full</artifactId>
+    <version>8.2.0</version>
+  </parent>
+
+  <groupId>com.io7m.cardant_gui</groupId>
+  <artifactId>com.io7m.cardant_gui</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+
+  <packaging>pom</packaging>
+  <name>com.io7m.cardant_gui</name>
+  <description>Cardant GUI</description>
+  <url>https://www.io7m.com/software/cardant_gui</url>
+
+  <modules>
+    <module>com.io7m.cardant_gui.main</module>
+    <module>com.io7m.cardant_gui.tests</module>
+    <module>com.io7m.cardant_gui.ui</module>
+  </modules>
+
+  <properties>
+    <!-- Configuration. -->
+    <io7m.api.previousVersion>1.0.0-SNAPSHOT</io7m.api.previousVersion>
+    <io7m.java.targetJavaVersion>21</io7m.java.targetJavaVersion>
+
+    <!-- io7m dependencies. -->
+    <com.io7m.cardant.version>1.0.0-SNAPSHOT</com.io7m.cardant.version>
+    <com.io7m.idstore.version>2.0.0</com.io7m.idstore.version>
+    <com.io7m.jade.version>1.0.2</com.io7m.jade.version>
+    <com.io7m.jattribute.version>1.0.0</com.io7m.jattribute.version>
+    <com.io7m.jsx.version>3.1.1</com.io7m.jsx.version>
+    <com.io7m.jwheatsheaf.version>4.0.0</com.io7m.jwheatsheaf.version>
+    <com.io7m.jxtrand.version>2.0.0</com.io7m.jxtrand.version>
+    <com.io7m.xoanon.version>1.0.1</com.io7m.xoanon.version>
+
+    <!-- Third-party dependencies. -->
+    <org.javafx.version>21.0.1</org.javafx.version>
+    <org.junit.version>5.10.2</org.junit.version>
+    <org.apache.tika.version>2.9.2</org.apache.tika.version>
+  </properties>
+
+  <licenses>
+    <license>
+      <name>ISC</name>
+      <url>https://www.io7m.com/license/isc.txt</url>
+    </license>
+  </licenses>
+
+  <inceptionYear>2024</inceptionYear>
+
+  <scm>
+    <url>https://www.github.com/io7m-com/cardant_gui</url>
+    <connection>scm:git:https://www.github.com/io7m-com/cardant_gui</connection>
+    <developerConnection>scm:git:https://www.github.com/io7m-com/cardant_gui</developerConnection>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>io7m</id>
+      <name>io7m</name>
+      <email>code@io7m.com</email>
+      <url>https://www.io7m.com</url>
+    </developer>
+  </developers>
+
+  <issueManagement>
+    <url>https://www.github.com/io7m-com/cardant_gui/issues</url>
+    <system>GitHub Issues</system>
+  </issueManagement>
+
+  <distributionManagement>
+    <site>
+      <id>io7m.com</id>
+      <name>io7m.com</name>
+      <url>https://www.io7m.com/software/cardant_gui</url>
+    </site>
+    <repository>
+      <id>sonatype-nexus-staging</id>
+      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+    <snapshotRepository>
+      <id>sonatype-nexus-snapshots</id>
+      <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <ciManagement>
+    <system>GitHub Actions</system>
+    <url>https://www.github.com/io7m-com/cardant_gui/actions</url>
+  </ciManagement>
+
+  <prerequisites>
+    <maven>3.0.4</maven>
+  </prerequisites>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.annotation.bundle</artifactId>
+        <version>2.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.annotation.versioning</artifactId>
+        <version>1.1.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.io7m.jmulticlose</groupId>
+        <artifactId>com.io7m.jmulticlose.core</artifactId>
+        <version>1.1.3</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.seltzer</groupId>
+        <artifactId>com.io7m.seltzer.api</artifactId>
+        <version>1.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.repetoir</groupId>
+        <artifactId>com.io7m.repetoir.core</artifactId>
+        <version>1.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.jade</groupId>
+        <artifactId>com.io7m.jade.api</artifactId>
+        <version>${com.io7m.jade.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.jade</groupId>
+        <artifactId>com.io7m.jade.vanilla</artifactId>
+        <version>${com.io7m.jade.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.jattribute</groupId>
+        <artifactId>com.io7m.jattribute.core</artifactId>
+        <version>${com.io7m.jattribute.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.lanark</groupId>
+        <artifactId>com.io7m.lanark.core</artifactId>
+        <version>1.2.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.joda</groupId>
+        <artifactId>joda-money</artifactId>
+        <version>1.0.4</version>
+      </dependency>
+
+      <!-- File selection. -->
+      <dependency>
+        <groupId>com.io7m.jwheatsheaf</groupId>
+        <artifactId>com.io7m.jwheatsheaf.ui</artifactId>
+        <version>${com.io7m.jwheatsheaf.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.jwheatsheaf</groupId>
+        <artifactId>com.io7m.jwheatsheaf.api</artifactId>
+        <version>${com.io7m.jwheatsheaf.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.jwheatsheaf</groupId>
+        <artifactId>com.io7m.jwheatsheaf.oxygen</artifactId>
+        <version>${com.io7m.jwheatsheaf.version}</version>
+      </dependency>
+
+      <!-- Media type handling. -->
+      <dependency>
+        <groupId>org.apache.tika</groupId>
+        <artifactId>tika-core</artifactId>
+        <version>${org.apache.tika.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tika</groupId>
+        <artifactId>tika-parser-image-module</artifactId>
+        <version>${org.apache.tika.version}</version>
+      </dependency>
+
+      <!-- idstore. -->
+      <dependency>
+        <groupId>com.io7m.idstore</groupId>
+        <artifactId>com.io7m.idstore.model</artifactId>
+        <version>${com.io7m.idstore.version}</version>
+      </dependency>
+
+      <!-- Cardant. -->
+      <dependency>
+        <groupId>com.io7m.cardant</groupId>
+        <artifactId>com.io7m.cardant.client.api</artifactId>
+        <version>${com.io7m.cardant.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.cardant</groupId>
+        <artifactId>com.io7m.cardant.client.basic</artifactId>
+        <version>${com.io7m.cardant.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.cardant</groupId>
+        <artifactId>com.io7m.cardant.client.preferences.api</artifactId>
+        <version>${com.io7m.cardant.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.cardant</groupId>
+        <artifactId>com.io7m.cardant.client.preferences.vanilla</artifactId>
+        <version>${com.io7m.cardant.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.cardant</groupId>
+        <artifactId>com.io7m.cardant.protocol.inventory</artifactId>
+        <version>${com.io7m.cardant.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.cardant</groupId>
+        <artifactId>com.io7m.cardant.parsers</artifactId>
+        <version>${com.io7m.cardant.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.cardant</groupId>
+        <artifactId>com.io7m.cardant.model</artifactId>
+        <version>${com.io7m.cardant.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.cardant</groupId>
+        <artifactId>com.io7m.cardant.strings</artifactId>
+        <version>${com.io7m.cardant.version}</version>
+      </dependency>
+
+      <!-- S-expression parsing. -->
+      <dependency>
+        <groupId>com.io7m.jsx</groupId>
+        <artifactId>com.io7m.jsx.prettyprint</artifactId>
+        <version>${com.io7m.jsx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.jsx</groupId>
+        <artifactId>com.io7m.jsx.core</artifactId>
+        <version>${com.io7m.jsx.version}</version>
+      </dependency>
+
+      <!-- jxstrand string resources. -->
+      <dependency>
+        <groupId>com.io7m.jxtrand</groupId>
+        <artifactId>com.io7m.jxtrand.api</artifactId>
+        <version>${com.io7m.jxtrand.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.jxtrand</groupId>
+        <artifactId>com.io7m.jxtrand.vanilla</artifactId>
+        <version>${com.io7m.jxtrand.version}</version>
+      </dependency>
+
+      <!-- JavaFX -->
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-fxml</artifactId>
+        <version>${org.javafx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-controls</artifactId>
+        <version>${org.javafx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-graphics</artifactId>
+        <version>${org.javafx.version}</version>
+      </dependency>
+
+      <!-- Logging -->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>2.0.13</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.5.6</version>
+      </dependency>
+
+      <!-- Test suite. -->
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${org.junit.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>net.jqwik</groupId>
+        <artifactId>jqwik-engine</artifactId>
+        <version>1.8.4</version>
+      </dependency>
+      <dependency>
+        <groupId>net.jqwik</groupId>
+        <artifactId>jqwik-api</artifactId>
+        <version>1.8.4</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.percentpass</groupId>
+        <artifactId>com.io7m.percentpass.extension</artifactId>
+        <version>1.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.xoanon</groupId>
+        <artifactId>com.io7m.xoanon.extension</artifactId>
+        <version>${com.io7m.xoanon.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>com.io7m.jxtrand</groupId>
+          <artifactId>com.io7m.jxtrand.maven_plugin</artifactId>
+          <version>${com.io7m.jxtrand.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <!-- Generate a site -->
+      <plugin>
+        <groupId>com.io7m.minisite</groupId>
+        <artifactId>com.io7m.minisite.maven_plugin</artifactId>
+        <inherited>false</inherited>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
+

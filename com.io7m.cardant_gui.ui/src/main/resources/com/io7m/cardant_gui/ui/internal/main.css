@@ -1,0 +1,137 @@
+.root
+{
+  -fx-font-size: 10pt;
+  -fx-font-family: "Sans";
+
+  -fx-base:              #eeeeee;
+  -fx-accent:            #aa0000;
+  -fx-default-button:    #aa0000;
+  -fx-focus-color:       #aa0000;
+  -fx-faint-focus-color: #aa000022;
+}
+
+.progress-bar > .track
+{
+  -fx-background-insets: 0 0 0 0;
+  -fx-background-radius: 0 0 0 0;
+  -fx-border-insets: 0 0 0 0;
+  -fx-padding: 0 0 0 0;
+}
+
+.progress-bar > .bar
+{
+  -fx-background-insets: 0 0 0 0;
+  -fx-background-radius: 0 0 0 0;
+  -fx-border-insets: 0 0 0 0;
+  -fx-padding: 0 0 0 0;
+
+  -fx-background-color: #aa0000;
+}
+
+.progress-bar
+{
+  -fx-border-color: #000000;
+}
+
+.button,
+.check-box,
+.choice-box,
+.color-picker,
+.color-picker.split-button,
+.combo-box-base,
+.container,
+.control-buttons-tab,
+.menu-button,
+.progress-bar,
+.radio-button,
+.text-field,
+.text-area,
+.tab,
+.tab-down-button,
+.tab-header-area,
+.tab-pane,
+.toggle-button
+{
+  -fx-background-radius: 0 0 0 0;
+  -fx-border-radius: 0 0 0 0;
+}
+
+.tab .tab-label
+{
+  -fx-pref-width: 128;
+  -fx-alignment: center;
+}
+
+.tab:selected .tab-label
+{
+  -fx-alignment: center;
+}
+
+.tab-pane
+{
+  -fx-tab-min-height: 32;
+  -fx-tab-max-height: 32;
+}
+
+.tabButton
+{
+  -fx-font-size: 8pt;
+}
+
+.accordion .titled-pane .title
+{
+  -fx-pref-height: 33;
+  -fx-alignment: center;
+}
+
+.accordion .titled-pane .title .text
+{
+  -fx-translate-y: -3;
+}
+
+.errorHighlight
+{
+  -fx-background-color: #ffbbbb;
+}
+
+.errorTable
+{
+  -fx-font-size: 9pt;
+  -fx-font-family: "Monospaced";
+}
+
+.auditTable
+{
+  -fx-font-size: 9pt;
+  -fx-font-family: "Monospaced";
+}
+
+.itemTable
+{
+  -fx-font-size: 9pt;
+  -fx-font-family: "Monospaced";
+}
+
+.metaTable
+{
+  -fx-font-size: 9pt;
+  -fx-font-family: "Monospaced";
+}
+
+.dataField
+{
+  -fx-font-size: 9pt;
+  -fx-font-family: "Monospaced";
+}
+
+.noHeader .column-header-background
+{
+  -fx-max-height: 0;
+  -fx-pref-height: 0;
+  -fx-min-height: 0;
+}
+
+.metadataTreeItem
+{
+
+}

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.control.ComboBox?>
+<StackPane fx:id="root" minHeight="-Infinity" styleClass="metadataTreeItem" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGMetaMatchCellController">
+  <children>
+    <GridPane fx:id="stringComparison" visible="false">
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="128.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="128.0" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="-Infinity" prefWidth="256.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+      <children>
+        <Label fx:id="stringComparisonFieldLabel" text="Label">
+          <font>
+            <Font name="Monospaced Regular" size="13.0" />
+          </font>
+          <GridPane.margin>
+            <Insets left="16.0" />
+          </GridPane.margin>
+        </Label>
+        <Label fx:id="stringComparisonFieldOp" text="%cardant.itemSearch.metadata.comparison.equalTo" GridPane.columnIndex="1" GridPane.halignment="LEFT">
+          <GridPane.margin>
+            <Insets left="16.0" />
+          </GridPane.margin>
+        </Label>
+        <TextField fx:id="stringComparisonField" maxHeight="1.7976931348623157E308" GridPane.columnIndex="2">
+          <font>
+            <Font name="Monospaced Regular" size="11.0" />
+          </font>
+        </TextField>
+      </children>
+    </GridPane>
+    <GridPane fx:id="element" visible="false">
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="256.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints vgrow="SOMETIMES" />
+      </rowConstraints>
+      <children>
+        <Label fx:id="elementLabel" text="Label">
+          <font>
+            <Font name="Monospaced Regular" size="13.0" />
+          </font>
+          <GridPane.margin>
+            <Insets left="16.0" />
+          </GridPane.margin>
+        </Label>
+      </children>
+    </GridPane>
+    <GridPane fx:id="valueAny" layoutX="10.0" layoutY="10.0" visible="false">
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="256.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints vgrow="SOMETIMES" />
+      </rowConstraints>
+      <children>
+        <Label fx:id="valueAnyLabel" text="%cardant.itemSearch.metadata.value.any">
+          <font>
+            <Font name="Monospaced Regular" size="13.0" />
+          </font>
+          <GridPane.margin>
+            <Insets left="16.0" />
+          </GridPane.margin>
+        </Label>
+      </children>
+    </GridPane>
+    <GridPane fx:id="valueExactText" layoutX="10.0" layoutY="10.0" visible="false">
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="256.0" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="-Infinity" prefWidth="256.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+      <children>
+        <Label text="%cardant.itemSearch.metadata.value.exactText">
+          <GridPane.margin>
+            <Insets left="16.0" />
+          </GridPane.margin>
+        </Label>
+        <TextField fx:id="valueExactTextField" maxHeight="1.7976931348623157E308" GridPane.columnIndex="1">
+          <font>
+            <Font name="Monospaced Regular" size="11.0" />
+          </font>
+        </TextField>
+      </children>
+    </GridPane>
+    <GridPane fx:id="valueSearchText" layoutX="10.0" layoutY="10.0" visible="false">
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="256.0" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="-Infinity" prefWidth="256.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+      <children>
+        <Label text="%cardant.itemSearch.metadata.value.searchText">
+          <GridPane.margin>
+            <Insets left="16.0" />
+          </GridPane.margin>
+        </Label>
+        <TextField fx:id="valueSearchTextField" maxHeight="1.7976931348623157E308" GridPane.columnIndex="1">
+          <font>
+            <Font name="Monospaced Regular" size="11.0" />
+          </font>
+        </TextField>
+      </children>
+    </GridPane>
+    <GridPane fx:id="valueIntegralRange" layoutX="10.0" layoutY="10.0" visible="false">
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="256.0" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="-Infinity" prefWidth="128.0" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="128.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+      <children>
+        <Label text="%cardant.itemSearch.metadata.value.integralWithin">
+          <GridPane.margin>
+            <Insets left="16.0" />
+          </GridPane.margin>
+        </Label>
+        <TextField fx:id="valueIntegralRange0" maxHeight="1.7976931348623157E308" GridPane.columnIndex="1">
+          <font>
+            <Font name="Monospaced Regular" size="11.0" />
+          </font>
+        </TextField>
+        <TextField fx:id="valueIntegralRange1" layoutX="266.0" layoutY="10.0" maxHeight="1.7976931348623157E308" GridPane.columnIndex="2">
+          <font>
+            <Font name="Monospaced Regular" size="11.0" />
+          </font>
+        </TextField>
+      </children>
+    </GridPane>
+    <GridPane fx:id="valueRealRange" layoutX="10.0" layoutY="10.0" visible="false">
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="256.0" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="-Infinity" prefWidth="128.0" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="128.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+      <children>
+        <Label text="%cardant.itemSearch.metadata.value.realWithin">
+          <GridPane.margin>
+            <Insets left="16.0" />
+          </GridPane.margin>
+        </Label>
+        <TextField fx:id="valueRealRange0" maxHeight="1.7976931348623157E308" GridPane.columnIndex="1">
+          <font>
+            <Font name="Monospaced Regular" size="11.0" />
+          </font>
+        </TextField>
+        <TextField fx:id="valueRealRange1" layoutX="266.0" layoutY="10.0" maxHeight="1.7976931348623157E308" GridPane.columnIndex="2" />
+      </children>
+    </GridPane>
+      <GridPane fx:id="valueTimeRange" layoutX="10.0" layoutY="10.0" visible="false">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="256.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="128.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" prefWidth="128.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" prefWidth="128.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="10.0" prefWidth="128.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label text="%cardant.itemSearch.metadata.value.timeWithin">
+               <GridPane.margin>
+                  <Insets left="16.0" />
+               </GridPane.margin>
+            </Label>
+            <DatePicker fx:id="valueTimeRangeDate0" maxHeight="1.7976931348623157E308" GridPane.columnIndex="1" />
+            <Spinner fx:id="valueTimeRangeTime0" editable="true" maxHeight="1.7976931348623157E308" GridPane.columnIndex="2" />
+            <DatePicker fx:id="valueTimeRangeDate1" layoutX="266.0" layoutY="10.0" maxHeight="1.7976931348623157E308" GridPane.columnIndex="3" />
+            <Spinner fx:id="valueTimeRangeTime1" editable="true" layoutX="394.0" layoutY="10.0" maxHeight="1.7976931348623157E308" GridPane.columnIndex="4" />
+         </children>
+      </GridPane>
+      <GridPane fx:id="valueMoneyRange" layoutX="10.0" layoutY="10.0" visible="false">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="256.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="128.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="128.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label text="%cardant.itemSearch.metadata.value.moneyWithin">
+               <GridPane.margin>
+                  <Insets left="16.0" />
+               </GridPane.margin>
+            </Label>
+            <TextField fx:id="valueMoneyRange0" maxHeight="1.7976931348623157E308" GridPane.columnIndex="1">
+               <font>
+                  <Font name="Monospaced Regular" size="11.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="valueMoneyRange1" layoutX="266.0" layoutY="10.0" maxHeight="1.7976931348623157E308" GridPane.columnIndex="2" />
+         </children>
+      </GridPane>
+      <GridPane fx:id="valueMoneyCurrency" layoutX="10.0" layoutY="10.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="256.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="256.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label text="%cardant.itemSearch.metadata.value.moneyCurrency">
+               <GridPane.margin>
+                  <Insets left="16.0" />
+               </GridPane.margin>
+            </Label>
+            <ComboBox fx:id="valueMoneyCurrencyBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+               GridPane.columnIndex="1" />
+         </children>
+      </GridPane>
+  </children>
+</StackPane>
