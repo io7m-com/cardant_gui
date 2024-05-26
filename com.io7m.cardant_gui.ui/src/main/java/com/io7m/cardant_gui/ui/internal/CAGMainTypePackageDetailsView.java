@@ -17,11 +17,12 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
+import com.io7m.cardant.model.CATypeField;
+import com.io7m.cardant.model.CATypeRecordIdentifier;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -33,13 +34,13 @@ import java.util.ResourceBundle;
 public final class CAGMainTypePackageDetailsView
   implements CAGViewType
 {
-  private static final Logger LOG =
-    LoggerFactory.getLogger(CAGMainTypePackageDetailsView.class);
-
   private final CAGControllerType controller;
   private final CAGStringsType strings;
 
   @FXML private TextArea text;
+
+  @FXML private ListView<CATypeRecordIdentifier> types;
+  @FXML private ListView<CATypeField> fields;
 
   /**
    * The main type package details view.

@@ -21,6 +21,7 @@ import com.io7m.cardant.model.CAAttachment;
 import com.io7m.cardant.model.CAAttachmentRelations;
 import com.io7m.cardant.model.CAItemSummary;
 import com.io7m.cardant.model.CAMetadataType;
+import com.io7m.cardant.model.CATypeRecordIdentifier;
 import com.io7m.lanark.core.RDottedName;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.application.Platform;
@@ -65,12 +66,23 @@ public final class CAGMainItemDetailsView
   @FXML private TextField nameField;
   @FXML private ImageView thumbnail;
   @FXML private ProgressBar thumbnailLoading;
-  @FXML private TableView<CAMetadataType> meta;
   @FXML private ListView<CAAttachment> attachments;
   @FXML private Button metaAdd;
   @FXML private Button metaRemove;
   @FXML private Button attachmentAdd;
   @FXML private Button attachmentRemove;
+  @FXML private Button typeAssign;
+  @FXML private Button typeUnassign;
+
+  @FXML private TableView<CATypeRecordIdentifier> types;
+  @FXML private TableColumn<CATypeRecordIdentifier, String> typesColPkg;
+  @FXML private TableColumn<CATypeRecordIdentifier, String> typesColType;
+
+  @FXML private TableView<CAMetadataType> meta;
+  @FXML private TableColumn<CAMetadataType, RDottedName> metaColPkg;
+  @FXML private TableColumn<CAMetadataType, RDottedName> metaColType;
+  @FXML private TableColumn<CAMetadataType, RDottedName> metaColField;
+  @FXML private TableColumn<CAMetadataType, String> metaColValue;
 
   /**
    * The main item details view.
@@ -99,48 +111,50 @@ public final class CAGMainItemDetailsView
     this.thumbnail.setVisible(false);
     this.thumbnailLoading.setVisible(false);
 
-    final var tableColumns =
-      this.meta.getColumns();
+    this.typesColPkg.setSortable(true);
+    this.typesColPkg.setReorderable(false);
+    this.typesColPkg.setCellValueFactory(
+      param -> {
+        return new SimpleStringProperty(param.getValue().packageName().value());
+      });
 
-    final var tablePkgColumn =
-      (TableColumn<CAMetadataType, RDottedName>) tableColumns.get(0);
-    final var tableTypeColumn =
-      (TableColumn<CAMetadataType, RDottedName>) tableColumns.get(1);
-    final var tableFieldColumn =
-      (TableColumn<CAMetadataType, RDottedName>) tableColumns.get(2);
-    final var tableValueColumn =
-      (TableColumn<CAMetadataType, String>) tableColumns.get(3);
+    this.typesColType.setSortable(true);
+    this.typesColType.setReorderable(false);
+    this.typesColType.setCellValueFactory(
+      param -> {
+        return new SimpleStringProperty(param.getValue().typeName().value());
+      });
 
-    tablePkgColumn.setSortable(true);
-    tablePkgColumn.setReorderable(false);
-    tablePkgColumn.setCellValueFactory(
+    this.metaColPkg.setSortable(true);
+    this.metaColPkg.setReorderable(false);
+    this.metaColPkg.setCellValueFactory(
       param -> {
         return new SimpleObjectProperty<>(
           param.getValue().name().typeName().packageName()
         );
       });
 
-    tableTypeColumn.setSortable(true);
-    tableTypeColumn.setReorderable(false);
-    tableTypeColumn.setCellValueFactory(
+    this.metaColType.setSortable(true);
+    this.metaColType.setReorderable(false);
+    this.metaColType.setCellValueFactory(
       param -> {
         return new SimpleObjectProperty<>(
           param.getValue().name().typeName().typeName()
         );
       });
 
-    tableFieldColumn.setSortable(true);
-    tableFieldColumn.setReorderable(false);
-    tableFieldColumn.setCellValueFactory(
+    this.metaColField.setSortable(true);
+    this.metaColField.setReorderable(false);
+    this.metaColField.setCellValueFactory(
       param -> {
         return new SimpleObjectProperty<>(
           param.getValue().name().fieldName()
         );
       });
 
-    tableValueColumn.setSortable(true);
-    tableValueColumn.setReorderable(false);
-    tableValueColumn.setCellValueFactory(
+    this.metaColValue.setSortable(true);
+    this.metaColValue.setReorderable(false);
+    this.metaColValue.setCellValueFactory(
       param -> {
         return new SimpleStringProperty(
           param.getValue().valueString()
@@ -151,7 +165,13 @@ public final class CAGMainItemDetailsView
       .comparatorProperty()
       .bind(this.meta.comparatorProperty());
 
-    this.meta.setItems(this.controller.itemSelectedMetadata());
+    this.meta.setItems(
+      this.controller.itemSelectedMetadata()
+    );
+
+    this.types.setItems(
+      this.controller.itemSelectedTypes()
+    );
 
     this.attachments.setCellFactory(
       new CAGItemAttachmentCellFactory(this.strings)
@@ -169,6 +189,24 @@ public final class CAGMainItemDetailsView
       .addListener((ListChangeListener<? super CAAttachment>) c -> {
         this.loadThumbnail();
       });
+
+    this.types.getSelectionModel()
+      .getSelectedItems()
+      .addListener((ListChangeListener<? super CATypeRecordIdentifier>)
+                     this::itemTypeSelectionChanged);
+  }
+
+  private void itemTypeSelectionChanged(
+    final ListChangeListener.Change<? extends CATypeRecordIdentifier> c)
+  {
+    this.typeUnassign.setDisable(true);
+
+    final var selected = c.getList();
+    if (selected.isEmpty()) {
+      return;
+    }
+
+    this.typeUnassign.setDisable(false);
   }
 
   private void itemSelectionChanged(
@@ -285,6 +323,18 @@ public final class CAGMainItemDetailsView
 
   @FXML
   private void onItemNameSetSelected()
+  {
+
+  }
+
+  @FXML
+  private void onTypeAssignSelected()
+  {
+
+  }
+
+  @FXML
+  private void onTypeUnassignSelected()
   {
 
   }

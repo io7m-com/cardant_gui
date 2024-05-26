@@ -102,6 +102,7 @@ public final class CAGMainTypePackageTableView
 
     this.typePackageTable.setItems(
       this.controller.typePackagesViewSorted());
+
     this.controller.typePackagesViewSorted()
       .comparatorProperty()
       .bind(this.typePackageTable.comparatorProperty());

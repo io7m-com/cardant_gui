@@ -22,6 +22,7 @@ import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSearchParameters;
 import com.io7m.cardant.model.CAItemSummary;
 import com.io7m.cardant.model.CAMetadataType;
+import com.io7m.cardant.model.CATypeRecordIdentifier;
 import com.io7m.cardant.protocol.inventory.CAICommandItemAttachmentAdd;
 import com.io7m.repetoir.core.RPServiceType;
 import javafx.beans.value.ObservableValue;
@@ -102,4 +103,10 @@ public interface CAGControllerItemsType
    */
 
   ObservableValue<CAItemSummary> itemSelected();
+
+  /**
+   * @return The currently assigned types
+   */
+
+  SortedList<CATypeRecordIdentifier> itemSelectedTypes();
 }

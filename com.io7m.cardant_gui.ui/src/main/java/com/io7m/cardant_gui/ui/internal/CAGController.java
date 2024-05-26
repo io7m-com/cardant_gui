@@ -30,6 +30,7 @@ import com.io7m.cardant.model.CAItemSummary;
 import com.io7m.cardant.model.CALocationID;
 import com.io7m.cardant.model.CALocationSummary;
 import com.io7m.cardant.model.CAMetadataType;
+import com.io7m.cardant.model.CATypeRecordIdentifier;
 import com.io7m.cardant.model.type_package.CATypePackageIdentifier;
 import com.io7m.cardant.model.type_package.CATypePackageSearchParameters;
 import com.io7m.cardant.model.type_package.CATypePackageSummary;
@@ -119,6 +120,9 @@ public final class CAGController implements CAGControllerType
   private final SimpleObjectProperty<CAGPageRange> locationPages;
   private final SimpleObjectProperty<CALocationSummary> locationSelected;
   private final SimpleObjectProperty<TreeItem<CALocationSummary>> locationTree;
+  private final ObservableList<CATypeRecordIdentifier> itemSelectedTypes;
+  private final SortedList<CATypeRecordIdentifier> itemSelectedTypesSorted;
+  private final SimpleObjectProperty<CATypePackageIdentifier> typePackageSelected;
 
   private CAGController(
     final CAGClientServiceType inClientService)
@@ -145,6 +149,11 @@ public final class CAGController implements CAGControllerType
     this.itemSelectedAttachments =
       FXCollections.observableArrayList();
 
+    this.itemSelectedTypes =
+      FXCollections.observableArrayList();
+    this.itemSelectedTypesSorted =
+      new SortedList<>(this.itemSelectedTypes);
+
     this.filePages =
       new SimpleObjectProperty<>(new CAGPageRange(0L, 0L));
     this.files =
@@ -169,6 +178,8 @@ public final class CAGController implements CAGControllerType
 
     this.typePackageTextSelected =
       new SimpleStringProperty();
+    this.typePackageSelected =
+      new SimpleObjectProperty<CATypePackageIdentifier>();
 
     this.locationSelectedMeta =
       FXCollections.observableArrayList();
@@ -285,6 +296,8 @@ public final class CAGController implements CAGControllerType
             .sorted(Comparator.comparing(o -> o.key().fileID()))
             .collect(Collectors.toList())
         );
+
+        this.itemSelectedTypes.setAll(item.types());
       });
     });
   }
@@ -302,6 +315,12 @@ public final class CAGController implements CAGControllerType
   }
 
   @Override
+  public SortedList<CATypeRecordIdentifier> itemSelectedTypes()
+  {
+    return this.itemSelectedTypesSorted;
+  }
+
+  @Override
   public void typePackageGet(
     final CATypePackageIdentifier id)
   {
@@ -312,6 +331,7 @@ public final class CAGController implements CAGControllerType
       final String formatted = formatXML(response.data());
 
       Platform.runLater(() -> {
+        this.typePackageSelected.set(id);
         this.typePackageTextSelected.set(formatted);
       });
     });

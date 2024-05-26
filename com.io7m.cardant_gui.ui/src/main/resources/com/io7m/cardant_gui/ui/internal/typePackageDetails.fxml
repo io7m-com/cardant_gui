@@ -1,15 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="mainTypePackageDetails" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainTypePackageDetailsView">
-   <children>
-      <TextArea fx:id="text" editable="false" styleClass="dataField" VBox.vgrow="ALWAYS">
-         <VBox.margin>
-            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-         </VBox.margin>
-      </TextArea>
-   </children>
-</VBox>
+<TabPane xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainTypePackageDetailsView">
+   <tabs>
+      <Tab closable="false" text="%cardant.text">
+         <content>
+            <VBox fx:id="mainTypePackageDetails" prefHeight="480.0" prefWidth="640.0">
+               <children>
+                  <TextArea fx:id="text" editable="false" styleClass="dataField" VBox.vgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </VBox.margin>
+                  </TextArea>
+               </children>
+            </VBox>
+         </content>
+      </Tab>
+      <Tab closable="false" disable="true" text="%cardant.types">
+        <content>
+            <HBox>
+               <padding>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </padding>
+               <children>
+                  <VBox HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0">
+                           <children>
+                              <Label alignment="CENTER" text="%cardant.types" />
+                           </children>
+                        </HBox>
+                        <ListView fx:id="types" prefWidth="256.0" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+                  <Region maxWidth="-Infinity" minWidth="-Infinity" prefWidth="8.0" HBox.hgrow="NEVER" />
+                  <VBox HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0">
+                           <children>
+                              <Label alignment="CENTER" text="%cardant.fields" />
+                           </children>
+                        </HBox>
+                        <ListView fx:id="fields" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+        </content>
+      </Tab>
+   </tabs>
+</TabPane>
