@@ -17,24 +17,22 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
-import javafx.fxml.Initializable;
-
 /**
- * The type of view controllers.
+ * The kind of expressions that match against audit event types.
  */
 
-public sealed interface CAGViewType
-  extends Initializable permits CAGAttachmentAddView,
-  CAGFileCreateView,
-  CAGLoginView,
-  CAGMainAuditSearchView,
-  CAGMainAuditTableView,
-  CAGMainFileListView,
-  CAGMainFileSearchView,
-  CAGMainItemDetailsView,
-  CAGMainItemSearchView,
-  CAGMainItemTableView,
-  CAGMainView
+public enum CAGAuditEventTypeMatchKind
 {
-
+  /**
+   * Anything.
+   */
+  ANY,
+  /**
+   * Equal to.
+   */
+  EQUAL_TO,
+  /**
+   * Not equal to.
+   */
+  NOT_EQUAL_TO,
 }

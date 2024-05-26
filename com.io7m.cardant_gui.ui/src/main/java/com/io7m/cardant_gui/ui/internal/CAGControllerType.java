@@ -18,6 +18,8 @@
 package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.model.CAAttachment;
+import com.io7m.cardant.model.CAAuditEvent;
+import com.io7m.cardant.model.CAAuditSearchParameters;
 import com.io7m.cardant.model.CAFileID;
 import com.io7m.cardant.model.CAFileSearchParameters;
 import com.io7m.cardant.model.CAFileType;
@@ -184,6 +186,33 @@ public interface CAGControllerType
 
   void itemAttachmentAdd(
     CAICommandItemAttachmentAdd command);
+
+  /**
+   * Start searching for audit records.
+   *
+   * @param searchParameters The search parameters
+   */
+
+  void auditSearchBegin(
+    CAAuditSearchParameters searchParameters);
+
+  /**
+   * @return The audit records for the current search query
+   */
+
+  ObservableList<CAAuditEvent> auditEventsView();
+
+  /**
+   * @return The audit records for the current search query
+   */
+
+  SortedList<CAAuditEvent> auditEventsViewSorted();
+
+  /**
+   * @return The page range for the current audit event search query
+   */
+
+  ObservableValue<CAGPageRange> auditEventsPages();
 
   /**
    * A page range.

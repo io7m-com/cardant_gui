@@ -19,6 +19,8 @@ package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.client.api.CAClientTransferStatistics;
 import com.io7m.cardant.model.CAAttachment;
+import com.io7m.cardant.model.CAAuditEvent;
+import com.io7m.cardant.model.CAAuditSearchParameters;
 import com.io7m.cardant.model.CAFileID;
 import com.io7m.cardant.model.CAFileSearchParameters;
 import com.io7m.cardant.model.CAFileType;
@@ -26,6 +28,7 @@ import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSearchParameters;
 import com.io7m.cardant.model.CAItemSummary;
 import com.io7m.cardant.model.CAMetadataType;
+import com.io7m.cardant.protocol.inventory.CAICommandAuditSearchBegin;
 import com.io7m.cardant.protocol.inventory.CAICommandFileSearchBegin;
 import com.io7m.cardant.protocol.inventory.CAICommandItemAttachmentAdd;
 import com.io7m.cardant.protocol.inventory.CAICommandItemGet;
@@ -70,6 +73,9 @@ public final class CAGController implements CAGControllerType
   private final ObservableList<CAFileType.CAFileWithoutData> files;
   private final SimpleObjectProperty<CAGPageRange> filePages;
   private final SimpleObjectProperty<CAGTransferStatusType> transferStatus;
+  private final SimpleObjectProperty<CAGPageRange> auditEventPages;
+  private final ObservableList<CAAuditEvent> auditEvents;
+  private final SortedList<CAAuditEvent> auditEventsSorted;
 
   private CAGController(
     final CAGClientServiceType inClientService)
@@ -104,6 +110,13 @@ public final class CAGController implements CAGControllerType
 
     this.transferStatus =
       new SimpleObjectProperty<>(IDLE);
+
+    this.auditEventPages =
+      new SimpleObjectProperty<>(new CAGPageRange(0L, 0L));
+    this.auditEvents =
+      FXCollections.observableArrayList();
+    this.auditEventsSorted =
+      new SortedList<>(this.auditEvents);
   }
 
   /**
@@ -379,6 +392,52 @@ public final class CAGController implements CAGControllerType
   {
     this.clientService.execute(command);
     this.itemGet(command.item());
+  }
+
+  @Override
+  public void auditSearchBegin(
+    final CAAuditSearchParameters searchParameters)
+  {
+    final var future =
+      this.clientService.execute(
+        new CAICommandAuditSearchBegin(searchParameters)
+      );
+
+    future.thenAccept(response -> {
+      Platform.runLater(() -> {
+        final var data = response.results();
+
+        final var newItemPage =
+          new ArrayList<>(data.items());
+
+        LOG.debug("Received {} audit events", newItemPage.size());
+        this.auditEventPages.set(
+          new CAGPageRange(
+            (long) data.pageIndex(),
+            (long) data.pageCount()
+          )
+        );
+        this.auditEvents.setAll(newItemPage);
+      });
+    });
+  }
+
+  @Override
+  public ObservableList<CAAuditEvent> auditEventsView()
+  {
+    return this.auditEvents;
+  }
+
+  @Override
+  public SortedList<CAAuditEvent> auditEventsViewSorted()
+  {
+    return this.auditEventsSorted;
+  }
+
+  @Override
+  public ObservableValue<CAGPageRange> auditEventsPages()
+  {
+    return this.auditEventPages;
   }
 
   @Override

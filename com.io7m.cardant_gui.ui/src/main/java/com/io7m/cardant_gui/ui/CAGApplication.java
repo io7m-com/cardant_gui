@@ -27,6 +27,8 @@ import com.io7m.cardant_gui.ui.internal.CAGControllerType;
 import com.io7m.cardant_gui.ui.internal.CAGFileChoosers;
 import com.io7m.cardant_gui.ui.internal.CAGFileChoosersType;
 import com.io7m.cardant_gui.ui.internal.CAGFileViewDialogs;
+import com.io7m.cardant_gui.ui.internal.CAGMainAuditSearchView;
+import com.io7m.cardant_gui.ui.internal.CAGMainAuditTableView;
 import com.io7m.cardant_gui.ui.internal.CAGMainFileListView;
 import com.io7m.cardant_gui.ui.internal.CAGMainFileSearchView;
 import com.io7m.cardant_gui.ui.internal.CAGMainItemDetailsView;
@@ -37,6 +39,7 @@ import com.io7m.cardant_gui.ui.internal.CAGStatusService;
 import com.io7m.cardant_gui.ui.internal.CAGStringConstants;
 import com.io7m.cardant_gui.ui.internal.CAGStrings;
 import com.io7m.cardant_gui.ui.internal.CAGStringsType;
+import com.io7m.cardant_gui.ui.internal.CAGViewType;
 import com.io7m.jade.api.ApplicationDirectoriesType;
 import com.io7m.repetoir.core.RPServiceDirectory;
 import javafx.application.Application;
@@ -46,7 +49,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * The main application class responsible for starting up the "main" view.
@@ -116,29 +121,51 @@ public final class CAGApplication extends Application
     final var loader =
       new FXMLLoader(xml, resources);
 
+    final Map<Class<? extends CAGViewType>, Supplier<CAGViewType>> controllers =
+      Map.ofEntries(
+        Map.entry(
+          CAGMainView.class,
+          () -> new CAGMainView(services)
+        ),
+        Map.entry(
+          CAGMainItemDetailsView.class,
+          () -> new CAGMainItemDetailsView(services)
+        ),
+        Map.entry(
+          CAGMainItemSearchView.class,
+          () -> new CAGMainItemSearchView(services)
+        ),
+        Map.entry(
+          CAGMainItemTableView.class,
+          () -> new CAGMainItemTableView(services)
+        ),
+        Map.entry(
+          CAGMainFileSearchView.class,
+          () -> new CAGMainFileSearchView(services)
+        ),
+        Map.entry(
+          CAGMainFileListView.class,
+          () -> new CAGMainFileListView(services)
+        ),
+        Map.entry(
+          CAGMainAuditSearchView.class,
+          () -> new CAGMainAuditSearchView(services)
+        ),
+        Map.entry(
+          CAGMainAuditTableView.class,
+          () -> new CAGMainAuditTableView(services)
+        )
+      );
+
     loader.setControllerFactory(
       clazz -> {
-        if (Objects.equals(clazz, CAGMainView.class)) {
-          return new CAGMainView(services);
+        final var supplier = controllers.get(clazz);
+        if (supplier == null) {
+          throw new IllegalStateException(
+            "Unrecognized controller class: %s".formatted(clazz)
+          );
         }
-        if (Objects.equals(clazz, CAGMainItemDetailsView.class)) {
-          return new CAGMainItemDetailsView(services);
-        }
-        if (Objects.equals(clazz, CAGMainItemSearchView.class)) {
-          return new CAGMainItemSearchView(services);
-        }
-        if (Objects.equals(clazz, CAGMainItemTableView.class)) {
-          return new CAGMainItemTableView(services);
-        }
-        if (Objects.equals(clazz, CAGMainFileSearchView.class)) {
-          return new CAGMainFileSearchView(services);
-        }
-        if (Objects.equals(clazz, CAGMainFileListView.class)) {
-          return new CAGMainFileListView(services);
-        }
-        throw new IllegalStateException(
-          "Unrecognized controller class: %s".formatted(clazz)
-        );
+        return supplier.get();
       }
     );
 

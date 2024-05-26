@@ -65,4 +65,13 @@ public final class CAGAttachmentAddDialogs
   {
     return "Attachment add dialogs.";
   }
+
+  @Override
+  public String toString()
+  {
+    return String.format(
+      "[CAGAttachmentAddDialogs 0x%08x]",
+      Integer.valueOf(this.hashCode())
+    );
+  }
 }

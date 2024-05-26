@@ -17,24 +17,58 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextArea;
+
+import java.net.URL;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
- * The type of view controllers.
+ * A cell controller.
  */
 
-public sealed interface CAGViewType
-  extends Initializable permits CAGAttachmentAddView,
-  CAGFileCreateView,
-  CAGLoginView,
-  CAGMainAuditSearchView,
-  CAGMainAuditTableView,
-  CAGMainFileListView,
-  CAGMainFileSearchView,
-  CAGMainItemDetailsView,
-  CAGMainItemSearchView,
-  CAGMainItemTableView,
-  CAGMainView
+public final class CAGAuditDataCellController
+  implements Initializable
 {
 
+  @FXML private TextArea data;
+
+  /**
+   * Construct a cell controller.
+   *
+   */
+
+  public CAGAuditDataCellController()
+  {
+
+  }
+
+  void unsetItem()
+  {
+    this.data.setText("");
+  }
+
+  void setItem(
+    final Map<String, String> item)
+  {
+    final var lines =
+      item.entrySet()
+        .stream()
+        .sorted(Map.Entry.comparingByKey())
+        .map(x -> "%s=%s".formatted(x.getKey(), x.getValue()))
+        .toList();
+
+    this.data.setText(String.join("\n", lines));
+    this.data.setPrefRowCount(lines.size());
+  }
+
+  @Override
+  public void initialize(
+    final URL url,
+    final ResourceBundle resourceBundle)
+  {
+
+  }
 }
