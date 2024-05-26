@@ -42,7 +42,7 @@
     <com.io7m.xoanon.version>1.0.1</com.io7m.xoanon.version>
 
     <!-- Third-party dependencies. -->
-    <org.javafx.version>21.0.1</org.javafx.version>
+    <org.javafx.version>21.0.3</org.javafx.version>
     <org.junit.version>5.10.2</org.junit.version>
     <org.apache.tika.version>2.9.2</org.apache.tika.version>
   </properties>
