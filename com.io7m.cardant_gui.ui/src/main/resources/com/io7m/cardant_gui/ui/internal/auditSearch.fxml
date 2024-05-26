@@ -25,7 +25,7 @@
   <children>
       <Accordion VBox.vgrow="ALWAYS">
         <panes>
-            <TitledPane animated="false" text="%cardant.itemSearch.basicParameters">
+            <TitledPane animated="false" text="%cardant.searchBasicParameters">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -77,7 +77,7 @@
          <children>
             <Button maxHeight="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSearchClearSelected" prefWidth="128.0" text="%cardant.itemSearch.searchClear">
                <tooltip>
-                  <Tooltip text="%cardant.files.tooltip.searchClear" />
+                  <Tooltip text="%cardant.tooltip.searchClear" />
                </tooltip>
             </Button>
             <Region minWidth="-Infinity" prefWidth="128.0" HBox.hgrow="ALWAYS" />
@@ -90,7 +90,7 @@
                   </ImageView>
                </graphic>
                <tooltip>
-                  <Tooltip text="%cardant.files.tooltip.search" />
+                  <Tooltip text="%cardant.tooltip.files.search" />
                </tooltip></Button>
          </children>
          <VBox.margin>

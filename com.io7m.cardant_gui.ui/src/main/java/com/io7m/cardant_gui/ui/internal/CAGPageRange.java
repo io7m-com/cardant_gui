@@ -17,31 +17,16 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
-import javafx.fxml.Initializable;
-
 /**
- * The type of view controllers.
+ * A page range.
+ *
+ * @param pageIndex The page index (indexed from 1)
+ * @param pageCount The page count
  */
 
-public sealed interface CAGViewType
-  extends Initializable permits CAGFileCreateView,
-  CAGItemAttachmentAddView,
-  CAGLocationAttachmentAddView,
-  CAGLoginView,
-  CAGMainAuditSearchView,
-  CAGMainAuditTableView,
-  CAGMainFileListView,
-  CAGMainFileSearchView,
-  CAGMainItemDetailsView,
-  CAGMainItemSearchView,
-  CAGMainItemTableView,
-  CAGMainLocationDetailsView,
-  CAGMainLocationSearchView,
-  CAGMainLocationTableView,
-  CAGMainTypePackageDetailsView,
-  CAGMainTypePackageSearchView,
-  CAGMainTypePackageTableView,
-  CAGMainView
+public record CAGPageRange(
+  long pageIndex,
+  long pageCount)
 {
 
 }

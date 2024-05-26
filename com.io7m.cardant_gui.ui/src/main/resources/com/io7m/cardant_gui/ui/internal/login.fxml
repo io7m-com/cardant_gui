@@ -42,7 +42,7 @@
             <ComboBox fx:id="bookmarks" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="32.0" prefWidth="574.0" promptText="%cardant.login.bookmarks" HBox.hgrow="ALWAYS" />
             <Button fx:id="bookmarkCreate" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onRequestBookmarkCreate" prefHeight="32.0" prefWidth="32.0">
               <tooltip>
-                <Tooltip text="%cardant.login.tooltip.createBookmark" />
+                <Tooltip text="%cardant.tooltip.login.createBookmark" />
               </tooltip>
               <graphic>
                 <Label alignment="CENTER" textAlignment="CENTER">
@@ -61,7 +61,7 @@
             </Button>
             <Button fx:id="bookmarkDelete" layoutX="547.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onRequestBookmarkDelete" prefHeight="32.0" prefWidth="32.0">
               <tooltip>
-                <Tooltip text="%cardant.login.tooltip.deleteBookmark" />
+                <Tooltip text="%cardant.tooltip.login.deleteBookmark" />
               </tooltip>
               <graphic>
                 <Label alignment="CENTER" textFill="RED">
@@ -84,12 +84,12 @@
         <Label text="%cardant.login.port" GridPane.rowIndex="3" />
         <CheckBox fx:id="httpsBox" mnemonicParsing="false" onAction="#onHTTPSBoxChanged" text="%cardant.login.https" GridPane.columnIndex="2" GridPane.rowIndex="4">
           <tooltip>
-            <Tooltip text="%cardant.login.tooltip.https" />
+            <Tooltip text="%cardant.tooltip.login.https" />
           </tooltip>
         </CheckBox>
         <TextField fx:id="hostField" onAction="#validate" onKeyReleased="#validate" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
           <tooltip>
-            <Tooltip text="%cardant.login.tooltip.host" />
+            <Tooltip text="%cardant.tooltip.login.host" />
           </tooltip>
           <font>
             <Font name="Monospaced Regular" size="13.0" />
@@ -97,7 +97,7 @@
         </TextField>
         <TextField fx:id="portField" onAction="#validate" onKeyReleased="#validate" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
           <tooltip>
-            <Tooltip text="%cardant.login.tooltip.port" />
+            <Tooltip text="%cardant.tooltip.login.port" />
           </tooltip>
           <font>
             <Font name="Monospaced Regular" size="13.0" />
@@ -107,7 +107,7 @@
         <Label text="%cardant.login.password" GridPane.rowIndex="6" />
         <TextField fx:id="userField" onAction="#validate" onKeyReleased="#validate" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
           <tooltip>
-            <Tooltip text="%cardant.login.tooltip.user" />
+            <Tooltip text="%cardant.tooltip.login.user" />
           </tooltip>
           <font>
             <Font name="Monospaced Regular" size="13.0" />
@@ -115,7 +115,7 @@
         </TextField>
         <PasswordField fx:id="passField" onAction="#validate" onKeyReleased="#validate" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
           <tooltip>
-            <Tooltip text="%cardant.login.tooltip.password" />
+            <Tooltip text="%cardant.tooltip.login.password" />
           </tooltip>
           <font>
             <Font name="Monospaced Regular" size="13.0" />
@@ -126,7 +126,7 @@
             <Font name="System Bold" size="18.0" />
           </font>
           <tooltip>
-            <Tooltip text="%cardant.login.tooltip.fieldNotValid" />
+            <Tooltip text="%cardant.tooltip.login.fieldNotValid" />
           </tooltip>
         </Label>
         <Label fx:id="portFieldBad" text="×" textFill="RED" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER">
@@ -134,7 +134,7 @@
             <Font name="System Bold" size="18.0" />
           </font>
           <tooltip>
-            <Tooltip text="%cardant.login.tooltip.fieldNotValid" />
+            <Tooltip text="%cardant.tooltip.login.fieldNotValid" />
           </tooltip>
         </Label>
         <Label fx:id="userFieldBad" text="×" textFill="RED" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.valignment="CENTER">
@@ -142,7 +142,7 @@
             <Font name="System Bold" size="18.0" />
           </font>
           <tooltip>
-            <Tooltip text="%cardant.login.tooltip.fieldNotValid" />
+            <Tooltip text="%cardant.tooltip.login.fieldNotValid" />
           </tooltip>
         </Label>
         <Label fx:id="passFieldBad" text="×" textFill="RED" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6" GridPane.valignment="CENTER">
@@ -150,7 +150,7 @@
             <Font name="System Bold" size="18.0" />
           </font>
           <tooltip>
-            <Tooltip text="%cardant.login.tooltip.fieldNotValid" />
+            <Tooltip text="%cardant.tooltip.login.fieldNotValid" />
           </tooltip>
         </Label>
         <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" onAction="#onCancel" prefHeight="32.0" prefWidth="128.0" text="%cardant.cancel" GridPane.rowIndex="8" />

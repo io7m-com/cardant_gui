@@ -21,9 +21,9 @@ import javafx.util.StringConverter;
 
 import java.util.Objects;
 
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_AUDITSEARCH_TYPE_ANY;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_AUDITSEARCH_TYPE_EQUALTO;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_AUDITSEARCH_TYPE_NOTEQUALTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_EXACT_ANY;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_EXACT_EQUALTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_EXACT_NOTEQUALTO;
 
 /**
  * A string converter.
@@ -56,13 +56,13 @@ public final class CAGAuditEventTypeMatchConverter
 
     return switch (k) {
       case ANY -> {
-        yield this.strings.format(CARDANT_AUDITSEARCH_TYPE_ANY);
+        yield this.strings.format(CARDANT_EXACT_ANY);
       }
       case EQUAL_TO -> {
-        yield this.strings.format(CARDANT_AUDITSEARCH_TYPE_EQUALTO);
+        yield this.strings.format(CARDANT_EXACT_EQUALTO);
       }
       case NOT_EQUAL_TO -> {
-        yield this.strings.format(CARDANT_AUDITSEARCH_TYPE_NOTEQUALTO);
+        yield this.strings.format(CARDANT_EXACT_NOTEQUALTO);
       }
     };
   }

@@ -25,7 +25,7 @@
   <children>
       <Accordion VBox.vgrow="ALWAYS">
         <panes>
-            <TitledPane animated="false" text="%cardant.itemSearch.basicParameters">
+            <TitledPane animated="false" text="%cardant.searchBasicParameters">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -47,7 +47,7 @@
                               <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
                         </rowConstraints>
                         <children>
-                          <Label text="%cardant.fileSearch.description">
+                          <Label text="%cardant.description">
                             <GridPane.margin>
                               <Insets />
                             </GridPane.margin>
@@ -58,7 +58,7 @@
                               <Font name="Monospaced Regular" size="13.0" />
                             </font>
                           </TextArea>
-                              <Label text="%cardant.fileSearch.mediaType" GridPane.rowIndex="3" />
+                              <Label text="%cardant.mediaType" GridPane.rowIndex="3" />
                               <ChoiceBox fx:id="fileMediaTypeMatch" layoutX="98.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
                               <TextField fx:id="fileMediaType" maxHeight="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
                               <Label text="%cardant.fileSearch.sizeRange" GridPane.rowIndex="5" />
@@ -76,7 +76,7 @@
          <children>
             <Button maxHeight="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSearchClearSelected" prefWidth="128.0" text="%cardant.itemSearch.searchClear">
                <tooltip>
-                  <Tooltip text="%cardant.files.tooltip.searchClear" />
+                  <Tooltip text="%cardant.tooltip.searchClear" />
                </tooltip>
             </Button>
             <Region minWidth="-Infinity" prefWidth="128.0" HBox.hgrow="ALWAYS" />
@@ -89,7 +89,7 @@
                   </ImageView>
                </graphic>
                <tooltip>
-                  <Tooltip text="%cardant.files.tooltip.search" />
+                  <Tooltip text="%cardant.tooltip.search" />
                </tooltip></Button>
          </children>
          <VBox.margin>

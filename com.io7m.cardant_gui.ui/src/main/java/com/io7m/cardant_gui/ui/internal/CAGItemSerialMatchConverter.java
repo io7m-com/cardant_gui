@@ -21,9 +21,9 @@ import javafx.util.StringConverter;
 
 import java.util.Objects;
 
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_SERIAL_ANY;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_SERIAL_EQUALTO;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_SERIAL_NOTEQUALTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_EXACT_ANY;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_EXACT_EQUALTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_EXACT_NOTEQUALTO;
 
 /**
  * A string converter.
@@ -56,13 +56,13 @@ public final class CAGItemSerialMatchConverter
 
     return switch (k) {
       case ANY -> {
-        yield this.strings.format(CARDANT_ITEMSEARCH_SERIAL_ANY);
+        yield this.strings.format(CARDANT_EXACT_ANY);
       }
       case EQUAL_TO -> {
-        yield this.strings.format(CARDANT_ITEMSEARCH_SERIAL_EQUALTO);
+        yield this.strings.format(CARDANT_EXACT_EQUALTO);
       }
       case NOT_EQUAL_TO -> {
-        yield this.strings.format(CARDANT_ITEMSEARCH_SERIAL_NOTEQUALTO);
+        yield this.strings.format(CARDANT_EXACT_NOTEQUALTO);
       }
     };
   }

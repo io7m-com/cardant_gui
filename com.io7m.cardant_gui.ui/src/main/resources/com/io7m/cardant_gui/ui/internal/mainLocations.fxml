@@ -2,9 +2,14 @@
 
 <?import java.lang.*?><?import java.util.*?><?import javafx.scene.*?><?import javafx.scene.control.*?><?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            prefHeight="400.0"
-            prefWidth="600.0">
-
-</AnchorPane>
+<HBox xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <fx:include source="locationSearch.fxml" />
+    <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="160.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+      <items>
+        <fx:include source="locationTable.fxml" />
+        <fx:include source="locationDetails.fxml" />
+      </items>
+    </SplitPane>
+  </children>
+</HBox>

@@ -17,31 +17,43 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
-import javafx.fxml.Initializable;
+import com.io7m.cardant.model.CALocationSummary;
+import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeView;
+import javafx.util.Callback;
+
+import java.util.Objects;
 
 /**
- * The type of view controllers.
+ * A cell factory.
  */
 
-public sealed interface CAGViewType
-  extends Initializable permits CAGFileCreateView,
-  CAGItemAttachmentAddView,
-  CAGLocationAttachmentAddView,
-  CAGLoginView,
-  CAGMainAuditSearchView,
-  CAGMainAuditTableView,
-  CAGMainFileListView,
-  CAGMainFileSearchView,
-  CAGMainItemDetailsView,
-  CAGMainItemSearchView,
-  CAGMainItemTableView,
-  CAGMainLocationDetailsView,
-  CAGMainLocationSearchView,
-  CAGMainLocationTableView,
-  CAGMainTypePackageDetailsView,
-  CAGMainTypePackageSearchView,
-  CAGMainTypePackageTableView,
-  CAGMainView
+public final class CAGLocationCellFactory
+  implements Callback<TreeView<CALocationSummary>, TreeCell<CALocationSummary>>
 {
+  private final CAGStringsType strings;
 
+  /**
+   * A cell factory.
+   *
+   * @param inStrings The string resources
+   */
+
+  public CAGLocationCellFactory(
+    final CAGStringsType inStrings)
+  {
+    this.strings =
+      Objects.requireNonNull(inStrings, "strings");
+  }
+
+  @Override
+  public TreeCell<CALocationSummary> call(
+    final TreeView<CALocationSummary> param)
+  {
+    try {
+      return new CAGLocationCell(this.strings);
+    } catch (final Exception e) {
+      throw new IllegalStateException(e);
+    }
+  }
 }

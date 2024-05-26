@@ -16,7 +16,7 @@
         <TextField maxHeight="-Infinity"
                    minHeight="-Infinity"
                    prefHeight="32.0"
-                   promptText="%cardant.ui.search.locations"
+                   promptText="%cardant.locations"
                    HBox.hgrow="ALWAYS"/>
         <Button layoutX="10.0"
                 layoutY="10.0"

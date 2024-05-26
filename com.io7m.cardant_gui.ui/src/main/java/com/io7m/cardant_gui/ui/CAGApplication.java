@@ -18,7 +18,6 @@
 package com.io7m.cardant_gui.ui;
 
 import com.io7m.cardant.client.preferences.api.CAPreferencesServiceType;
-import com.io7m.cardant_gui.ui.internal.CAGAttachmentAddDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGCSS;
 import com.io7m.cardant_gui.ui.internal.CAGClientService;
 import com.io7m.cardant_gui.ui.internal.CAGClientServiceType;
@@ -27,6 +26,8 @@ import com.io7m.cardant_gui.ui.internal.CAGControllerType;
 import com.io7m.cardant_gui.ui.internal.CAGFileChoosers;
 import com.io7m.cardant_gui.ui.internal.CAGFileChoosersType;
 import com.io7m.cardant_gui.ui.internal.CAGFileViewDialogs;
+import com.io7m.cardant_gui.ui.internal.CAGItemAttachmentAddDialogs;
+import com.io7m.cardant_gui.ui.internal.CAGLocationAttachmentAddDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGMainAuditSearchView;
 import com.io7m.cardant_gui.ui.internal.CAGMainAuditTableView;
 import com.io7m.cardant_gui.ui.internal.CAGMainFileListView;
@@ -34,6 +35,9 @@ import com.io7m.cardant_gui.ui.internal.CAGMainFileSearchView;
 import com.io7m.cardant_gui.ui.internal.CAGMainItemDetailsView;
 import com.io7m.cardant_gui.ui.internal.CAGMainItemSearchView;
 import com.io7m.cardant_gui.ui.internal.CAGMainItemTableView;
+import com.io7m.cardant_gui.ui.internal.CAGMainLocationDetailsView;
+import com.io7m.cardant_gui.ui.internal.CAGMainLocationSearchView;
+import com.io7m.cardant_gui.ui.internal.CAGMainLocationTableView;
 import com.io7m.cardant_gui.ui.internal.CAGMainTypePackageDetailsView;
 import com.io7m.cardant_gui.ui.internal.CAGMainTypePackageSearchView;
 import com.io7m.cardant_gui.ui.internal.CAGMainTypePackageTableView;
@@ -100,8 +104,13 @@ public final class CAGApplication extends Application
       new CAGFileViewDialogs(services));
 
     services.register(
-      CAGAttachmentAddDialogs.class,
-      new CAGAttachmentAddDialogs(services)
+      CAGItemAttachmentAddDialogs.class,
+      new CAGItemAttachmentAddDialogs(services)
+    );
+
+    services.register(
+      CAGLocationAttachmentAddDialogs.class,
+      new CAGLocationAttachmentAddDialogs(services)
     );
 
     services.register(CAPreferencesServiceType.class, this.preferences);
@@ -169,6 +178,18 @@ public final class CAGApplication extends Application
         Map.entry(
           CAGMainTypePackageTableView.class,
           () -> new CAGMainTypePackageTableView(services)
+        ),
+        Map.entry(
+          CAGMainLocationDetailsView.class,
+          () -> new CAGMainLocationDetailsView(services)
+        ),
+        Map.entry(
+          CAGMainLocationSearchView.class,
+          () -> new CAGMainLocationSearchView(services)
+        ),
+        Map.entry(
+          CAGMainLocationTableView.class,
+          () -> new CAGMainLocationTableView(services)
         )
       );
 

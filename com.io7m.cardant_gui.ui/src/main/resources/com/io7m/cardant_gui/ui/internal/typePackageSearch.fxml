@@ -23,7 +23,7 @@
   <children>
       <Accordion VBox.vgrow="ALWAYS">
         <panes>
-            <TitledPane animated="false" text="%cardant.itemSearch.basicParameters">
+            <TitledPane animated="false" text="%cardant.searchBasicParameters">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -41,7 +41,7 @@
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
                         </rowConstraints>
                         <children>
-                              <Label text="%cardant.tpSearch.description" />
+                              <Label text="%cardant.description" />
                               <ChoiceBox fx:id="descriptionMatch" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" />
                               <TextArea fx:id="description" styleClass="dataField" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.rowSpan="2147483647">
                                  <font>
@@ -60,7 +60,7 @@
          <children>
             <Button maxHeight="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSearchClearSelected" prefWidth="128.0" text="%cardant.itemSearch.searchClear">
                <tooltip>
-                  <Tooltip text="%cardant.files.tooltip.searchClear" />
+                  <Tooltip text="%cardant.tooltip.searchClear" />
                </tooltip>
             </Button>
             <Region minWidth="-Infinity" prefWidth="128.0" HBox.hgrow="ALWAYS" />
@@ -73,7 +73,7 @@
                   </ImageView>
                </graphic>
                <tooltip>
-                  <Tooltip text="%cardant.files.tooltip.search" />
+                  <Tooltip text="%cardant.tooltip.files.search" />
                </tooltip></Button>
          </children>
          <VBox.margin>

@@ -31,13 +31,13 @@
             <Image url="@icons/attachment-32.png" />
          </image>
       </ImageView>
-      <Label text="%cardant.itemDetails.attachment.id" GridPane.columnIndex="1" />
-      <Label text="%cardant.itemDetails.attachment.relation" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Label text="%cardant.itemDetails.attachment.description" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <Label text="%cardant.itemDetails.attachment.mediaType" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <Label text="%cardant.itemDetails.attachment.size" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Label text="%cardant.itemDetails.attachment.hashAlgorithm" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-      <Label text="%cardant.itemDetails.attachment.hashValue" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <Label text="%cardant.id" GridPane.columnIndex="1" />
+      <Label text="%cardant.relation" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Label text="%cardant.description" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Label text="%cardant.mediaType" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <Label text="%cardant.size" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <Label text="%cardant.hashAlgorithm" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <Label text="%cardant.hashValue" GridPane.columnIndex="1" GridPane.rowIndex="6" />
       <TextField fx:id="id" editable="false" maxHeight="1.7976931348623157E308" styleClass="dataField" GridPane.columnIndex="3" />
       <TextField fx:id="relation" editable="false" layoutX="178.0" layoutY="10.0" maxHeight="1.7976931348623157E308" styleClass="dataField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
       <TextField fx:id="description" editable="false" layoutX="178.0" layoutY="42.0" maxHeight="1.7976931348623157E308" styleClass="dataField" GridPane.columnIndex="3" GridPane.rowIndex="2" />

@@ -41,7 +41,7 @@ import java.util.UUID;
  * The attachment addition view.
  */
 
-public final class CAGAttachmentAddView
+public final class CAGItemAttachmentAddView
   implements CAGViewType
 {
   private final Stage stage;
@@ -62,7 +62,7 @@ public final class CAGAttachmentAddView
    * @param services The services
    */
 
-  public CAGAttachmentAddView(
+  public CAGItemAttachmentAddView(
     final Stage inStage,
     final RPServiceDirectoryType services)
   {

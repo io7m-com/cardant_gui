@@ -33,7 +33,8 @@
             <Insets left="16.0" />
           </GridPane.margin>
         </Label>
-        <Label fx:id="stringComparisonFieldOp" text="%cardant.itemSearch.metadata.comparison.equalTo" GridPane.columnIndex="1" GridPane.halignment="LEFT">
+        <Label fx:id="stringComparisonFieldOp" text="%cardant.exact.equalTo" GridPane.columnIndex="1"
+               GridPane.halignment="LEFT">
           <GridPane.margin>
             <Insets left="16.0" />
           </GridPane.margin>

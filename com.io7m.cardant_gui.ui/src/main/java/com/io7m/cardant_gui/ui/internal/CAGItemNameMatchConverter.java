@@ -21,11 +21,11 @@ import javafx.util.StringConverter;
 
 import java.util.Objects;
 
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_NAME_ANY;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_NAME_EQUALTO;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_NAME_NOTEQUALTO;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_NAME_NOTSIMILARTO;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_NAME_SIMILARTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FUZZY_ANY;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FUZZY_EQUALTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FUZZY_NOTEQUALTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FUZZY_NOTSIMILARTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FUZZY_SIMILARTO;
 
 /**
  * A string converter.
@@ -58,19 +58,19 @@ public final class CAGItemNameMatchConverter
 
     return switch (k) {
       case ANY -> {
-        yield this.strings.format(CARDANT_ITEMSEARCH_NAME_ANY);
+        yield this.strings.format(CARDANT_FUZZY_ANY);
       }
       case EQUAL_TO -> {
-        yield this.strings.format(CARDANT_ITEMSEARCH_NAME_EQUALTO);
+        yield this.strings.format(CARDANT_FUZZY_EQUALTO);
       }
       case NOT_EQUAL_TO -> {
-        yield this.strings.format(CARDANT_ITEMSEARCH_NAME_NOTEQUALTO);
+        yield this.strings.format(CARDANT_FUZZY_NOTEQUALTO);
       }
       case SIMILAR_TO -> {
-        yield this.strings.format(CARDANT_ITEMSEARCH_NAME_SIMILARTO);
+        yield this.strings.format(CARDANT_FUZZY_SIMILARTO);
       }
       case NOT_SIMILAR_TO -> {
-        yield this.strings.format(CARDANT_ITEMSEARCH_NAME_NOTSIMILARTO);
+        yield this.strings.format(CARDANT_FUZZY_NOTSIMILARTO);
       }
     };
   }

@@ -17,31 +17,48 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
+import com.io7m.cardant.model.CALocationSummary;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.control.Label;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
- * The type of view controllers.
+ * A tree cell controller.
  */
 
-public sealed interface CAGViewType
-  extends Initializable permits CAGFileCreateView,
-  CAGItemAttachmentAddView,
-  CAGLocationAttachmentAddView,
-  CAGLoginView,
-  CAGMainAuditSearchView,
-  CAGMainAuditTableView,
-  CAGMainFileListView,
-  CAGMainFileSearchView,
-  CAGMainItemDetailsView,
-  CAGMainItemSearchView,
-  CAGMainItemTableView,
-  CAGMainLocationDetailsView,
-  CAGMainLocationSearchView,
-  CAGMainLocationTableView,
-  CAGMainTypePackageDetailsView,
-  CAGMainTypePackageSearchView,
-  CAGMainTypePackageTableView,
-  CAGMainView
+public final class CAGLocationCellController implements Initializable
 {
+  @FXML private Parent root;
+  @FXML private Label name;
 
+  /**
+   * Construct a cell controller.
+   */
+
+  public CAGLocationCellController()
+  {
+  }
+
+  void unsetItem()
+  {
+    this.name.setText("");
+  }
+
+  void setItem(
+    final CALocationSummary item)
+  {
+    this.name.setText(item.name());
+  }
+
+  @Override
+  public void initialize(
+    final URL url,
+    final ResourceBundle resourceBundle)
+  {
+
+  }
 }

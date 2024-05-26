@@ -72,12 +72,12 @@ import static com.io7m.cardant_gui.ui.internal.CAGMetaMatchNodeType.Element.AND;
 import static com.io7m.cardant_gui.ui.internal.CAGMetaMatchNodeType.Element.ANYTHING;
 import static com.io7m.cardant_gui.ui.internal.CAGMetaMatchNodeType.Element.MATCH;
 import static com.io7m.cardant_gui.ui.internal.CAGMetaMatchNodeType.Element.OR;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_EXACT_ANY;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_EXACT_EQUALTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_EXACT_NOTEQUALTO;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_AND;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_ANY;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_CHANGETYPE;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_COMPARISON_ANY;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_COMPARISON_EQUALTO;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_COMPARISON_NOTEQUALTO;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_OR;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_SPECIFIC;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_VALUE_ANY;
@@ -278,19 +278,19 @@ public final class CAGMetaMatchTree
 
     items.add(
       this.menuItem(
-        CARDANT_ITEMSEARCH_METADATA_COMPARISON_EQUALTO,
+        CARDANT_EXACT_EQUALTO,
         this::onMetadataChangeComparisonToEqualTo
       )
     );
     items.add(
       this.menuItem(
-        CARDANT_ITEMSEARCH_METADATA_COMPARISON_NOTEQUALTO,
+        CARDANT_EXACT_NOTEQUALTO,
         this::onMetadataChangeComparisonToNotEqualTo
       )
     );
     items.add(
       this.menuItem(
-        CARDANT_ITEMSEARCH_METADATA_COMPARISON_ANY,
+        CARDANT_EXACT_ANY,
         this::onMetadataChangeComparisonToAny
       )
     );

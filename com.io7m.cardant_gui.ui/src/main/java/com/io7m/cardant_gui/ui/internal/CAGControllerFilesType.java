@@ -18,31 +18,54 @@
 package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.model.CAFileID;
+import com.io7m.cardant.model.CAFileSearchParameters;
+import com.io7m.cardant.model.CAFileType;
+import com.io7m.repetoir.core.RPServiceType;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.image.Image;
+import javafx.collections.ObservableList;
 
 import java.nio.file.Path;
-import java.util.concurrent.CompletableFuture;
 
 /**
- * The main controller interface.
+ * File methods for the controller.
  */
 
-public interface CAGControllerType
-  extends CAGControllerAuditType,
-  CAGControllerFilesType,
-  CAGControllerItemsType,
-  CAGControllerLocationsType,
-  CAGControllerTypePackagesType
+public interface CAGControllerFilesType
+  extends RPServiceType
 {
   /**
-   * @return The current transfer status
+   * Start searching for files.
+   *
+   * @param searchParameters The parameters
    */
 
-  ObservableValue<CAGTransferStatusType> transferStatus();
+  void fileSearchBegin(
+    CAFileSearchParameters searchParameters);
 
   /**
-   * Get an image.
+   * @return The files for the current search query
+   */
+
+  ObservableList<CAFileType.CAFileWithoutData> filesView();
+
+  /**
+   * Upload a file.
+   *
+   * @param fileID      The file ID
+   * @param file        The file
+   * @param contentType The content type
+   * @param description The description
+   */
+
+  void fileUpload(
+    CAFileID fileID,
+    Path file,
+    String contentType,
+    String description
+  );
+
+  /**
+   * Download a file.
    *
    * @param fileID        The file ID
    * @param file          The output file
@@ -50,19 +73,19 @@ public interface CAGControllerType
    * @param size          The expected size
    * @param hashAlgorithm The hash algorithm
    * @param hashValue     The expected hash value
-   * @param width         The requested width
-   * @param height        The requested height
-   *
-   * @return The operation in progress
    */
 
-  CompletableFuture<Image> imageGet(
+  void fileDownload(
     CAFileID fileID,
     Path file,
     Path fileTmp,
     long size,
     String hashAlgorithm,
-    String hashValue,
-    int width,
-    int height);
+    String hashValue);
+
+  /**
+   * @return The page range for the current file search query
+   */
+
+  ObservableValue<CAGPageRange> filePages();
 }

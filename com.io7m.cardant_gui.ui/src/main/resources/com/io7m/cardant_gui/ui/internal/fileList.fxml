@@ -21,7 +21,7 @@
             <Region HBox.hgrow="ALWAYS" />
             <Button fx:id="fileDownload" disable="true" layoutX="586.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onFileDownloadSelected" prefHeight="32.0" prefWidth="32.0">
                <tooltip>
-                  <Tooltip text="%cardant.files.tooltip.download" />
+                  <Tooltip text="%cardant.tooltip.files.download" />
                </tooltip>
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
@@ -33,7 +33,7 @@
             </Button>
             <Button fx:id="fileAdd" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onFileAddSelected" prefHeight="32.0" prefWidth="32.0">
                <tooltip>
-                  <Tooltip text="%cardant.files.tooltip.add" />
+                  <Tooltip text="%cardant.tooltip.files.add" />
                </tooltip>
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
@@ -44,7 +44,7 @@
                </graphic></Button>
             <Button fx:id="fileRemove" disable="true" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onFileRemoveSelected" prefHeight="32.0" prefWidth="32.0">
                <tooltip>
-                  <Tooltip text="%cardant.files.tooltip.remove" />
+                  <Tooltip text="%cardant.tooltip.files.remove" />
                </tooltip>
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">

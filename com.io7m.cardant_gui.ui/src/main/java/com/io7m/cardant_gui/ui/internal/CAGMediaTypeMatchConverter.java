@@ -21,11 +21,11 @@ import javafx.util.StringConverter;
 
 import java.util.Objects;
 
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FILESEARCH_MEDIATYPE_ANY;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FILESEARCH_MEDIATYPE_EQUALTO;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FILESEARCH_MEDIATYPE_NOTEQUALTO;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FILESEARCH_MEDIATYPE_NOTSIMILARTO;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FILESEARCH_MEDIATYPE_SIMILARTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FUZZY_ANY;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FUZZY_EQUALTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FUZZY_NOTEQUALTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FUZZY_NOTSIMILARTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FUZZY_SIMILARTO;
 
 /**
  * A string converter.
@@ -58,19 +58,19 @@ public final class CAGMediaTypeMatchConverter
 
     return switch (k) {
       case ANY -> {
-        yield this.strings.format(CARDANT_FILESEARCH_MEDIATYPE_ANY);
+        yield this.strings.format(CARDANT_FUZZY_ANY);
       }
       case EQUAL_TO -> {
-        yield this.strings.format(CARDANT_FILESEARCH_MEDIATYPE_EQUALTO);
+        yield this.strings.format(CARDANT_FUZZY_EQUALTO);
       }
       case NOT_EQUAL_TO -> {
-        yield this.strings.format(CARDANT_FILESEARCH_MEDIATYPE_NOTEQUALTO);
+        yield this.strings.format(CARDANT_FUZZY_NOTEQUALTO);
       }
       case SIMILAR_TO -> {
-        yield this.strings.format(CARDANT_FILESEARCH_MEDIATYPE_SIMILARTO);
+        yield this.strings.format(CARDANT_FUZZY_SIMILARTO);
       }
       case NOT_SIMILAR_TO -> {
-        yield this.strings.format(CARDANT_FILESEARCH_MEDIATYPE_NOTSIMILARTO);
+        yield this.strings.format(CARDANT_FUZZY_NOTSIMILARTO);
       }
     };
   }

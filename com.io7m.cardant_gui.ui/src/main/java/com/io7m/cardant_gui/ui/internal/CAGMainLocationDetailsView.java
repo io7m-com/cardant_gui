@@ -19,7 +19,7 @@ package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.model.CAAttachment;
 import com.io7m.cardant.model.CAAttachmentRelations;
-import com.io7m.cardant.model.CAItemSummary;
+import com.io7m.cardant.model.CALocationSummary;
 import com.io7m.cardant.model.CAMetadataType;
 import com.io7m.lanark.core.RDottedName;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
@@ -46,19 +46,19 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
- * The main item details view.
+ * The main location details view.
  */
 
-public final class CAGMainItemDetailsView
+public final class CAGMainLocationDetailsView
   implements CAGViewType
 {
   private static final Logger LOG =
-    LoggerFactory.getLogger(CAGMainItemDetailsView.class);
+    LoggerFactory.getLogger(CAGMainLocationDetailsView.class);
 
   private final CAGControllerType controller;
   private final CAGStringsType strings;
-  private final CAGItemAttachmentAddDialogs attachmentAddDialogs;
-  private CAGViewAndStage<CAGItemAttachmentAddView> attachmentAddDialog;
+  private final CAGLocationAttachmentAddDialogs attachmentAddDialogs;
+  private CAGViewAndStage<CAGLocationAttachmentAddView> attachmentAddDialog;
 
   @FXML private TabPane mainItemDetails;
   @FXML private TextField idField;
@@ -73,12 +73,12 @@ public final class CAGMainItemDetailsView
   @FXML private Button attachmentRemove;
 
   /**
-   * The main item details view.
+   * The main location details view.
    *
    * @param services The service directory
    */
 
-  public CAGMainItemDetailsView(
+  public CAGMainLocationDetailsView(
     final RPServiceDirectoryType services)
   {
     this.controller =
@@ -86,7 +86,7 @@ public final class CAGMainItemDetailsView
     this.strings =
       services.requireService(CAGStringsType.class);
     this.attachmentAddDialogs =
-      services.requireService(CAGItemAttachmentAddDialogs.class);
+      services.requireService(CAGLocationAttachmentAddDialogs.class);
   }
 
   @Override
@@ -147,32 +147,32 @@ public final class CAGMainItemDetailsView
         );
       });
 
-    this.controller.itemSelectedMetadata()
+    this.controller.locationSelectedMetadata()
       .comparatorProperty()
       .bind(this.meta.comparatorProperty());
 
-    this.meta.setItems(this.controller.itemSelectedMetadata());
+    this.meta.setItems(this.controller.locationSelectedMetadata());
 
     this.attachments.setCellFactory(
       new CAGItemAttachmentCellFactory(this.strings)
     );
     this.attachments.setItems(
-      this.controller.itemSelectedAttachments()
+      this.controller.locationSelectedAttachments()
     );
 
-    this.controller.itemSelected()
+    this.controller.locationSelected()
       .addListener((observable, oldValue, newValue) -> {
-        this.itemSelectionChanged(newValue);
+        this.locationSelectionChanged(newValue);
       });
 
-    this.controller.itemSelectedAttachments()
+    this.controller.locationSelectedAttachments()
       .addListener((ListChangeListener<? super CAAttachment>) c -> {
         this.loadThumbnail();
       });
   }
 
-  private void itemSelectionChanged(
-    final CAItemSummary newValue)
+  private void locationSelectionChanged(
+    final CALocationSummary newValue)
   {
     if (newValue == null) {
       this.mainItemDetails.setDisable(true);

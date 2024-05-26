@@ -27,6 +27,8 @@ import com.io7m.cardant.model.CAFileType;
 import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSearchParameters;
 import com.io7m.cardant.model.CAItemSummary;
+import com.io7m.cardant.model.CALocationID;
+import com.io7m.cardant.model.CALocationSummary;
 import com.io7m.cardant.model.CAMetadataType;
 import com.io7m.cardant.model.type_package.CATypePackageIdentifier;
 import com.io7m.cardant.model.type_package.CATypePackageSearchParameters;
@@ -36,6 +38,9 @@ import com.io7m.cardant.protocol.inventory.CAICommandFileSearchBegin;
 import com.io7m.cardant.protocol.inventory.CAICommandItemAttachmentAdd;
 import com.io7m.cardant.protocol.inventory.CAICommandItemGet;
 import com.io7m.cardant.protocol.inventory.CAICommandItemSearchBegin;
+import com.io7m.cardant.protocol.inventory.CAICommandLocationAttachmentAdd;
+import com.io7m.cardant.protocol.inventory.CAICommandLocationGet;
+import com.io7m.cardant.protocol.inventory.CAICommandLocationList;
 import com.io7m.cardant.protocol.inventory.CAICommandTypePackageGetText;
 import com.io7m.cardant.protocol.inventory.CAICommandTypePackageInstall;
 import com.io7m.cardant.protocol.inventory.CAICommandTypePackageSearchBegin;
@@ -46,6 +51,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +70,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -80,25 +88,37 @@ public final class CAGController implements CAGControllerType
   private static final Logger LOG =
     LoggerFactory.getLogger(CAGController.class);
 
-  private final ObservableList<CAItemSummary> items;
-  private final SortedList<CAItemSummary> itemsSorted;
-  private final ObservableList<CAItemSummary> itemsRead;
-  private final SimpleObjectProperty<CAGPageRange> itemPages;
+  private static final CALocationID ROOT_LOCATION =
+    CALocationID.of("00000000-0000-0000-0000-000000000000");
+
+  private static final CALocationSummary ROOT_LOCATION_SUMMARY =
+    new CALocationSummary(ROOT_LOCATION, Optional.empty(), "Everywhere");
+
   private final CAGClientServiceType clientService;
-  private final SimpleObjectProperty<CAItemSummary> itemSelected;
-  private final ObservableList<CAMetadataType> itemSelectedMeta;
-  private final SortedList<CAMetadataType> itemSelectedMetaSorted;
   private final ObservableList<CAAttachment> itemSelectedAttachments;
-  private final ObservableList<CAFileType.CAFileWithoutData> files;
-  private final SimpleObjectProperty<CAGPageRange> filePages;
-  private final SimpleObjectProperty<CAGTransferStatusType> transferStatus;
-  private final SimpleObjectProperty<CAGPageRange> auditEventPages;
   private final ObservableList<CAAuditEvent> auditEvents;
-  private final SortedList<CAAuditEvent> auditEventsSorted;
-  private final SimpleObjectProperty<CAGPageRange> typePackagePages;
+  private final ObservableList<CAFileType.CAFileWithoutData> files;
+  private final ObservableList<CAItemSummary> items;
+  private final ObservableList<CAItemSummary> itemsRead;
+  private final ObservableList<CAMetadataType> itemSelectedMeta;
   private final ObservableList<CATypePackageSummary> typePackages;
-  private final SortedList<CATypePackageSummary> typePackagesSorted;
+  private final SimpleObjectProperty<CAGPageRange> auditEventPages;
+  private final SimpleObjectProperty<CAGPageRange> filePages;
+  private final SimpleObjectProperty<CAGPageRange> itemPages;
+  private final SimpleObjectProperty<CAGPageRange> typePackagePages;
+  private final SimpleObjectProperty<CAGTransferStatusType> transferStatus;
+  private final SimpleObjectProperty<CAItemSummary> itemSelected;
   private final SimpleStringProperty typePackageTextSelected;
+  private final SortedList<CAAuditEvent> auditEventsSorted;
+  private final SortedList<CAItemSummary> itemsSorted;
+  private final SortedList<CAMetadataType> itemSelectedMetaSorted;
+  private final SortedList<CATypePackageSummary> typePackagesSorted;
+  private final ObservableList<CAMetadataType> locationSelectedMeta;
+  private final SortedList<CAMetadataType> locationSelectedMetaSorted;
+  private final ObservableList<CAAttachment> locationSelectedAttachments;
+  private final SimpleObjectProperty<CAGPageRange> locationPages;
+  private final SimpleObjectProperty<CALocationSummary> locationSelected;
+  private final SimpleObjectProperty<TreeItem<CALocationSummary>> locationTree;
 
   private CAGController(
     final CAGClientServiceType inClientService)
@@ -122,7 +142,6 @@ public final class CAGController implements CAGControllerType
       FXCollections.observableArrayList();
     this.itemSelectedMetaSorted =
       new SortedList<>(this.itemSelectedMeta);
-
     this.itemSelectedAttachments =
       FXCollections.observableArrayList();
 
@@ -150,6 +169,21 @@ public final class CAGController implements CAGControllerType
 
     this.typePackageTextSelected =
       new SimpleStringProperty();
+
+    this.locationSelectedMeta =
+      FXCollections.observableArrayList();
+    this.locationSelectedMetaSorted =
+      new SortedList<>(this.locationSelectedMeta);
+    this.locationSelectedAttachments =
+      FXCollections.observableArrayList();
+
+    this.locationPages =
+      new SimpleObjectProperty<>(new CAGPageRange(0L, 0L));
+    this.locationSelected =
+      new SimpleObjectProperty<>();
+
+    this.locationTree =
+      new SimpleObjectProperty<>();
   }
 
   /**
@@ -595,5 +629,149 @@ public final class CAGController implements CAGControllerType
       "[CAGController 0x%08x]",
       Integer.valueOf(this.hashCode())
     );
+  }
+
+  @Override
+  public ObservableValue<TreeItem<CALocationSummary>> locationTree()
+  {
+    return this.locationTree;
+  }
+
+  @Override
+  public void locationSearchBegin()
+  {
+    final var future =
+      this.clientService.execute(new CAICommandLocationList());
+
+    future.thenAccept(response -> {
+      Platform.runLater(() -> {
+        final var data =
+          response.data();
+        final var summaries =
+          data.locations();
+
+        LOG.debug("Received {} locations", summaries.size());
+
+        final var treeItems =
+          new HashMap<CALocationID, TreeItem<CALocationSummary>>(summaries.size());
+        final var newRoot =
+          new TreeItem<>(ROOT_LOCATION_SUMMARY);
+
+        for (final var location : summaries.values()) {
+          final var item = new TreeItem<>(location);
+          treeItems.put(location.id(), item);
+        }
+
+        for (final var location : summaries.values()) {
+          final var locationItem =
+            treeItems.get(location.id());
+          final var parent =
+            location.parent();
+
+          if (parent.isEmpty()) {
+            newRoot.getChildren().add(locationItem);
+            continue;
+          }
+
+          final var parentId =
+            parent.get();
+          final var parentItem =
+            treeItems.get(parentId);
+
+          if (parentItem == null) {
+            LOG.warn("Location {} provided a nonexistent parent {}", location.id(), parentId);
+            continue;
+          }
+
+          parentItem.getChildren().add(locationItem);
+        }
+
+        this.locationTree.set(newRoot);
+      });
+    });
+  }
+
+  @Override
+  public void locationGet(
+    final CALocationID id)
+  {
+    if (Objects.equals(id, ROOT_LOCATION)) {
+      this.locationSelectNothing();
+      return;
+    }
+
+    final var future =
+      this.clientService.execute(new CAICommandLocationGet(id));
+
+    future.thenAccept(response -> {
+      Platform.runLater(() -> {
+        final var location = response.data();
+
+        this.locationSelected.set(location.summary());
+
+        this.locationSelectedMeta.setAll(
+          location.metadata()
+            .values()
+            .stream()
+            .toList()
+        );
+
+        this.locationSelectedAttachments.setAll(
+          location.attachments()
+            .values()
+            .stream()
+            .sorted(Comparator.comparing(o -> o.key().fileID()))
+            .collect(Collectors.toList())
+        );
+      });
+    });
+  }
+
+  @Override
+  public SortedList<CAMetadataType> locationSelectedMetadata()
+  {
+    return this.locationSelectedMetaSorted;
+  }
+
+  @Override
+  public void locationSelectNothing()
+  {
+    this.locationSelected.set(null);
+  }
+
+  @Override
+  public ObservableList<CAAttachment> locationSelectedAttachments()
+  {
+    return this.locationSelectedAttachments;
+  }
+
+  @Override
+  public void locationAttachmentAdd(
+    final CAICommandLocationAttachmentAdd command)
+  {
+
+  }
+
+  @Override
+  public ObservableValue<CAGPageRange> locationPages()
+  {
+    return this.locationPages;
+  }
+
+  @Override
+  public ObservableValue<CALocationSummary> locationSelected()
+  {
+    return this.locationSelected;
+  }
+
+  @Override
+  public void locationRemove()
+  {
+    final var location = this.locationSelected.get();
+    if (location == null) {
+      return;
+    }
+
+    throw new IllegalStateException("Unimplemented code!");
   }
 }

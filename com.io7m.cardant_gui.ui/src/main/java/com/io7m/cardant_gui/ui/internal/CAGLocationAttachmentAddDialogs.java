@@ -25,8 +25,8 @@ import javafx.stage.Stage;
  * An attachment addition dialog.
  */
 
-public final class CAGAttachmentAddDialogs
-  extends CAGDialogFactoryAbstract<Void, CAGAttachmentAddView>
+public final class CAGLocationAttachmentAddDialogs
+  extends CAGDialogFactoryAbstract<Void, CAGLocationAttachmentAddView>
 {
   /**
    * An attachment addition dialog.
@@ -34,12 +34,12 @@ public final class CAGAttachmentAddDialogs
    * @param services The service directory
    */
 
-  public CAGAttachmentAddDialogs(
+  public CAGLocationAttachmentAddDialogs(
     final RPServiceDirectoryType services)
   {
     super(
-      CAGAttachmentAddView.class,
-      "/com/io7m/cardant_gui/ui/internal/attachmentAdd.fxml",
+      CAGLocationAttachmentAddView.class,
+      "/com/io7m/cardant_gui/ui/internal/locationAttachmentAdd.fxml",
       services,
       Modality.NONE
     );
@@ -53,11 +53,11 @@ public final class CAGAttachmentAddDialogs
   }
 
   @Override
-  protected CAGAttachmentAddView createController(
+  protected CAGLocationAttachmentAddView createController(
     final Void arguments,
     final Stage stage)
   {
-    return new CAGAttachmentAddView(stage, this.services());
+    return new CAGLocationAttachmentAddView(stage, this.services());
   }
 
   @Override
@@ -70,7 +70,7 @@ public final class CAGAttachmentAddDialogs
   public String toString()
   {
     return String.format(
-      "[CAGAttachmentAddDialogs 0x%08x]",
+      "[CAGLocationAttachmentAddDialogs 0x%08x]",
       Integer.valueOf(this.hashCode())
     );
   }

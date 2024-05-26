@@ -62,11 +62,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_EXACT_ANY;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_EXACT_EQUALTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_EXACT_NOTEQUALTO;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_AND;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_ANY;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_COMPARISON_ANY;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_COMPARISON_EQUALTO;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_COMPARISON_NOTEQUALTO;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_OR;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_METADATA_SPECIFIC;
 
@@ -292,11 +292,11 @@ public final class CAGMetaMatchCellController implements Initializable
     this.stringComparisonFieldOp.setText(
       switch (c) {
         case final StringAnything a ->
-          s.format(CARDANT_ITEMSEARCH_METADATA_COMPARISON_ANY);
+          s.format(CARDANT_EXACT_ANY);
         case final StringEqualTo e ->
-          s.format(CARDANT_ITEMSEARCH_METADATA_COMPARISON_EQUALTO);
+          s.format(CARDANT_EXACT_EQUALTO);
         case final StringNotEqualTo n ->
-          s.format(CARDANT_ITEMSEARCH_METADATA_COMPARISON_NOTEQUALTO);
+          s.format(CARDANT_EXACT_NOTEQUALTO);
       }
     );
 

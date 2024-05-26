@@ -24,7 +24,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<TabPane fx:id="mainItemDetails" prefHeight="480.0" prefWidth="640.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainItemDetailsView">
+<TabPane fx:id="mainItemDetails" prefHeight="480.0" prefWidth="640.0" tabClosingPolicy="UNAVAILABLE"
+         xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainLocationDetailsView">
   <tabs>
     <Tab text="%cardant.attributes">
       <content>
@@ -62,7 +64,7 @@
                                     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff00" height="128.0" stroke="#0000007f" strokeType="INSIDE" width="128.0" />
                                  </children>
                               </StackPane>
-                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onItemNameSetSelected" text="%cardant.itemDetails.nameSet" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onItemNameSetSelected" text="%cardant.locationDetails.nameSet" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                            </children>
                         </GridPane>
                      </children>

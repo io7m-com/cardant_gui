@@ -21,12 +21,12 @@ import javafx.util.StringConverter;
 
 import java.util.Objects;
 
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_TYPES_ANY;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_TYPES_EQUALTO;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_TYPES_NOTEQUALTO;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_TYPES_OVERLAPPING;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_TYPES_SUBSETOF;
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSEARCH_TYPES_SUPERSETOF;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_SETCOMPARISON_ANY;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_SETCOMPARISON_EQUALTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_SETCOMPARISON_NOTEQUALTO;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_SETCOMPARISON_OVERLAPPING;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_SETCOMPARISON_SUBSETOF;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_SETCOMPARISON_SUPERSETOF;
 
 /**
  * A string converter.
@@ -59,22 +59,22 @@ public final class CAGItemTypeMatchConverter
 
     return switch (k) {
       case ANY -> {
-        yield this.strings.format(CARDANT_ITEMSEARCH_TYPES_ANY);
+        yield this.strings.format(CARDANT_SETCOMPARISON_ANY);
       }
       case EQUAL_TO -> {
-        yield this.strings.format(CARDANT_ITEMSEARCH_TYPES_EQUALTO);
+        yield this.strings.format(CARDANT_SETCOMPARISON_EQUALTO);
       }
       case NOT_EQUAL_TO -> {
-        yield this.strings.format(CARDANT_ITEMSEARCH_TYPES_NOTEQUALTO);
+        yield this.strings.format(CARDANT_SETCOMPARISON_NOTEQUALTO);
       }
       case SUPERSET_OF -> {
-        yield this.strings.format(CARDANT_ITEMSEARCH_TYPES_SUPERSETOF);
+        yield this.strings.format(CARDANT_SETCOMPARISON_SUPERSETOF);
       }
       case SUBSET_OF -> {
-        yield this.strings.format(CARDANT_ITEMSEARCH_TYPES_SUBSETOF);
+        yield this.strings.format(CARDANT_SETCOMPARISON_SUBSETOF);
       }
       case OVERLAPPING -> {
-        yield this.strings.format(CARDANT_ITEMSEARCH_TYPES_OVERLAPPING);
+        yield this.strings.format(CARDANT_SETCOMPARISON_OVERLAPPING);
       }
     };
   }
