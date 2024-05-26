@@ -140,6 +140,8 @@ public final class CAGController implements CAGControllerType
   private void onClientStatusChanged()
   {
     this.items.clear();
+    this.auditEvents.clear();
+    this.files.clear();
   }
 
   @Override

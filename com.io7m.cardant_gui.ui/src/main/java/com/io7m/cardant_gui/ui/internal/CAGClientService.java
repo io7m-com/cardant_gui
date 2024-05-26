@@ -53,6 +53,7 @@ import static com.io7m.cardant_gui.ui.internal.CAGClientStatus.CONNECTING;
 import static com.io7m.cardant_gui.ui.internal.CAGClientStatus.NOT_CONNECTED;
 import static com.io7m.cardant_gui.ui.internal.CAGStatusEvent.Kind.ERROR;
 import static com.io7m.cardant_gui.ui.internal.CAGStatusEvent.Kind.IDLE;
+import static com.io7m.cardant_gui.ui.internal.CAGStatusEvent.Kind.RUNNING;
 import static com.io7m.cardant_gui.ui.internal.CAGStatusEvent.Kind.RUNNING_LONG;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_LOGIN_CONNECTED;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_LOGIN_CONNECTING;
@@ -215,11 +216,11 @@ public final class CAGClientService
       }
 
       try {
-        this.statusService.publish(RUNNING_LONG, "Searching…");
+        this.statusService.publish(RUNNING, "Executing command…");
         future.complete(
           this.client.sendAndWaitOrThrow(command, Duration.ofSeconds(30L))
         );
-        this.statusService.publish(IDLE, "Search completed.");
+        this.statusService.publish(IDLE, "Executed command.");
       } catch (final InterruptedException e) {
         Thread.currentThread().interrupt();
         future.cancel(true);
