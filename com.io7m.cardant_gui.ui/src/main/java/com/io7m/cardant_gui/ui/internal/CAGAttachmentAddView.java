@@ -198,6 +198,7 @@ public final class CAGAttachmentAddView
   private void onAddSelected()
   {
     this.controller.itemAttachmentAdd(this.createCommand());
+    this.stage.close();
   }
 
   @FXML
