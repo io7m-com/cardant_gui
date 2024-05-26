@@ -21,7 +21,7 @@ package com.io7m.cardant_gui.ui.internal;
  * The kind of expressions that match against file descriptions.
  */
 
-public enum CAGFileDescriptionMatchKind
+public enum CAGDescriptionMatchKind
 {
   /**
    * Anything.

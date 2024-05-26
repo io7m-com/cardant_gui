@@ -27,6 +27,9 @@ import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSearchParameters;
 import com.io7m.cardant.model.CAItemSummary;
 import com.io7m.cardant.model.CAMetadataType;
+import com.io7m.cardant.model.type_package.CATypePackageIdentifier;
+import com.io7m.cardant.model.type_package.CATypePackageSearchParameters;
+import com.io7m.cardant.model.type_package.CATypePackageSummary;
 import com.io7m.cardant.protocol.inventory.CAICommandItemAttachmentAdd;
 import com.io7m.repetoir.core.RPServiceType;
 import javafx.beans.value.ObservableValue;
@@ -215,6 +218,41 @@ public interface CAGControllerType
   ObservableValue<CAGPageRange> auditEventsPages();
 
   /**
+   * Start searching for type packages.
+   *
+   * @param searchParameters The search parameters
+   */
+
+  void typePackageSearchBegin(
+    CATypePackageSearchParameters searchParameters);
+
+  /**
+   * @return The type packages for the current search query
+   */
+
+  ObservableList<CATypePackageSummary> typePackagesView();
+
+  /**
+   * @return The type packages for the current search query
+   */
+
+  SortedList<CATypePackageSummary> typePackagesViewSorted();
+
+  /**
+   * @return The page range for the current type package search query
+   */
+
+  ObservableValue<CAGPageRange> typePackagesPages();
+
+  /**
+   * Install a type package from the given file.
+   *
+   * @param file The file
+   */
+
+  void typePackageInstall(Path file);
+
+  /**
    * A page range.
    *
    * @param pageIndex The page index (indexed from 1)
@@ -239,4 +277,24 @@ public interface CAGControllerType
    */
 
   ObservableValue<CAItemSummary> itemSelected();
+
+  /**
+   * Fetch a type package.
+   *
+   * @param id The type package ID
+   */
+
+  void typePackageGet(CATypePackageIdentifier id);
+
+  /**
+   * @return The text of the currently selected type package
+   */
+
+  ObservableValue<String> typePackageTextSelected();
+
+  /**
+   * Clear the current type package selection.
+   */
+
+  void typePackageSelectNothing();
 }

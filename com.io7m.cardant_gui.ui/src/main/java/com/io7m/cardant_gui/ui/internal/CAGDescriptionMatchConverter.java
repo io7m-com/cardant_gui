@@ -31,8 +31,8 @@ import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FILESE
  * A string converter.
  */
 
-public final class CAGFileDescriptionMatchConverter
-  extends StringConverter<CAGFileDescriptionMatchKind>
+public final class CAGDescriptionMatchConverter
+  extends StringConverter<CAGDescriptionMatchKind>
 {
   private final CAGStringsType strings;
 
@@ -42,7 +42,7 @@ public final class CAGFileDescriptionMatchConverter
    * @param inStrings The string resources
    */
 
-  public CAGFileDescriptionMatchConverter(
+  public CAGDescriptionMatchConverter(
     final CAGStringsType inStrings)
   {
     this.strings = Objects.requireNonNull(inStrings, "strings");
@@ -50,7 +50,7 @@ public final class CAGFileDescriptionMatchConverter
 
   @Override
   public String toString(
-    final CAGFileDescriptionMatchKind k)
+    final CAGDescriptionMatchKind k)
   {
     if (k == null) {
       return "";
@@ -76,7 +76,7 @@ public final class CAGFileDescriptionMatchConverter
   }
 
   @Override
-  public CAGFileDescriptionMatchKind fromString(
+  public CAGDescriptionMatchKind fromString(
     final String string)
   {
     return null;

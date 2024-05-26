@@ -34,6 +34,9 @@ import com.io7m.cardant_gui.ui.internal.CAGMainFileSearchView;
 import com.io7m.cardant_gui.ui.internal.CAGMainItemDetailsView;
 import com.io7m.cardant_gui.ui.internal.CAGMainItemSearchView;
 import com.io7m.cardant_gui.ui.internal.CAGMainItemTableView;
+import com.io7m.cardant_gui.ui.internal.CAGMainTypePackageDetailsView;
+import com.io7m.cardant_gui.ui.internal.CAGMainTypePackageSearchView;
+import com.io7m.cardant_gui.ui.internal.CAGMainTypePackageTableView;
 import com.io7m.cardant_gui.ui.internal.CAGMainView;
 import com.io7m.cardant_gui.ui.internal.CAGStatusService;
 import com.io7m.cardant_gui.ui.internal.CAGStringConstants;
@@ -154,6 +157,18 @@ public final class CAGApplication extends Application
         Map.entry(
           CAGMainAuditTableView.class,
           () -> new CAGMainAuditTableView(services)
+        ),
+        Map.entry(
+          CAGMainTypePackageDetailsView.class,
+          () -> new CAGMainTypePackageDetailsView(services)
+        ),
+        Map.entry(
+          CAGMainTypePackageSearchView.class,
+          () -> new CAGMainTypePackageSearchView(services)
+        ),
+        Map.entry(
+          CAGMainTypePackageTableView.class,
+          () -> new CAGMainTypePackageTableView(services)
         )
       );
 

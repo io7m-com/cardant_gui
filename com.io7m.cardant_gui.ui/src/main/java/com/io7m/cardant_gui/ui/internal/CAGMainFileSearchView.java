@@ -58,7 +58,7 @@ public final class CAGMainFileSearchView
   private final CAGStringsType strings;
   private final CAGControllerType controller;
 
-  @FXML private ChoiceBox<CAGFileDescriptionMatchKind> fileDescriptionMatch;
+  @FXML private ChoiceBox<CAGDescriptionMatchKind> fileDescriptionMatch;
   @FXML private TextArea fileDescription;
   @FXML private ChoiceBox<CAGMediaTypeMatchKind> fileMediaTypeMatch;
   @FXML private TextField fileMediaType;
@@ -83,7 +83,7 @@ public final class CAGMainFileSearchView
   private void clearParameters()
   {
     this.fileDescriptionMatch.getSelectionModel()
-      .select(CAGFileDescriptionMatchKind.ANY);
+      .select(CAGDescriptionMatchKind.ANY);
     this.fileDescription.setText("");
 
     this.fileMediaTypeMatch.getSelectionModel()
@@ -109,9 +109,9 @@ public final class CAGMainFileSearchView
       new CAGSpinnerLongFactory());
 
     this.fileDescriptionMatch.setItems(
-      FXCollections.observableArrayList(CAGFileDescriptionMatchKind.values()));
+      FXCollections.observableArrayList(CAGDescriptionMatchKind.values()));
     this.fileDescriptionMatch.setConverter(
-      new CAGFileDescriptionMatchConverter(this.strings));
+      new CAGDescriptionMatchConverter(this.strings));
     this.fileDescriptionMatch.getSelectionModel()
       .selectedItemProperty()
       .addListener((observable, oldValue, newValue) -> {
@@ -145,7 +145,7 @@ public final class CAGMainFileSearchView
   }
 
   private void onDescriptionMatchChanged(
-    final CAGFileDescriptionMatchKind k)
+    final CAGDescriptionMatchKind k)
   {
     switch (k) {
       case ANY -> {

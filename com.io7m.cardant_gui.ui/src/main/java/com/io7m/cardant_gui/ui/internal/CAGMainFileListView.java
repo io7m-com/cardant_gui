@@ -235,7 +235,6 @@ public final class CAGMainFileListView
     final var configuration =
       JWFileChooserConfiguration.builder()
         .setAction(JWFileChooserAction.CREATE)
-        .setCssStylesheet(CAGCSS.defaultCSS().toURL())
         .setConfirmFileSelection(true)
         .build();
 
