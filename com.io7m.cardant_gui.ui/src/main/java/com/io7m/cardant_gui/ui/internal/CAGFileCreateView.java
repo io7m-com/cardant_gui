@@ -18,6 +18,9 @@
 package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.model.CAFileID;
+import com.io7m.cardant_gui.ui.internal.database.CAGDatabaseType;
+import com.io7m.cardant_gui.ui.internal.database.CAGRecentFileAddType;
+import com.io7m.darco.api.DDatabaseException;
 import com.io7m.jwheatsheaf.api.JWFileChooserAction;
 import com.io7m.jwheatsheaf.api.JWFileChooserConfiguration;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
@@ -57,6 +60,7 @@ public final class CAGFileCreateView
   private final Stage stage;
   private final ExecutorService executor;
   private final SimpleObjectProperty<FileDetails> fileDetails;
+  private final CAGDatabaseType database;
 
   @FXML private TextField file;
   @FXML private TextField description;
@@ -81,6 +85,9 @@ public final class CAGFileCreateView
       services.requireService(CAGControllerType.class);
     this.choosers =
       services.requireService(CAGFileChoosersType.class);
+    this.database =
+      services.requireService(CAGDatabaseType.class);
+
     this.stage =
       Objects.requireNonNull(inStage, "stage");
     this.executor =
@@ -158,7 +165,6 @@ public final class CAGFileCreateView
     final var configuration =
       JWFileChooserConfiguration.builder()
         .setAction(JWFileChooserAction.OPEN_EXISTING_SINGLE)
-        .setCssStylesheet(CAGCSS.defaultCSS().toURL())
         .build();
 
     final var chooser =
@@ -171,8 +177,9 @@ public final class CAGFileCreateView
     }
 
     final var chosen = results.get(0);
-    this.file.setText(chosen.toAbsolutePath().toString());
+    this.addRecentFile(chosen);
 
+    this.file.setText(chosen.toAbsolutePath().toString());
     this.hashProgress.setVisible(true);
 
     this.executor.execute(() -> {
@@ -187,6 +194,17 @@ public final class CAGFileCreateView
 
       Platform.runLater(() -> this.fileDetails.set(details));
     });
+  }
+
+  private void addRecentFile(
+    final Path newFile)
+  {
+    try (var t = this.database.openTransaction()) {
+      t.query(CAGRecentFileAddType.class).execute(newFile);
+      t.commit();
+    } catch (final DDatabaseException e) {
+      // Nothing can be done.
+    }
   }
 
   private record FileDetails(

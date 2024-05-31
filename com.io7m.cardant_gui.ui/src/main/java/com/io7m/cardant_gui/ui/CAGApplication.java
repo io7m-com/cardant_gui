@@ -17,7 +17,6 @@
 
 package com.io7m.cardant_gui.ui;
 
-import com.io7m.cardant.client.preferences.api.CAPreferencesServiceType;
 import com.io7m.cardant_gui.ui.internal.CAGCSS;
 import com.io7m.cardant_gui.ui.internal.CAGClientService;
 import com.io7m.cardant_gui.ui.internal.CAGClientServiceType;
@@ -47,6 +46,12 @@ import com.io7m.cardant_gui.ui.internal.CAGStringConstants;
 import com.io7m.cardant_gui.ui.internal.CAGStrings;
 import com.io7m.cardant_gui.ui.internal.CAGStringsType;
 import com.io7m.cardant_gui.ui.internal.CAGViewType;
+import com.io7m.cardant_gui.ui.internal.database.CAGDatabaseConfiguration;
+import com.io7m.cardant_gui.ui.internal.database.CAGDatabaseFactory;
+import com.io7m.cardant_gui.ui.internal.database.CAGDatabaseType;
+import com.io7m.darco.api.DDatabaseCreate;
+import com.io7m.darco.api.DDatabaseTelemetryNoOp;
+import com.io7m.darco.api.DDatabaseUpgrade;
 import com.io7m.jade.api.ApplicationDirectoriesType;
 import com.io7m.repetoir.core.RPServiceDirectory;
 import javafx.application.Application;
@@ -67,23 +72,18 @@ import java.util.function.Supplier;
 public final class CAGApplication extends Application
 {
   private final ApplicationDirectoriesType directories;
-  private final CAPreferencesServiceType preferences;
 
   /**
    * The main application class responsible for starting up the "main" view.
    *
    * @param inConfiguration The configuration
-   * @param inPreferences   The preferences
    */
 
   public CAGApplication(
-    final ApplicationDirectoriesType inConfiguration,
-    final CAPreferencesServiceType inPreferences)
+    final ApplicationDirectoriesType inConfiguration)
   {
     this.directories =
       Objects.requireNonNull(inConfiguration, "configuration");
-    this.preferences =
-      Objects.requireNonNull(inPreferences, "preferences");
   }
 
   @Override
@@ -96,24 +96,44 @@ public final class CAGApplication extends Application
     final var services =
       new RPServiceDirectory();
 
-    services.register(CAGFileChoosersType.class, new CAGFileChoosers());
-    services.register(CAGStringsType.class, strings);
+    final var database =
+      new CAGDatabaseFactory()
+        .open(
+          new CAGDatabaseConfiguration(
+            DDatabaseTelemetryNoOp.get(),
+            DDatabaseCreate.CREATE_DATABASE,
+            DDatabaseUpgrade.UPGRADE_DATABASE,
+            this.directories.configurationDirectory()
+              .resolve("database.db")
+          ),
+          event -> {
 
+          }
+        );
+    services.register(
+      CAGDatabaseType.class,
+      database
+    );
+    services.register(
+      CAGFileChoosersType.class,
+      new CAGFileChoosers(services)
+    );
+    services.register(
+      CAGStringsType.class,
+      strings
+    );
     services.register(
       CAGFileViewDialogs.class,
-      new CAGFileViewDialogs(services));
-
+      new CAGFileViewDialogs(services)
+    );
     services.register(
       CAGItemAttachmentAddDialogs.class,
       new CAGItemAttachmentAddDialogs(services)
     );
-
     services.register(
       CAGLocationAttachmentAddDialogs.class,
       new CAGLocationAttachmentAddDialogs(services)
     );
-
-    services.register(CAPreferencesServiceType.class, this.preferences);
 
     final var status = new CAGStatusService();
     services.register(CAGStatusService.class, status);

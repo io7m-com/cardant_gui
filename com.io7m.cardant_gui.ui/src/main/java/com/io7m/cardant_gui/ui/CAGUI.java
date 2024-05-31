@@ -17,7 +17,6 @@
 
 package com.io7m.cardant_gui.ui;
 
-import com.io7m.cardant.client.preferences.api.CAPreferencesServiceType;
 import com.io7m.jade.api.ApplicationDirectoriesType;
 import javafx.stage.Stage;
 
@@ -41,7 +40,6 @@ public final class CAGUI
    * Start a new UI.
    *
    * @param configuration The configuration
-   * @param preferences
    *
    * @return A new UI
    *
@@ -49,8 +47,7 @@ public final class CAGUI
    */
 
   public static CAGUI start(
-    final ApplicationDirectoriesType configuration,
-    final CAPreferencesServiceType preferences)
+    final ApplicationDirectoriesType configuration)
     throws Exception
   {
     final var stage = new Stage();
@@ -60,7 +57,7 @@ public final class CAGUI
     stage.setMinWidth(800.0);
     stage.setMinHeight(600.0);
 
-    final var app = new CAGApplication(configuration, preferences);
+    final var app = new CAGApplication(configuration);
     app.start(stage);
     return new CAGUI(app);
   }

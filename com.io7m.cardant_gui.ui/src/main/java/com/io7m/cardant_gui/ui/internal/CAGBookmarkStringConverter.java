@@ -16,7 +16,6 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
-import com.io7m.cardant.client.preferences.api.CAPreferenceServerBookmark;
 import javafx.util.StringConverter;
 
 /**
@@ -24,7 +23,7 @@ import javafx.util.StringConverter;
  */
 
 public final class CAGBookmarkStringConverter
-  extends StringConverter<CAPreferenceServerBookmark>
+  extends StringConverter<CAGServerBookmark>
 {
   /**
    * A bookmark string converter.
@@ -37,7 +36,7 @@ public final class CAGBookmarkStringConverter
 
   @Override
   public String toString(
-    final CAPreferenceServerBookmark bookmark)
+    final CAGServerBookmark bookmark)
   {
     if (bookmark == null) {
       return "";
@@ -46,7 +45,7 @@ public final class CAGBookmarkStringConverter
   }
 
   @Override
-  public CAPreferenceServerBookmark fromString(
+  public CAGServerBookmark fromString(
     final String s)
   {
     return null;

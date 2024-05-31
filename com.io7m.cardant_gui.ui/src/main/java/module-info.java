@@ -14,6 +14,13 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import com.io7m.cardant_gui.ui.internal.database.CAGDatabaseQueryProviderType;
+import com.io7m.cardant_gui.ui.internal.database.CAGRecentFileAdd;
+import com.io7m.cardant_gui.ui.internal.database.CAGRecentFileList;
+import com.io7m.cardant_gui.ui.internal.database.CAGServerBookmarkDelete;
+import com.io7m.cardant_gui.ui.internal.database.CAGServerBookmarkList;
+import com.io7m.cardant_gui.ui.internal.database.CAGServerBookmarkPut;
+
 /**
  * Cardant GUI (UI)
  */
@@ -25,10 +32,10 @@ open module com.io7m.cardant_gui.ui
 
   requires com.io7m.cardant.client.api;
   requires com.io7m.cardant.client.basic;
-  requires com.io7m.cardant.client.preferences.api;
-  requires com.io7m.cardant.client.preferences.vanilla;
   requires com.io7m.cardant.parsers;
 
+  requires com.io7m.darco.api;
+  requires com.io7m.darco.sqlite;
   requires com.io7m.jade.api;
   requires com.io7m.jattribute.core;
   requires com.io7m.jmulticlose.core;
@@ -40,12 +47,32 @@ open module com.io7m.cardant_gui.ui
   requires com.io7m.jxtrand.vanilla;
   requires com.io7m.repetoir.core;
   requires com.io7m.seltzer.api;
+  requires com.io7m.trasco.api;
+  requires com.io7m.trasco.vanilla;
+  requires io.opentelemetry.api;
+  requires io.opentelemetry.context;
   requires java.sql;
   requires javafx.controls;
   requires javafx.fxml;
   requires org.apache.tika.core;
+  requires org.jooq;
   requires org.slf4j;
+  requires org.xerial.sqlitejdbc;
+
+  uses CAGDatabaseQueryProviderType;
+
+  provides CAGDatabaseQueryProviderType with
+    CAGRecentFileAdd,
+    CAGRecentFileList,
+    CAGServerBookmarkDelete,
+    CAGServerBookmarkList,
+    CAGServerBookmarkPut
+    ;
 
   exports com.io7m.cardant_gui.ui;
-  exports com.io7m.cardant_gui.ui.internal to com.io7m.cardant_gui.tests;
+
+  exports com.io7m.cardant_gui.ui.internal
+    to com.io7m.cardant_gui.tests;
+  exports com.io7m.cardant_gui.ui.internal.database
+    to com.io7m.cardant_gui.tests;
 }

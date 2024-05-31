@@ -16,7 +16,6 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
-import com.io7m.cardant.client.preferences.api.CAPreferenceServerBookmark;
 import javafx.scene.control.ListCell;
 
 /**
@@ -24,7 +23,7 @@ import javafx.scene.control.ListCell;
  */
 
 public final class CAGBookmarkCell
-  extends ListCell<CAPreferenceServerBookmark>
+  extends ListCell<CAGServerBookmark>
 {
   /**
    * Construct a cell.
@@ -37,7 +36,7 @@ public final class CAGBookmarkCell
 
   @Override
   protected void updateItem(
-    final CAPreferenceServerBookmark item,
+    final CAGServerBookmark item,
     final boolean empty)
   {
     super.updateItem(item, empty);

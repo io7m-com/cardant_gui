@@ -23,8 +23,6 @@ import com.io7m.cardant.client.api.CAClientException;
 import com.io7m.cardant.client.api.CAClientTransferStatistics;
 import com.io7m.cardant.client.api.CAClientType;
 import com.io7m.cardant.client.basic.CAClients;
-import com.io7m.cardant.client.preferences.api.CAPreferenceServerCredentialsType;
-import com.io7m.cardant.client.preferences.api.CAPreferenceServerUsernamePassword;
 import com.io7m.cardant.model.CAFileID;
 import com.io7m.cardant.protocol.inventory.CAICommandType;
 import com.io7m.cardant.protocol.inventory.CAIResponseType;
@@ -144,7 +142,8 @@ public final class CAGClientService
     final String host,
     final int port,
     final boolean https,
-    final CAPreferenceServerCredentialsType credentials)
+    final String username,
+    final String password)
   {
     this.executor.execute(() -> {
       try {
@@ -155,14 +154,8 @@ public final class CAGClientService
       }
 
       try {
-        final IdName username;
-        final String password;
-        switch (credentials) {
-          case final CAPreferenceServerUsernamePassword creds -> {
-            username = new IdName(creds.username());
-            password = creds.password();
-          }
-        }
+        final var connectUsername =
+          new IdName(username);
 
         this.status.set(CONNECTING);
         this.statusService.publish(
@@ -175,7 +168,7 @@ public final class CAGClientService
             host,
             port,
             https,
-            username,
+            connectUsername,
             password,
             Map.of(),
             Duration.ofSeconds(10L),

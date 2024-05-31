@@ -17,7 +17,6 @@
 
 package com.io7m.cardant_gui.main;
 
-import com.io7m.cardant.client.preferences.vanilla.CAPreferencesService;
 import com.io7m.cardant_gui.ui.CAGUI;
 import com.io7m.jade.api.ApplicationDirectories;
 import com.io7m.jade.api.ApplicationDirectoryConfiguration;
@@ -44,13 +43,13 @@ public final class CAGMain
    *
    * @param args The command-line arguments
    *
-   * @throws Exception On errors
    */
 
   public static void main(
     final String[] args)
-    throws Exception
   {
+    System.setProperty("org.jooq.no-logo", "true");
+
     final var directoryConfiguration =
       ApplicationDirectoryConfiguration.builder()
         .setApplicationName("com.io7m.cardant")
@@ -61,15 +60,9 @@ public final class CAGMain
     final var directories =
       ApplicationDirectories.get(directoryConfiguration);
 
-    final var preferences =
-      CAPreferencesService.openOrDefault(
-        directories.configurationDirectory()
-          .resolve("preferences.xml")
-      );
-
     Platform.startup(() -> {
       try {
-        CAGUI.start(directories, preferences);
+        CAGUI.start(directories);
       } catch (final Exception e) {
         LOG.error("startup failed: ", e);
         System.exit(1);

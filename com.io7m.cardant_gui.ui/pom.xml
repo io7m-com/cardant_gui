@@ -79,14 +79,6 @@
     </dependency>
     <dependency>
       <groupId>com.io7m.cardant</groupId>
-      <artifactId>com.io7m.cardant.client.preferences.api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.io7m.cardant</groupId>
-      <artifactId>com.io7m.cardant.client.preferences.vanilla</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.io7m.cardant</groupId>
       <artifactId>com.io7m.cardant.protocol.inventory</artifactId>
     </dependency>
     <dependency>
@@ -126,6 +118,28 @@
     <dependency>
       <groupId>org.joda</groupId>
       <artifactId>joda-money</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jooq</groupId>
+      <artifactId>jooq</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.xerial</groupId>
+      <artifactId>sqlite-jdbc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.io7m.darco</groupId>
+      <artifactId>com.io7m.darco.api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.io7m.darco</groupId>
+      <artifactId>com.io7m.darco.sqlite</artifactId>
     </dependency>
 
     <dependency>
@@ -196,6 +210,105 @@
         </configuration>
       </plugin>
 
+      <!-- Generate SQL file -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+
+        <dependencies>
+          <dependency>
+            <groupId>com.io7m.trasco</groupId>
+            <artifactId>com.io7m.trasco.api</artifactId>
+            <version>${com.io7m.trasco.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>com.io7m.trasco</groupId>
+            <artifactId>com.io7m.trasco.vanilla</artifactId>
+            <version>${com.io7m.trasco.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>com.io7m.trasco</groupId>
+            <artifactId>com.io7m.trasco.xml.schemas</artifactId>
+            <version>${com.io7m.trasco.version}</version>
+          </dependency>
+        </dependencies>
+
+        <executions>
+          <execution>
+            <id>generate-sql</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+              <mainClass>com.io7m.trasco.vanilla.TrSchemaRevisionSetSQLMain</mainClass>
+              <includePluginDependencies>true</includePluginDependencies>
+              <includeProjectDependencies>false</includeProjectDependencies>
+              <arguments>
+                <argument>${project.basedir}/src/main/resources/com/io7m/cardant_gui/ui/internal/database.xml</argument>
+                <argument>${project.build.directory}/database.sql</argument>
+                <argument>ROLES</argument>
+                <argument>GRANTS</argument>
+                <argument>FUNCTIONS</argument>
+                <argument>TRIGGERS</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Generate jooq sources. -->
+      <plugin>
+        <groupId>org.jooq</groupId>
+        <artifactId>jooq-codegen-maven</artifactId>
+        <version>${org.jooq.version}</version>
+        <configuration>
+          <configurationFile>src/main/jooq/configuration.xml</configurationFile>
+        </configuration>
+        <executions>
+          <execution>
+            <id>jooq-codegen</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta-extensions</artifactId>
+            <version>${org.jooq.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-postgres-extensions</artifactId>
+            <version>${org.jooq.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+      <!-- Add jooq sources. -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>add-jooq-sources</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/jooq</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Generate strings. -->
       <plugin>
         <groupId>com.io7m.jxtrand</groupId>
         <artifactId>com.io7m.jxtrand.maven_plugin</artifactId>

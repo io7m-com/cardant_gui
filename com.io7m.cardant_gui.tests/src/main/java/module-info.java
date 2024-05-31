@@ -14,6 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+/**
+ * Cardant GUI (Test suite)
+ */
 
 open module com.io7m.cardant_gui.tests
 {

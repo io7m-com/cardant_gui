@@ -18,6 +18,9 @@
 package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.model.type_package.CATypePackageSummary;
+import com.io7m.cardant_gui.ui.internal.database.CAGDatabaseType;
+import com.io7m.cardant_gui.ui.internal.database.CAGRecentFileAddType;
+import com.io7m.darco.api.DDatabaseException;
 import com.io7m.jwheatsheaf.api.JWFileChooserAction;
 import com.io7m.jwheatsheaf.api.JWFileChooserConfiguration;
 import com.io7m.lanark.core.RDottedName;
@@ -32,6 +35,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -45,6 +49,7 @@ public final class CAGMainTypePackageTableView
   private final CAGControllerType controller;
   private final CAGStringsType strings;
   private final CAGFileChoosersType choosers;
+  private final CAGDatabaseType database;
 
   @FXML private TableView<CATypePackageSummary> typePackageTable;
   @FXML private TableColumn<CATypePackageSummary, RDottedName> typePackageTableName;
@@ -71,6 +76,8 @@ public final class CAGMainTypePackageTableView
       services.requireService(CAGStringsType.class);
     this.choosers =
       services.requireService(CAGFileChoosersType.class);
+    this.database =
+      services.requireService(CAGDatabaseType.class);
   }
 
   @Override
@@ -148,7 +155,20 @@ public final class CAGMainTypePackageTableView
       return;
     }
 
-    this.controller.typePackageInstall(results.get(0));
+    final var file = results.get(0);
+    this.addRecentFile(file);
+    this.controller.typePackageInstall(file);
+  }
+
+  private void addRecentFile(
+    final Path file)
+  {
+    try (var t = this.database.openTransaction()) {
+      t.query(CAGRecentFileAddType.class).execute(file);
+      t.commit();
+    } catch (final DDatabaseException e) {
+      // Nothing can be done.
+    }
   }
 
   @FXML

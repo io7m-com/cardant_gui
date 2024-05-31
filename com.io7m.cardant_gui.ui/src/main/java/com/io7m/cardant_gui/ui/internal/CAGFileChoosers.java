@@ -17,16 +17,24 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
+import com.io7m.cardant_gui.ui.internal.database.CAGDatabaseType;
+import com.io7m.cardant_gui.ui.internal.database.CAGRecentFileListType;
 import com.io7m.jwheatsheaf.api.JWFileChooserConfiguration;
 import com.io7m.jwheatsheaf.api.JWFileChooserFilterType;
 import com.io7m.jwheatsheaf.api.JWFileChooserType;
 import com.io7m.jwheatsheaf.api.JWFileChoosersType;
 import com.io7m.jwheatsheaf.oxygen.JWOxygenIconSet;
 import com.io7m.jwheatsheaf.ui.JWFileChoosers;
+import com.io7m.repetoir.core.RPServiceDirectoryType;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
+
+import static com.io7m.darco.api.DDatabaseUnit.UNIT;
 
 /**
  * The file chooser service.
@@ -38,13 +46,20 @@ public final class CAGFileChoosers implements CAGFileChoosersType
     new JWOxygenIconSet();
 
   private final JWFileChoosersType choosers;
+  private final CAGDatabaseType database;
 
   /**
    * The file chooser service.
+   *
+   * @param services The service directory
    */
 
-  public CAGFileChoosers()
+  public CAGFileChoosers(
+    final RPServiceDirectoryType services)
   {
+    this.database =
+      services.requireService(CAGDatabaseType.class);
+
     this.choosers =
       JWFileChoosers.createWith(
         Executors.newVirtualThreadPerTaskExecutor(),
@@ -56,12 +71,26 @@ public final class CAGFileChoosers implements CAGFileChoosersType
   public JWFileChooserType create(
     final JWFileChooserConfiguration configuration)
   {
-    return this.choosers.create(
+    List<Path> recentFiles;
+    try (var t = this.database.openTransaction()) {
+      recentFiles = t.query(CAGRecentFileListType.class).execute(UNIT);
+    } catch (final Exception e) {
+      recentFiles = List.of();
+    }
+
+    final var builder =
       JWFileChooserConfiguration.builder()
         .from(configuration)
         .setFileImageSet(OXYGEN_ICON_SET)
-        .build()
-    );
+        .setRecentFiles(recentFiles);
+
+    try {
+      builder.setCssStylesheet(CAGCSS.defaultCSS().toURL());
+    } catch (final MalformedURLException e) {
+      throw new IllegalStateException(e);
+    }
+
+    return this.choosers.create(builder.build());
   }
 
   @Override

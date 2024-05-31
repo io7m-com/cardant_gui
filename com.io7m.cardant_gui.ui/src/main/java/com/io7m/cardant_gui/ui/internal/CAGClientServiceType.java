@@ -18,7 +18,6 @@
 package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.client.api.CAClientTransferStatistics;
-import com.io7m.cardant.client.preferences.api.CAPreferenceServerCredentialsType;
 import com.io7m.cardant.model.CAFileID;
 import com.io7m.cardant.protocol.inventory.CAICommandType;
 import com.io7m.cardant.protocol.inventory.CAIResponseType;
@@ -45,17 +44,19 @@ public interface CAGClientServiceType extends RPServiceType
   /**
    * Asynchronously log in.
    *
-   * @param host        The host
-   * @param port        The port
-   * @param https       {@code true} if HTTPS is enabled
-   * @param credentials The credentials
+   * @param host     The host
+   * @param port     The port
+   * @param https    {@code true} if HTTPS is enabled
+   * @param username The username
+   * @param password The password
    */
 
   void login(
     String host,
     int port,
     boolean https,
-    CAPreferenceServerCredentialsType credentials);
+    String username,
+    String password);
 
   /**
    * Execute the given command.

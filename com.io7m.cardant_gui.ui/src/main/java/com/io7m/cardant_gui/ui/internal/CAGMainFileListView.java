@@ -22,6 +22,9 @@ import com.io7m.cardant.model.CAFileType.CAFileWithoutData;
 import com.io7m.cardant_gui.ui.internal.CAGTransferStatusType.Downloading;
 import com.io7m.cardant_gui.ui.internal.CAGTransferStatusType.Idle;
 import com.io7m.cardant_gui.ui.internal.CAGTransferStatusType.Uploading;
+import com.io7m.cardant_gui.ui.internal.database.CAGDatabaseType;
+import com.io7m.cardant_gui.ui.internal.database.CAGRecentFileAddType;
+import com.io7m.darco.api.DDatabaseException;
 import com.io7m.jwheatsheaf.api.JWFileChooserAction;
 import com.io7m.jwheatsheaf.api.JWFileChooserConfiguration;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
@@ -36,6 +39,7 @@ import javafx.scene.control.SelectionMode;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ResourceBundle;
 
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FILES_TRANSFER_DOWNLOADING;
@@ -54,6 +58,7 @@ public final class CAGMainFileListView
   private final CAGControllerType controller;
   private final CAGFileViewDialogs dialogs;
   private final CAGFileChoosersType choosers;
+  private final CAGDatabaseType database;
 
   @FXML private Label resultsLabel;
   @FXML private Button fileDownload;
@@ -82,6 +87,8 @@ public final class CAGMainFileListView
       services.requireService(CAGFileViewDialogs.class);
     this.choosers =
       services.requireService(CAGFileChoosersType.class);
+    this.database =
+      services.requireService(CAGDatabaseType.class);
   }
 
   @Override
@@ -247,8 +254,9 @@ public final class CAGMainFileListView
       return;
     }
 
-    final var file =
-      results.get(0);
+    final var file = results.get(0);
+    this.addRecentFile(file);
+
     final var fileTmp =
       file.resolveSibling(file.getFileName() + ".tmp");
     final var fileValue =
@@ -263,6 +271,17 @@ public final class CAGMainFileListView
       fileValue.hashAlgorithm(),
       fileValue.hashValue()
     );
+  }
+
+  private void addRecentFile(
+    final Path file)
+  {
+    try (var t = this.database.openTransaction()) {
+      t.query(CAGRecentFileAddType.class).execute(file);
+      t.commit();
+    } catch (final DDatabaseException e) {
+      // Nothing can be done.
+    }
   }
 
   @FXML

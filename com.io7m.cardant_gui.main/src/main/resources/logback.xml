@@ -10,6 +10,9 @@
     <target>System.err</target>
   </appender>
 
+  <logger name="org.jooq"
+          level="DEBUG"/>
+
   <root level="DEBUG">
     <appender-ref ref="STDERR"/>
   </root>

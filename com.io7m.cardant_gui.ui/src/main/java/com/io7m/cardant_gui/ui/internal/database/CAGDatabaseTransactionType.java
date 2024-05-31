@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2023 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,34 +14,16 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cardant_gui.ui.internal;
+package com.io7m.cardant_gui.ui.internal.database;
 
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.util.Callback;
+import com.io7m.darco.api.DDatabaseTransactionType;
 
 /**
- * A factory of bookmark cells.
+ * A database transaction.
  */
 
-public final class CAGBookmarkCellFactory
-  implements Callback<
-  ListView<CAGServerBookmark>,
-  ListCell<CAGServerBookmark>>
+public interface CAGDatabaseTransactionType
+  extends DDatabaseTransactionType
 {
-  /**
-   * A factory of bookmark cells.
-   */
 
-  public CAGBookmarkCellFactory()
-  {
-
-  }
-
-  @Override
-  public ListCell<CAGServerBookmark> call(
-    final ListView<CAGServerBookmark> param)
-  {
-    return new CAGBookmarkCell();
-  }
 }

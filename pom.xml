@@ -33,19 +33,24 @@
 
     <!-- io7m dependencies. -->
     <com.io7m.cardant.version>1.0.0-SNAPSHOT</com.io7m.cardant.version>
+    <com.io7m.darco.version>1.0.0-SNAPSHOT</com.io7m.darco.version>
     <com.io7m.idstore.version>2.0.1</com.io7m.idstore.version>
     <com.io7m.jade.version>1.0.3</com.io7m.jade.version>
     <com.io7m.jattribute.version>1.0.0</com.io7m.jattribute.version>
     <com.io7m.jsx.version>3.1.1</com.io7m.jsx.version>
     <com.io7m.jwheatsheaf.version>4.0.0</com.io7m.jwheatsheaf.version>
     <com.io7m.jxtrand.version>2.1.0</com.io7m.jxtrand.version>
-    <com.io7m.xoanon.version>1.0.1</com.io7m.xoanon.version>
+    <com.io7m.trasco.version>1.1.0</com.io7m.trasco.version>
     <com.io7m.verona.version>1.0.1</com.io7m.verona.version>
+    <com.io7m.xoanon.version>1.0.1</com.io7m.xoanon.version>
 
     <!-- Third-party dependencies. -->
-    <org.javafx.version>21.0.3</org.javafx.version>
-    <org.junit.version>5.10.2</org.junit.version>
+    <io.opentelemetry.version>1.38.0</io.opentelemetry.version>
     <org.apache.tika.version>2.9.2</org.apache.tika.version>
+    <org.javafx.version>21.0.3</org.javafx.version>
+    <org.jooq.version>3.19.8</org.jooq.version>
+    <org.junit.version>5.10.2</org.junit.version>
+    <org.xerial.sqlite.version>3.45.3.0</org.xerial.sqlite.version>
   </properties>
 
   <licenses>
@@ -160,6 +165,38 @@
         <groupId>org.joda</groupId>
         <artifactId>joda-money</artifactId>
         <version>1.0.4</version>
+      </dependency>
+
+      <!-- Local database. -->
+      <dependency>
+        <groupId>org.xerial</groupId>
+        <artifactId>sqlite-jdbc</artifactId>
+        <version>${org.xerial.sqlite.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jooq</groupId>
+        <artifactId>jooq</artifactId>
+        <version>${org.jooq.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.trasco</groupId>
+        <artifactId>com.io7m.trasco.api</artifactId>
+        <version>${com.io7m.trasco.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.trasco</groupId>
+        <artifactId>com.io7m.trasco.vanilla</artifactId>
+        <version>${com.io7m.trasco.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.darco</groupId>
+        <artifactId>com.io7m.darco.api</artifactId>
+        <version>${com.io7m.darco.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.darco</groupId>
+        <artifactId>com.io7m.darco.sqlite</artifactId>
+        <version>${com.io7m.darco.version}</version>
       </dependency>
 
       <!-- File selection. -->
@@ -291,6 +328,15 @@
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
         <version>1.5.6</version>
+      </dependency>
+
+      <!-- OpenTelemetry. -->
+      <dependency>
+        <groupId>io.opentelemetry</groupId>
+        <artifactId>opentelemetry-bom</artifactId>
+        <version>${io.opentelemetry.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
       <!-- Test suite. -->

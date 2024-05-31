@@ -17,10 +17,11 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
-import com.io7m.cardant.client.preferences.api.CAPreferenceServerBookmark;
-import com.io7m.cardant.client.preferences.api.CAPreferenceServerUsernamePassword;
-import com.io7m.cardant.client.preferences.api.CAPreferences;
-import com.io7m.cardant.client.preferences.api.CAPreferencesServiceType;
+import com.io7m.cardant_gui.ui.internal.database.CAGDatabaseType;
+import com.io7m.cardant_gui.ui.internal.database.CAGServerBookmarkDeleteType;
+import com.io7m.cardant_gui.ui.internal.database.CAGServerBookmarkListType;
+import com.io7m.cardant_gui.ui.internal.database.CAGServerBookmarkPutType;
+import com.io7m.darco.api.DDatabaseException;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -37,16 +38,17 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_LOGIN_BOOKMARK_CREATEMAIN;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_LOGIN_BOOKMARK_CREATETITLE;
+import static com.io7m.darco.api.DDatabaseUnit.UNIT;
 
 /**
  * The main login controller.
@@ -60,7 +62,7 @@ public final class CAGLoginView
 
   private final Stage stage;
   private final RPServiceDirectoryType mainServices;
-  private final CAPreferencesServiceType preferences;
+  private final CAGDatabaseType database;
   private final CAGStringsType strings;
   private final CAGClientServiceType clientService;
 
@@ -78,14 +80,14 @@ public final class CAGLoginView
   @FXML private Label passFieldBad;
   @FXML private CheckBox httpsBox;
   @FXML private GridPane grid;
-  @FXML private ComboBox<CAPreferenceServerBookmark> bookmarks;
+  @FXML private ComboBox<CAGServerBookmark> bookmarks;
   @FXML private HBox bookmarksContainer;
 
   /**
    * The login dialog controller.
    *
-   * @param inMainServices  The service directory
-   * @param inStage         The host stage
+   * @param inMainServices The service directory
+   * @param inStage        The host stage
    */
 
   CAGLoginView(
@@ -96,8 +98,8 @@ public final class CAGLoginView
       Objects.requireNonNull(inStage, "stage");
     this.mainServices =
       Objects.requireNonNull(inMainServices, "mainServices");
-    this.preferences =
-      this.mainServices.requireService(CAPreferencesServiceType.class);
+    this.database =
+      this.mainServices.requireService(CAGDatabaseType.class);
     this.strings =
       this.mainServices.requireService(CAGStringsType.class);
     this.clientService =
@@ -136,16 +138,13 @@ public final class CAGLoginView
     final var connect =
       this.validate().orElseThrow();
 
-    switch (connect.credentials()) {
-      case final CAPreferenceServerUsernamePassword creds -> {
-        this.clientService.login(
-          connect.host(),
-          connect.port(),
-          connect.isHTTPs(),
-          connect.credentials()
-        );
-      }
-    }
+    this.clientService.login(
+      connect.host(),
+      connect.port(),
+      connect.isHTTPs(),
+      connect.username(),
+      connect.password()
+    );
 
     this.stage.close();
   }
@@ -154,50 +153,34 @@ public final class CAGLoginView
     final String name)
   {
     try {
-      LOG.debug("delete bookmark {}", name);
+      LOG.debug("Delete bookmark {}", name);
 
-      this.preferences.update(oldPreferences -> {
-        final var newBookmarks =
-          new ArrayList<>(oldPreferences.serverBookmarks());
-
-        newBookmarks.removeIf(mark -> Objects.equals(mark.name(), name));
-        return new CAPreferences(
-          oldPreferences.debuggingEnabled(),
-          List.copyOf(newBookmarks),
-          oldPreferences.recentFiles()
-        );
-      });
-    } catch (final IOException e) {
-      LOG.error("unable to save bookmarks: ", e);
+      try (var t = this.database.openTransaction()) {
+        t.query(CAGServerBookmarkDeleteType.class).execute(name);
+        t.commit();
+      }
+    } catch (final Exception e) {
+      LOG.error("Unable to save bookmarks: ", e);
     }
   }
 
   private void bookmarkSaveNow(
-    final String name,
-    final CAPreferenceServerBookmark newBookmark)
+    final CAGServerBookmark newBookmark)
   {
     try {
-      LOG.debug("save bookmark {}", name);
+      LOG.debug("Save bookmark {}", newBookmark.name());
 
-      this.preferences.update(oldPreferences -> {
-        final var newBookmarks =
-          new ArrayList<>(oldPreferences.serverBookmarks());
-
-        newBookmarks.removeIf(mark -> Objects.equals(mark.name(), name));
-        newBookmarks.add(newBookmark);
-        return new CAPreferences(
-          oldPreferences.debuggingEnabled(),
-          List.copyOf(newBookmarks),
-          oldPreferences.recentFiles()
-        );
-      });
-    } catch (final IOException e) {
-      LOG.error("unable to save bookmarks: ", e);
+      try (var t = this.database.openTransaction()) {
+        t.query(CAGServerBookmarkPutType.class).execute(newBookmark);
+        t.commit();
+      }
+    } catch (final Exception e) {
+      LOG.error("Unable to save bookmarks: ", e);
     }
   }
 
   @FXML
-  private Optional<CAPreferenceServerBookmark> validate()
+  private Optional<CAGServerBookmark> validate()
   {
     boolean ok = true;
 
@@ -248,17 +231,15 @@ public final class CAGLoginView
       this.loginButton.setDisable(false);
 
       return Optional.of(
-        new CAPreferenceServerBookmark(
+        new CAGServerBookmark(
           "",
           this.hostField.getCharacters().toString(),
           port,
           this.httpsBox.isSelected(),
           Duration.ofSeconds(10L),
           Duration.ofSeconds(10L),
-          new CAPreferenceServerUsernamePassword(
-            this.userField.getCharacters().toString(),
-            this.passField.getCharacters().toString()
-          )
+          this.userField.getCharacters().toString(),
+          this.passField.getCharacters().toString()
         ));
     }
 
@@ -286,14 +267,23 @@ public final class CAGLoginView
   private void onRequestBookmarkCreate()
   {
     final var dialog = new TextInputDialog();
-    dialog.setTitle(this.strings.format("connect.bookmark.createTitle"));
+    dialog.setTitle(this.strings.format(CARDANT_LOGIN_BOOKMARK_CREATETITLE));
     dialog.setHeaderText(null);
-    dialog.setContentText(this.strings.format("connect.bookmark.createMain"));
+    dialog.setContentText(this.strings.format(CARDANT_LOGIN_BOOKMARK_CREATEMAIN));
 
     final var nameOpt = dialog.showAndWait();
     nameOpt.ifPresent(name -> {
       this.validate().ifPresent(newBookmark -> {
-        this.bookmarkSaveNow(name, newBookmark);
+        this.bookmarkSaveNow(new CAGServerBookmark(
+          name,
+          newBookmark.host(),
+          newBookmark.port(),
+          newBookmark.isHTTPs(),
+          newBookmark.loginTimeout(),
+          newBookmark.commandTimeout(),
+          newBookmark.username(),
+          newBookmark.password()
+        ));
         this.reloadBookmarks();
       });
     });
@@ -339,11 +329,16 @@ public final class CAGLoginView
   {
     final var items = this.bookmarks.getItems();
     items.clear();
-    items.addAll(this.preferences.preferences().serverBookmarks());
+
+    try (var t = this.database.openTransaction()) {
+      items.addAll(t.query(CAGServerBookmarkListType.class).execute(UNIT));
+    } catch (final DDatabaseException e) {
+      LOG.error("Unable to load bookmarks: ", e);
+    }
   }
 
   private void onSelectedBookmark(
-    final CAPreferenceServerBookmark bookmark)
+    final CAGServerBookmark bookmark)
   {
     if (bookmark == null) {
       return;
@@ -352,12 +347,8 @@ public final class CAGLoginView
     this.hostField.setText(bookmark.host());
     this.portField.setText(Integer.toUnsignedString(bookmark.port()));
     this.httpsBox.setSelected(bookmark.isHTTPs());
-
-    if (bookmark.credentials()
-      instanceof final CAPreferenceServerUsernamePassword usernamePassword) {
-      this.userField.setText(usernamePassword.username());
-      this.passField.setText(usernamePassword.password());
-    }
+    this.userField.setText(bookmark.username());
+    this.passField.setText(bookmark.password());
 
     this.validate();
   }
