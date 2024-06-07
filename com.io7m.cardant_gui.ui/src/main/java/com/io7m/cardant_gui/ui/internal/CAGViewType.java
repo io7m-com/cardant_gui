@@ -27,6 +27,7 @@ public sealed interface CAGViewType
   extends Initializable permits CAGFileCreateView,
   CAGItemAttachmentAddView,
   CAGLocationAttachmentAddView,
+  CAGLocationReparentView,
   CAGLoginView,
   CAGMainAuditSearchView,
   CAGMainAuditTableView,

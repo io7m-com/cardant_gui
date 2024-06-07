@@ -93,10 +93,29 @@ public interface CAGControllerLocationsType
    */
 
   ObservableValue<CALocationSummary> locationSelected();
-  
+
   /**
    * Remove the selected location.
    */
 
   void locationRemove();
+
+  /**
+   * Create a location with a name.
+   *
+   * @param name The name
+   */
+
+  void locationCreate(String name);
+
+  /**
+   * Set the parent of {@code location} to {@code newParent}.
+   *
+   * @param location  The location
+   * @param newParent The new parent
+   */
+
+  void locationReparent(
+    CALocationID location,
+    CALocationID newParent);
 }

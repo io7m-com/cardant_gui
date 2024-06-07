@@ -145,6 +145,8 @@ public final class CAGClientService
     final String username,
     final String password)
   {
+    LOG.debug("Login: {}", host);
+
     this.executor.execute(() -> {
       try {
         this.commandSemaphore.acquire();
@@ -183,6 +185,7 @@ public final class CAGClientService
         );
 
       } catch (final Exception e) {
+        LOG.debug("Login: Exception: ", e);
         this.status.set(NOT_CONNECTED);
         this.statusService.publish(ERROR, e.getMessage());
       } finally {
@@ -198,6 +201,7 @@ public final class CAGClientService
     Objects.requireNonNull(command, "command");
 
     final var future = new CompletableFuture<R>();
+    LOG.debug("Execute: {}", command);
 
     this.executor.execute(() -> {
       try {
@@ -218,6 +222,7 @@ public final class CAGClientService
         Thread.currentThread().interrupt();
         future.cancel(true);
       } catch (final Exception e) {
+        LOG.debug("Execute: Exception: ", e);
         this.statusService.publish(ERROR, e.getMessage());
         future.completeExceptionally(e);
       } finally {

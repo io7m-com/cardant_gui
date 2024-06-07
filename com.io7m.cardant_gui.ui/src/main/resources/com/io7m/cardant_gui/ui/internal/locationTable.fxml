@@ -14,6 +14,18 @@
       <HBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0">
          <children>
             <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="locationReparent" layoutX="194.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onLocationReparentSelected" prefHeight="32.0" prefWidth="32.0">
+               <graphic>
+                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/location-reparent-32.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="%cardant.tooltip.locations.reparent" />
+               </tooltip>
+            </Button>
             <Button fx:id="locationAdd" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onLocationAddSelected" prefHeight="32.0" prefWidth="32.0">
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">

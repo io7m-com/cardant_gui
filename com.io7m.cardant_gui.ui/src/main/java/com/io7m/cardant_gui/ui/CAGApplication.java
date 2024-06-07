@@ -27,6 +27,7 @@ import com.io7m.cardant_gui.ui.internal.CAGFileChoosersType;
 import com.io7m.cardant_gui.ui.internal.CAGFileViewDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGItemAttachmentAddDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGLocationAttachmentAddDialogs;
+import com.io7m.cardant_gui.ui.internal.CAGLocationReparentDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGMainAuditSearchView;
 import com.io7m.cardant_gui.ui.internal.CAGMainAuditTableView;
 import com.io7m.cardant_gui.ui.internal.CAGMainFileListView;
@@ -133,6 +134,10 @@ public final class CAGApplication extends Application
     services.register(
       CAGLocationAttachmentAddDialogs.class,
       new CAGLocationAttachmentAddDialogs(services)
+    );
+    services.register(
+      CAGLocationReparentDialogs.class,
+      new CAGLocationReparentDialogs(services)
     );
 
     final var status = new CAGStatusService();

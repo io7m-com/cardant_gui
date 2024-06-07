@@ -24,9 +24,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -34,6 +36,7 @@ import java.util.ResourceBundle;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_CANCEL;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_LOCATIONS_REMOVECONFIRM;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_LOCATIONS_REMOVECONFIRMTITLE;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_LOCATION_CREATETITLE;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_REMOVE;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE;
@@ -49,10 +52,12 @@ public final class CAGMainLocationTableView
   private final CAGControllerType controller;
   private final CAGStringsType strings;
   private final CAGClientServiceType clients;
+  private final CAGLocationReparentDialogs reparentDialogs;
 
   @FXML private TreeView<CALocationSummary> mainLocationTree;
   @FXML private Button locationAdd;
   @FXML private Button locationRemove;
+  @FXML private Button locationReparent;
 
   /**
    * The table of locations.
@@ -71,6 +76,8 @@ public final class CAGMainLocationTableView
       inServices.requireService(CAGStringsType.class);
     this.clients =
       inServices.requireService(CAGClientServiceType.class);
+    this.reparentDialogs =
+      inServices.requireService(CAGLocationReparentDialogs.class);
   }
 
   @Override
@@ -79,6 +86,7 @@ public final class CAGMainLocationTableView
     final ResourceBundle resourceBundle)
   {
     this.locationRemove.setDisable(true);
+    this.locationReparent.setDisable(true);
 
     this.mainLocationTree.setCellFactory(
       new CAGLocationCellFactory(this.strings)
@@ -112,12 +120,14 @@ public final class CAGMainLocationTableView
     final TreeItem<CALocationSummary> newValue)
   {
     this.locationRemove.setDisable(true);
+    this.locationReparent.setDisable(true);
 
     if (newValue == null) {
       this.controller.locationSelectNothing();
       return;
     }
 
+    this.locationReparent.setDisable(false);
     this.locationRemove.setDisable(false);
     this.controller.locationGet(newValue.getValue().id());
   }
@@ -139,7 +149,29 @@ public final class CAGMainLocationTableView
   @FXML
   private void onLocationAddSelected()
   {
+    final var dialog = new TextInputDialog();
+    dialog.setTitle(this.strings.format(CARDANT_LOCATION_CREATETITLE));
+    dialog.setHeaderText(null);
+    dialog.setContentText(this.strings.format(CARDANT_LOCATION_CREATETITLE));
 
+    CAGCSS.setCSS(dialog.getDialogPane());
+
+    final var nameOpt = dialog.showAndWait();
+    if (nameOpt.isPresent()) {
+      this.controller.locationCreate(nameOpt.orElseThrow());
+    }
+  }
+
+  @FXML
+  private void onLocationReparentSelected()
+    throws IOException
+  {
+    this.reparentDialogs.openDialogAndWait(
+      this.mainLocationTree.getSelectionModel()
+        .getSelectedItem()
+        .getValue()
+        .id()
+    );
   }
 
   @FXML

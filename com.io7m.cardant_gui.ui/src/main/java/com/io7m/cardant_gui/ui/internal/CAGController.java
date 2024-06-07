@@ -27,6 +27,7 @@ import com.io7m.cardant.model.CAFileType;
 import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSearchParameters;
 import com.io7m.cardant.model.CAItemSummary;
+import com.io7m.cardant.model.CALocation;
 import com.io7m.cardant.model.CALocationID;
 import com.io7m.cardant.model.CALocationSummary;
 import com.io7m.cardant.model.CAMetadataType;
@@ -40,8 +41,10 @@ import com.io7m.cardant.protocol.inventory.CAICommandItemAttachmentAdd;
 import com.io7m.cardant.protocol.inventory.CAICommandItemGet;
 import com.io7m.cardant.protocol.inventory.CAICommandItemSearchBegin;
 import com.io7m.cardant.protocol.inventory.CAICommandLocationAttachmentAdd;
+import com.io7m.cardant.protocol.inventory.CAICommandLocationDelete;
 import com.io7m.cardant.protocol.inventory.CAICommandLocationGet;
 import com.io7m.cardant.protocol.inventory.CAICommandLocationList;
+import com.io7m.cardant.protocol.inventory.CAICommandLocationPut;
 import com.io7m.cardant.protocol.inventory.CAICommandTypePackageGetText;
 import com.io7m.cardant.protocol.inventory.CAICommandTypePackageInstall;
 import com.io7m.cardant.protocol.inventory.CAICommandTypePackageSearchBegin;
@@ -74,6 +77,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -346,7 +351,9 @@ public final class CAGController implements CAGControllerType
           .newTransformer();
 
       transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+      transformer.setOutputProperty(
+        "{http://xml.apache.org/xslt}indent-amount",
+        "2");
       transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 
       final StreamResult result =
@@ -699,7 +706,10 @@ public final class CAGController implements CAGControllerType
             treeItems.get(parentId);
 
           if (parentItem == null) {
-            LOG.warn("Location {} provided a nonexistent parent {}", location.id(), parentId);
+            LOG.warn(
+              "Location {} provided a nonexistent parent {}",
+              location.id(),
+              parentId);
             continue;
           }
 
@@ -792,6 +802,78 @@ public final class CAGController implements CAGControllerType
       return;
     }
 
-    throw new IllegalStateException("Unimplemented code!");
+    final var future =
+      this.clientService.execute(new CAICommandLocationDelete(location.id()));
+
+    future.thenAccept(response -> {
+      Platform.runLater(() -> {
+        this.locationTreeDelete(this.locationTree.get(), location.id());
+      });
+    });
+  }
+
+  @Override
+  public void locationCreate(
+    final String name)
+  {
+    final var future =
+      this.clientService.execute(new CAICommandLocationPut(
+        new CALocation(
+          CALocationID.random(),
+          Optional.empty(),
+          name,
+          new TreeMap<>(),
+          new TreeMap<>(),
+          new TreeSet<>()
+        )
+      ));
+
+    future.thenAccept(response -> this.locationSearchBegin());
+  }
+
+  @Override
+  public void locationReparent(
+    final CALocationID location,
+    final CALocationID newParent)
+  {
+    final var future0 =
+      this.clientService.execute(new CAICommandLocationGet(location));
+
+    final var future1 =
+      future0.thenCompose(response -> {
+        final var source = response.data();
+        return this.clientService.execute(
+          new CAICommandLocationPut(
+            new CALocation(
+              source.id(),
+              Optional.of(newParent),
+              source.name(),
+              source.metadata(),
+              source.attachments(),
+              source.types()
+            )
+          )
+        );
+      });
+
+    future1.thenAccept(response -> this.locationSearchBegin());
+  }
+
+  private boolean locationTreeDelete(
+    final TreeItem<CALocationSummary> tree,
+    final CALocationID id)
+  {
+    if (Objects.equals(tree.getValue().id(), id)) {
+      tree.getParent()
+        .getChildren()
+        .remove(tree);
+      return true;
+    }
+    for (final var c : tree.getChildren()) {
+      if (this.locationTreeDelete(c, id)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
