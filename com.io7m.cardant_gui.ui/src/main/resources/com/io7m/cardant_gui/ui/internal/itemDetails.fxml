@@ -164,9 +164,9 @@
                         </Button>
                      </children>
                   </HBox>
-                  <TableView fx:id="types" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="types" prefHeight="200.0" prefWidth="200.0" styleClass="metaTable" VBox.vgrow="ALWAYS">
                      <columns>
-                        <TableColumn fx:id="typesColPkg" prefWidth="75.0" text="%cardant.package" />
+                        <TableColumn fx:id="typesColPkg" prefWidth="75.0" style="-fx-size: 32;" text="%cardant.package" />
                         <TableColumn fx:id="typesColType" prefWidth="75.0" text="%cardant.type" />
                      </columns>
                      <columnResizePolicy>

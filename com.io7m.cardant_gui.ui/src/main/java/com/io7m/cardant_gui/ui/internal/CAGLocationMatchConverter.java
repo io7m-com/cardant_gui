@@ -29,8 +29,8 @@ import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMSE
  * A string converter.
  */
 
-public final class CAGItemLocationMatchConverter
-  extends StringConverter<CAGItemLocationMatchKind>
+public final class CAGLocationMatchConverter
+  extends StringConverter<CAGLocationMatchKind>
 {
   private final CAGStringsType strings;
 
@@ -40,7 +40,7 @@ public final class CAGItemLocationMatchConverter
    * @param inStrings The string resources
    */
 
-  public CAGItemLocationMatchConverter(
+  public CAGLocationMatchConverter(
     final CAGStringsType inStrings)
   {
     this.strings = Objects.requireNonNull(inStrings, "strings");
@@ -48,7 +48,7 @@ public final class CAGItemLocationMatchConverter
 
   @Override
   public String toString(
-    final CAGItemLocationMatchKind k)
+    final CAGLocationMatchKind k)
   {
     if (k == null) {
       return "";
@@ -68,7 +68,7 @@ public final class CAGItemLocationMatchConverter
   }
 
   @Override
-  public CAGItemLocationMatchKind fromString(
+  public CAGLocationMatchKind fromString(
     final String string)
   {
     return null;

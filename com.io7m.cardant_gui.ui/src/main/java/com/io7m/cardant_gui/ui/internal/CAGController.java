@@ -31,6 +31,8 @@ import com.io7m.cardant.model.CALocation;
 import com.io7m.cardant.model.CALocationID;
 import com.io7m.cardant.model.CALocationSummary;
 import com.io7m.cardant.model.CAMetadataType;
+import com.io7m.cardant.model.CAStockOccurrenceType;
+import com.io7m.cardant.model.CAStockSearchParameters;
 import com.io7m.cardant.model.CATypeRecordIdentifier;
 import com.io7m.cardant.model.type_package.CATypePackageIdentifier;
 import com.io7m.cardant.model.type_package.CATypePackageSearchParameters;
@@ -45,6 +47,7 @@ import com.io7m.cardant.protocol.inventory.CAICommandLocationDelete;
 import com.io7m.cardant.protocol.inventory.CAICommandLocationGet;
 import com.io7m.cardant.protocol.inventory.CAICommandLocationList;
 import com.io7m.cardant.protocol.inventory.CAICommandLocationPut;
+import com.io7m.cardant.protocol.inventory.CAICommandStockSearchBegin;
 import com.io7m.cardant.protocol.inventory.CAICommandTypePackageGetText;
 import com.io7m.cardant.protocol.inventory.CAICommandTypePackageInstall;
 import com.io7m.cardant.protocol.inventory.CAICommandTypePackageSearchBegin;
@@ -128,6 +131,10 @@ public final class CAGController implements CAGControllerType
   private final ObservableList<CATypeRecordIdentifier> itemSelectedTypes;
   private final SortedList<CATypeRecordIdentifier> itemSelectedTypesSorted;
   private final SimpleObjectProperty<CATypePackageIdentifier> typePackageSelected;
+  private final ObservableList<CAStockOccurrenceType> stockRead;
+  private final SortedList<CAStockOccurrenceType> stockSorted;
+  private final ObservableList<CAStockOccurrenceType> stock;
+  private final SimpleObjectProperty<CAGPageRange> stockPages;
 
   private CAGController(
     final CAGClientServiceType inClientService)
@@ -141,6 +148,16 @@ public final class CAGController implements CAGControllerType
       new SortedList<>(this.items);
     this.itemsRead =
       FXCollections.unmodifiableObservableList(this.items);
+
+    this.stock =
+      FXCollections.observableArrayList();
+    this.stockSorted =
+      new SortedList<>(this.stock);
+    this.stockRead =
+      FXCollections.unmodifiableObservableList(this.stock);
+
+    this.stockPages =
+      new SimpleObjectProperty<>(new CAGPageRange(0L, 0L));
 
     this.itemPages =
       new SimpleObjectProperty<>(new CAGPageRange(0L, 0L));
@@ -779,7 +796,8 @@ public final class CAGController implements CAGControllerType
   public void locationAttachmentAdd(
     final CAICommandLocationAttachmentAdd command)
   {
-
+    this.clientService.execute(command);
+    this.locationGet(command.location());
   }
 
   @Override
@@ -875,5 +893,46 @@ public final class CAGController implements CAGControllerType
       }
     }
     return false;
+  }
+
+  @Override
+  public ObservableList<CAStockOccurrenceType> stockView()
+  {
+    return this.stockRead;
+  }
+
+  @Override
+  public SortedList<CAStockOccurrenceType> stockViewSorted()
+  {
+    return this.stockSorted;
+  }
+
+  @Override
+  public void stockSearchBegin(
+    final CAStockSearchParameters searchParameters)
+  {
+    final var future =
+      this.clientService.execute(
+        new CAICommandStockSearchBegin(searchParameters)
+      );
+
+    future.thenAccept(response -> {
+      Platform.runLater(() -> {
+        final var data =
+          response.data();
+
+        final var newItemPage =
+          new ArrayList<>(data.items());
+
+        LOG.debug("Received {} stock", newItemPage.size());
+        this.stockPages.set(
+          new CAGPageRange(
+            (long) data.pageIndex(),
+            (long) data.pageCount()
+          )
+        );
+        this.stock.setAll(newItemPage);
+      });
+    });
   }
 }

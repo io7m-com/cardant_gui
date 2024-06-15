@@ -32,6 +32,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 
 import static com.io7m.darco.api.DDatabaseUnit.UNIT;
@@ -47,6 +48,7 @@ public final class CAGFileChoosers implements CAGFileChoosersType
 
   private final JWFileChoosersType choosers;
   private final CAGDatabaseType database;
+  private Path mostRecentDirectory;
 
   /**
    * The file chooser service.
@@ -83,6 +85,10 @@ public final class CAGFileChoosers implements CAGFileChoosersType
         .from(configuration)
         .setFileImageSet(OXYGEN_ICON_SET)
         .setRecentFiles(recentFiles);
+
+    if (this.mostRecentDirectory != null) {
+      builder.setInitialDirectory(this.mostRecentDirectory);
+    }
 
     try {
       builder.setCssStylesheet(CAGCSS.defaultCSS().toURL());
@@ -125,5 +131,12 @@ public final class CAGFileChoosers implements CAGFileChoosersType
       "[CAGFileChoosers 0x%08x]",
       Integer.valueOf(this.hashCode())
     );
+  }
+
+  @Override
+  public void setMostRecentDirectory(
+    final Path file)
+  {
+    this.mostRecentDirectory = Objects.requireNonNull(file, "file");
   }
 }

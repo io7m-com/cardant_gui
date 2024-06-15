@@ -30,12 +30,14 @@ import com.io7m.cardant.model.comparisons.CAComparisonFuzzyType.IsSimilarTo;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -64,6 +66,8 @@ public final class CAGMainFileSearchView
   @FXML private TextField fileMediaType;
   @FXML private Spinner<Long> fileSizeLower;
   @FXML private Spinner<Long> fileSizeUpper;
+  @FXML private Accordion accordion;
+  @FXML private TitledPane basicParameters;
 
   /**
    * The main file search view.
@@ -101,6 +105,8 @@ public final class CAGMainFileSearchView
     final URL url,
     final ResourceBundle resourceBundle)
   {
+    this.accordion.setExpandedPane(this.basicParameters);
+
     this.fileDescription.setDisable(true);
 
     this.fileSizeLower.setValueFactory(

@@ -255,6 +255,7 @@ public final class CAGMainFileListView
     }
 
     final var file = results.get(0);
+    this.choosers.setMostRecentDirectory(file);
     this.addRecentFile(file);
 
     final var fileTmp =

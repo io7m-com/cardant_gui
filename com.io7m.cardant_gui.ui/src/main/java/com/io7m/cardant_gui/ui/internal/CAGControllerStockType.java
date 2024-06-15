@@ -17,28 +17,37 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
+import com.io7m.cardant.model.CAStockOccurrenceType;
+import com.io7m.cardant.model.CAStockSearchParameters;
+import com.io7m.repetoir.core.RPServiceType;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
+
 /**
- * An expression that matches against an item location.
+ * Stock methods for the controller.
  */
 
-public enum CAGItemLocationMatchKind
+public interface CAGControllerStockType
+  extends RPServiceType
 {
   /**
-   * The item can be in any location.
+   * @return The stock for the current search query
    */
 
-  ANY,
+  ObservableList<CAStockOccurrenceType> stockView();
 
   /**
-   * The item must be in exactly the given location.
+   * @return The stock for the current search query
    */
 
-  EXACTLY,
+  SortedList<CAStockOccurrenceType> stockViewSorted();
 
   /**
-   * The item may be in the given location or any descendant of the
-   * given location.
+   * Start searching for stock.
+   *
+   * @param searchParameters The search parameters
    */
 
-  DESCENDANTS_OF
+  void stockSearchBegin(
+    CAStockSearchParameters searchParameters);
 }

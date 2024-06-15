@@ -17,23 +17,22 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
-import com.io7m.jwheatsheaf.api.JWFileChoosersType;
-import com.io7m.repetoir.core.RPServiceType;
-
-import java.nio.file.Path;
-
 /**
- * The file chooser service.
+ * The kind of expressions that match against IDs.
  */
 
-public interface CAGFileChoosersType
-  extends RPServiceType, JWFileChoosersType
+public enum CAGItemIDMatchKind
 {
   /**
-   * Set the most recent file.
-   *
-   * @param file The file
+   * Anything.
    */
-
-  void setMostRecentDirectory(Path file);
+  ANY,
+  /**
+   * Equal to.
+   */
+  EQUAL_TO,
+  /**
+   * Not equal to.
+   */
+  NOT_EQUAL_TO,
 }

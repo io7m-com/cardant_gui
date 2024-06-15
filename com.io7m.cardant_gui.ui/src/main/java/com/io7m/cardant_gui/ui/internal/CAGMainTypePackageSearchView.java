@@ -22,8 +22,10 @@ import com.io7m.cardant.model.type_package.CATypePackageSearchParameters;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TitledPane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -40,6 +42,8 @@ public final class CAGMainTypePackageSearchView
 
   @FXML private ChoiceBox<CAGDescriptionMatchKind> descriptionMatch;
   @FXML private TextArea description;
+  @FXML private Accordion accordion;
+  @FXML private TitledPane basicParameters;
 
   /**
    * The main type package search view.
@@ -61,6 +65,8 @@ public final class CAGMainTypePackageSearchView
     final URL url,
     final ResourceBundle resourceBundle)
   {
+    this.accordion.setExpandedPane(this.basicParameters);
+
     this.descriptionMatch.setItems(
       FXCollections.observableArrayList(CAGDescriptionMatchKind.values()));
     this.descriptionMatch.setConverter(

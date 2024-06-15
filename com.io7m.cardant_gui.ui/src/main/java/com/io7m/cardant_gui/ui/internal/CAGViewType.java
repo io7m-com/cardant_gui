@@ -39,6 +39,8 @@ public sealed interface CAGViewType
   CAGMainLocationDetailsView,
   CAGMainLocationSearchView,
   CAGMainLocationTableView,
+  CAGMainStockSearchView,
+  CAGMainStockTableView,
   CAGMainTypePackageDetailsView,
   CAGMainTypePackageSearchView,
   CAGMainTypePackageTableView,

@@ -73,6 +73,58 @@
   -fx-tab-max-height: 32;
 }
 
+.table-column
+{
+
+}
+
+/*
+ * Table cell CSS controls the vertical lines in the table. In practical terms,
+ * only the left border color is useful.
+ */
+
+.table-cell
+{
+  -fx-border-insets:     0 0 0 0;
+  -fx-border-color:      #ffffff00 #aaaaaaff #ffffff00 #ffffff00;
+  -fx-padding:           4px;
+}
+
+.table-cell:even
+{
+  -fx-background-color:  #00000000;
+  -fx-background-insets: 0;
+}
+
+.table-cell:odd
+{
+  -fx-background-color:  #00000010;
+  -fx-background-insets: 0;
+}
+
+.table-cell:selected
+{
+  -fx-background-color:  #aa0000ff;
+}
+
+/*
+ * Table row cell CSS controls the horizontal lines in the table.
+ */
+
+.table-row-cell:even
+{
+  -fx-border-insets:     0 0 0 0;
+  -fx-border-color:      #ffffff00 #ffffff00 #aaaaaaff #ffffff00;
+  -fx-padding:           0px;
+}
+
+.table-row-cell:odd
+{
+  -fx-border-insets:     0 0 0 0;
+  -fx-border-color:      #ffffff00 #ffffff00 #aaaaaaff #ffffff00;
+  -fx-padding:           0px;
+}
+
 .tabButton
 {
   -fx-font-size: 8pt;
@@ -140,4 +192,10 @@
 .metadataTreeItem
 {
 
+}
+
+.stockTableTextField
+{
+  -fx-background-color: transparent;
+  -fx-background-insets: 0px;
 }

@@ -177,6 +177,7 @@ public final class CAGFileCreateView
     }
 
     final var chosen = results.get(0);
+    this.choosers.setMostRecentDirectory(chosen.getParent());
     this.addRecentFile(chosen);
 
     this.file.setText(chosen.toAbsolutePath().toString());

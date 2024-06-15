@@ -32,6 +32,7 @@ public interface CAGControllerType
   extends CAGControllerAuditType,
   CAGControllerFilesType,
   CAGControllerItemsType,
+  CAGControllerStockType,
   CAGControllerLocationsType,
   CAGControllerTypePackagesType
 {

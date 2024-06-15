@@ -19,12 +19,9 @@ package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.model.CAItemColumn;
 import com.io7m.cardant.model.CAItemColumnOrdering;
-import com.io7m.cardant.model.CAItemLocationMatchType;
 import com.io7m.cardant.model.CAItemSearchParameters;
-import com.io7m.cardant.model.CAItemSerial;
 import com.io7m.cardant.model.CAMetadataElementMatchType;
 import com.io7m.cardant.model.CATypeRecordIdentifier;
-import com.io7m.cardant.model.comparisons.CAComparisonExactType;
 import com.io7m.cardant.model.comparisons.CAComparisonFuzzyType;
 import com.io7m.cardant.model.comparisons.CAComparisonSetType;
 import com.io7m.cardant.parsers.CAMetadataMatchExpressions;
@@ -34,6 +31,7 @@ import com.io7m.repetoir.core.RPServiceDirectoryType;
 import com.io7m.seltzer.api.SStructuredErrorType;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -41,6 +39,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,19 +73,16 @@ public final class CAGMainItemSearchView
   private final CAMetadataMatchExpressions expressions;
   private final CAGControllerType controller;
 
-  @FXML private ChoiceBox<CAGItemLocationMatchKind> itemLocationMatch;
-  @FXML private ChoiceBox<CAGItemSerialMatchKind> itemSerialMatch;
   @FXML private ChoiceBox<CAGItemNameMatchKind> itemNameMatch;
   @FXML private ChoiceBox<CAGItemTypeMatchKind> itemTypeMatch;
   @FXML private Button itemTypeAdd;
   @FXML private Button itemTypeRemove;
   @FXML private TextField itemName;
-  @FXML private TextField itemSerial;
-  @FXML private TextField itemLocation;
-  @FXML private Button itemLocationSelect;
   @FXML private TreeView<CAGMetaMatchNodeType> itemMetadataMatch;
   @FXML private TextArea itemMetadataCompiled;
   @FXML private ListView<CATypeRecordIdentifier> itemTypes;
+  @FXML private Accordion accordion;
+  @FXML private TitledPane basicParameters;
 
   private CAGMetaMatchTree metaTree;
 
@@ -109,14 +105,6 @@ public final class CAGMainItemSearchView
 
   private void clearParameters()
   {
-    this.itemLocationMatch.getSelectionModel()
-      .select(CAGItemLocationMatchKind.ANY);
-    this.itemLocation.setText("");
-
-    this.itemSerialMatch.getSelectionModel()
-      .select(CAGItemSerialMatchKind.ANY);
-    this.itemSerial.setText("");
-
     this.itemNameMatch.getSelectionModel()
       .select(CAGItemNameMatchKind.ANY);
     this.itemName.setText("");
@@ -134,12 +122,11 @@ public final class CAGMainItemSearchView
     final URL url,
     final ResourceBundle resourceBundle)
   {
+    this.accordion.setExpandedPane(this.basicParameters);
+
     this.itemTypeRemove.setDisable(true);
     this.itemTypeAdd.setDisable(true);
     this.itemName.setDisable(true);
-    this.itemSerial.setDisable(true);
-    this.itemLocation.setDisable(true);
-    this.itemLocationSelect.setDisable(true);
 
     this.itemTypeMatch.setItems(
       FXCollections.observableArrayList(CAGItemTypeMatchKind.values()));
@@ -165,30 +152,6 @@ public final class CAGMainItemSearchView
         this.onNameMatchChanged(newValue);
       });
 
-    this.itemSerialMatch.setItems(
-      FXCollections.observableArrayList(CAGItemSerialMatchKind.values()));
-    this.itemSerialMatch.setConverter(
-      new CAGItemSerialMatchConverter(this.strings));
-    this.itemSerialMatch.getSelectionModel()
-      .select(CAGItemSerialMatchKind.ANY);
-    this.itemSerialMatch.getSelectionModel()
-      .selectedItemProperty()
-      .addListener((observable, oldValue, newValue) -> {
-        this.onSerialMatchChanged(newValue);
-      });
-
-    this.itemLocationMatch.setItems(
-      FXCollections.observableArrayList(CAGItemLocationMatchKind.values()));
-    this.itemLocationMatch.setConverter(
-      new CAGItemLocationMatchConverter(this.strings));
-    this.itemLocationMatch.getSelectionModel()
-      .select(CAGItemLocationMatchKind.ANY);
-    this.itemLocationMatch.getSelectionModel()
-      .selectedItemProperty()
-      .addListener((observable, oldValue, newValue) -> {
-        this.onLocationMatchChanged(newValue);
-      });
-
     this.metaTree =
       new CAGMetaMatchTree(this.strings, this.itemMetadataMatch);
 
@@ -196,21 +159,6 @@ public final class CAGMainItemSearchView
       (observable, oldValue, newValue) -> {
         this.recompileMetadataMatch();
       });
-  }
-
-  private void onLocationMatchChanged(
-    final CAGItemLocationMatchKind k)
-  {
-    switch (k) {
-      case ANY -> {
-        this.itemLocation.setDisable(true);
-        this.itemLocationSelect.setDisable(true);
-      }
-      case EXACTLY, DESCENDANTS_OF -> {
-        this.itemLocation.setDisable(false);
-        this.itemLocationSelect.setDisable(false);
-      }
-    }
   }
 
   private void onTypeMatchChanged(
@@ -237,19 +185,6 @@ public final class CAGMainItemSearchView
       }
       case EQUAL_TO, NOT_EQUAL_TO, SIMILAR_TO, NOT_SIMILAR_TO -> {
         this.itemName.setDisable(false);
-      }
-    }
-  }
-
-  private void onSerialMatchChanged(
-    final CAGItemSerialMatchKind k)
-  {
-    switch (k) {
-      case ANY -> {
-        this.itemSerial.setDisable(true);
-      }
-      case EQUAL_TO, NOT_EQUAL_TO -> {
-        this.itemSerial.setDisable(false);
       }
     }
   }
@@ -317,11 +252,9 @@ public final class CAGMainItemSearchView
   {
     this.controller.itemSearchBegin(
       new CAItemSearchParameters(
-        this.locationMatch(),
         this.nameMatch(),
         new CAComparisonFuzzyType.Anything<>(),
         this.typeMatch(),
-        this.serialMatch(),
         this.metadataMatch(),
         new CAItemColumnOrdering(CAItemColumn.BY_NAME, true),
         100L
@@ -370,25 +303,6 @@ public final class CAGMainItemSearchView
   private CAMetadataElementMatchType metadataMatch()
   {
     return this.metaTree.compile();
-  }
-
-  private CAComparisonExactType<CAItemSerial> serialMatch()
-  {
-    return switch (this.itemSerialMatch.getValue()) {
-      case ANY -> {
-        yield new CAComparisonExactType.Anything<>();
-      }
-      case EQUAL_TO -> {
-        yield new CAComparisonExactType.IsEqualTo<>(
-          new CAItemSerial(this.itemSerial.getText().trim())
-        );
-      }
-      case NOT_EQUAL_TO -> {
-        yield new CAComparisonExactType.IsNotEqualTo<>(
-          new CAItemSerial(this.itemSerial.getText().trim())
-        );
-      }
-    };
   }
 
   private CAComparisonSetType<CATypeRecordIdentifier> typeMatch()
@@ -442,10 +356,5 @@ public final class CAGMainItemSearchView
         );
       }
     };
-  }
-
-  private CAItemLocationMatchType locationMatch()
-  {
-    return new CAItemLocationMatchType.CAItemLocationsAll();
   }
 }

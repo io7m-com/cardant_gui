@@ -24,10 +24,12 @@ import com.io7m.cardant.model.comparisons.CAComparisonExactType;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.util.StringConverter;
 
 import java.net.URL;
@@ -57,6 +59,8 @@ public final class CAGMainAuditSearchView
   @FXML private ChoiceBox<CAGAuditEventTypeMatchKind> typeMatch;
   @FXML private TextField typeName;
   @FXML private TextField owner;
+  @FXML private Accordion accordion;
+  @FXML private TitledPane basicParameters;
 
   /**
    * The main audit search view.
@@ -78,6 +82,8 @@ public final class CAGMainAuditSearchView
     final URL url,
     final ResourceBundle resourceBundle)
   {
+    this.accordion.setExpandedPane(this.basicParameters);
+
     this.typeMatch.setItems(
       FXCollections.observableArrayList(CAGAuditEventTypeMatchKind.values()));
     this.typeMatch.setConverter(

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.HBox?>
+
+<HBox xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <fx:include source="stockSearch.fxml" />
+    <fx:include source="stockTable.fxml" HBox.hgrow="ALWAYS" />
+  </children>
+</HBox>

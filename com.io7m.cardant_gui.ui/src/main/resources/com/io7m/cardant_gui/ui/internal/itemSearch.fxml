@@ -25,9 +25,9 @@
 
 <VBox prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainItemSearchView">
   <children>
-      <Accordion VBox.vgrow="ALWAYS">
+      <Accordion fx:id="accordion" VBox.vgrow="ALWAYS">
         <panes>
-            <TitledPane animated="false" text="%cardant.searchBasicParameters">
+            <TitledPane fx:id="basicParameters" animated="false" text="%cardant.searchBasicParameters">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -42,29 +42,8 @@
                         <rowConstraints>
                           <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
-                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
                         </rowConstraints>
                         <children>
-                          <Label text="%cardant.itemSearch.location" GridPane.rowIndex="2" />
-                          <ChoiceBox fx:id="itemLocationMatch" layoutX="146.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
-                          <TextField fx:id="itemLocation" layoutX="274.0" layoutY="10.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
-                                 <font>
-                                    <Font name="Monospaced Regular" size="13.0" />
-                                 </font>
-                              </TextField>
-                          <Button fx:id="itemLocationSelect" graphicTextGap="8.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" mnemonicParsing="false" prefHeight="32.0" text="%cardant.itemSearch.location.select" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4">
-                                 <graphic>
-                                    <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons/location-generic-22.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
                           <Label layoutX="10.0" layoutY="50.0" text="%cardant.name" />
                           <ChoiceBox fx:id="itemNameMatch" layoutX="146.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" />
                           <TextField fx:id="itemName" layoutX="274.0" layoutY="10.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
@@ -72,9 +51,6 @@
                                     <Font name="Monospaced Regular" size="13.0" />
                                  </font>
                               </TextField>
-                          <Label layoutX="10.0" layoutY="82.0" text="%cardant.serial" GridPane.rowIndex="5" />
-                          <ChoiceBox fx:id="itemSerialMatch" layoutX="146.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
-                          <TextField fx:id="itemSerial" layoutX="274.0" layoutY="10.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
                         </children>
                       </GridPane>
                      </children>

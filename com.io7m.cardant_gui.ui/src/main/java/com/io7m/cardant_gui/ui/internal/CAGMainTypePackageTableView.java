@@ -156,6 +156,7 @@ public final class CAGMainTypePackageTableView
     }
 
     final var file = results.get(0);
+    this.choosers.setMostRecentDirectory(file);
     this.addRecentFile(file);
     this.controller.typePackageInstall(file);
   }

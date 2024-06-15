@@ -3,10 +3,9 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.Tooltip?>
@@ -21,11 +20,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainAuditSearchView">
+<VBox prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainStockSearchView">
   <children>
       <Accordion fx:id="accordion" VBox.vgrow="ALWAYS">
         <panes>
-            <TitledPane fx:id="basicParameters" animated="false" text="%cardant.searchBasicParameters">
+            <TitledPane fx:id="basicParameters" animated="false" expanded="false" text="%cardant.searchBasicParameters">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -38,33 +37,40 @@
                           <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="128.0" />
                         </columnConstraints>
                         <rowConstraints>
-                              <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
                         </rowConstraints>
                         <children>
-                              <Label text="%cardant.auditSearch.timeRange" GridPane.rowIndex="3" />
-                              <Spinner fx:id="timeLower" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
-                              <Spinner fx:id="timeUpper" editable="true" layoutX="98.0" layoutY="170.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
-                              <DatePicker fx:id="dateLower" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="%cardant.auditSearch.timeRange.lower" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
-                              <DatePicker fx:id="dateUpper" layoutX="98.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="%cardant.auditSearch.timeRange.upper" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
-                              <Label text="%cardant.auditSearch.type" GridPane.rowIndex="1" />
-                              <ChoiceBox fx:id="typeMatch" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
-                              <TextField fx:id="typeName" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" styleClass="dataField" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                          <Label layoutX="10.0" layoutY="50.0" text="%cardant.location" />
+                          <ChoiceBox fx:id="locationMatch" layoutX="146.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" />
+                          <TextField fx:id="locationField" layoutX="274.0" layoutY="10.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
                                  <font>
                                     <Font name="Monospaced Regular" size="13.0" />
                                  </font>
                               </TextField>
-                              <Label layoutX="57.0" layoutY="50.0" text="%cardant.auditSearch.owner" />
-                              <TextField fx:id="owner" layoutX="98.0" layoutY="74.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" styleClass="dataField" GridPane.columnIndex="2" GridPane.columnSpan="2147483647">
+                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onLocationSelectSelected" text="%cardant.stockSearch.location.select" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                                 <graphic>
+                                    <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icons/location-16.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Label layoutX="33.0" layoutY="18.0" text="%cardant.item_id" GridPane.rowIndex="3" />
+                              <ChoiceBox fx:id="idMatch" layoutX="98.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
+                              <TextField fx:id="idField" layoutX="98.0" layoutY="42.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                  <font>
                                     <Font name="Monospaced Regular" size="13.0" />
                                  </font>
                               </TextField>
+                              <CheckBox fx:id="includeSerial" mnemonicParsing="false" selected="true" text="%cardant.stockSearch.includeSerial" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
+                              <CheckBox fx:id="includeSets" mnemonicParsing="false" selected="true" text="%cardant.stockSearch.includeSets" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                         </children>
                       </GridPane>
                      </children>
@@ -81,7 +87,7 @@
                </tooltip>
             </Button>
             <Region minWidth="-Infinity" prefWidth="128.0" HBox.hgrow="ALWAYS" />
-            <Button maxHeight="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSearchSelected" prefWidth="128.0" text="%cardant.itemSearch.search">
+            <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#onSearchSelected" prefHeight="32.0" prefWidth="128.0" text="%cardant.itemSearch.search">
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -90,7 +96,7 @@
                   </ImageView>
                </graphic>
                <tooltip>
-                  <Tooltip text="%cardant.tooltip.files.search" />
+                  <Tooltip text="%cardant.tooltip.search" />
                </tooltip></Button>
          </children>
          <VBox.margin>

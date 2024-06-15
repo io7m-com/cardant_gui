@@ -19,7 +19,7 @@
           <TableColumn fx:id="auditTableID" editable="false" maxWidth="64.0" minWidth="64.0" prefWidth="64.0" resizable="false" style="-fx-size: 32;" text="%cardant.auditSearch.id" />
           <TableColumn fx:id="auditTableTime" editable="false" maxWidth="192.0" prefWidth="192.0" resizable="false" text="%cardant.auditSearch.time" />
             <TableColumn fx:id="auditTableOwner" editable="false" maxWidth="256.0" minWidth="256.0" prefWidth="256.0" resizable="false" text="%cardant.auditSearch.owner" />
-            <TableColumn fx:id="auditTableType" editable="false" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" resizable="false" text="%cardant.auditSearch.type" />
+            <TableColumn fx:id="auditTableType" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="176.0" resizable="false" text="%cardant.auditSearch.type" />
             <TableColumn fx:id="auditTableData" editable="false" prefWidth="296.0" text="%cardant.auditSearch.data" />
         </columns>
          <columnResizePolicy>

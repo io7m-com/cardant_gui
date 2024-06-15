@@ -21,9 +21,9 @@
 
 <VBox prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainTypePackageSearchView">
   <children>
-      <Accordion VBox.vgrow="ALWAYS">
+      <Accordion fx:id="accordion" VBox.vgrow="ALWAYS">
         <panes>
-            <TitledPane animated="false" text="%cardant.searchBasicParameters">
+            <TitledPane fx:id="basicParameters" animated="false" text="%cardant.searchBasicParameters">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
