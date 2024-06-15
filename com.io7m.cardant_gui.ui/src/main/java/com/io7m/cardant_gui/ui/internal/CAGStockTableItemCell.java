@@ -44,14 +44,17 @@ public final class CAGStockTableItemCell
   private final MenuItem menuItemSelectAll;
   private final MenuItem menuItemOpen;
   private final ContextMenu customMenu;
+  private CAItemID itemNow;
 
   /**
    * A cell displaying a stock item.
    *
+   * @param controller The controller
    * @param strings The string resources
    */
 
   public CAGStockTableItemCell(
+    final CAGControllerType controller,
     final CAGStringsType strings)
   {
     this.menuItemCopy =
@@ -67,7 +70,8 @@ public final class CAGStockTableItemCell
     this.menuItemCopy.setOnAction(event -> this.textField.copy());
     this.menuItemSelectAll.setOnAction(event -> this.textField.selectAll());
     this.menuItemOpen.setOnAction(event -> {
-
+      controller.itemGet(this.itemNow);
+      controller.tabSelect(CAGTabKind.TAB_ITEMS);
     });
 
     this.customMenu =
@@ -94,6 +98,7 @@ public final class CAGStockTableItemCell
       return;
     }
 
+    this.itemNow = item;
     this.setText(null);
     this.setPadding(Insets.EMPTY);
 

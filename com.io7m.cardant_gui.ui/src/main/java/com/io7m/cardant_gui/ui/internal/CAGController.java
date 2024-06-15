@@ -83,6 +83,8 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
 import java.util.stream.Collectors;
 
 import static com.io7m.cardant_gui.ui.internal.CAGTransferStatusType.Idle.IDLE;
@@ -135,12 +137,16 @@ public final class CAGController implements CAGControllerType
   private final SortedList<CAStockOccurrenceType> stockSorted;
   private final ObservableList<CAStockOccurrenceType> stock;
   private final SimpleObjectProperty<CAGPageRange> stockPages;
+  private final SubmissionPublisher<CAGTabKind> tabSelection;
 
   private CAGController(
     final CAGClientServiceType inClientService)
   {
     this.clientService =
       Objects.requireNonNull(inClientService, "clientService");
+
+    this.tabSelection =
+      new SubmissionPublisher<>();
 
     this.items =
       FXCollections.observableArrayList();
@@ -934,5 +940,20 @@ public final class CAGController implements CAGControllerType
         this.stock.setAll(newItemPage);
       });
     });
+  }
+
+  @Override
+  public Flow.Publisher<CAGTabKind> tabSelectionRequested()
+  {
+    return this.tabSelection;
+  }
+
+  @Override
+  public void tabSelect(
+    final CAGTabKind tabKind)
+  {
+    this.tabSelection.submit(
+      Objects.requireNonNull(tabKind, "tabKind")
+    );
   }
 }

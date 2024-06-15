@@ -22,10 +22,11 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -47,11 +48,18 @@ public final class CAGMainView
   private final CAGClientServiceType clients;
   private final CAGStatusService status;
   private final CAGStringsType strings;
+  private final CAGControllerType controller;
 
-  @FXML private Parent mainTabs;
+  @FXML private TabPane mainTabs;
   @FXML private ProgressBar mainProgress;
   @FXML private Label mainStatusText;
   @FXML private Node mainError;
+  @FXML private Tab tabItems;
+  @FXML private Tab tabLocations;
+  @FXML private Tab tabStock;
+  @FXML private Tab tabFiles;
+  @FXML private Tab tabTypePackages;
+  @FXML private Tab tabAudit;
 
   /**
    * The main view controller.
@@ -64,6 +72,8 @@ public final class CAGMainView
   {
     this.services =
       Objects.requireNonNull(inServices, "services");
+    this.controller =
+      this.services.requireService(CAGControllerType.class);
     this.clients =
       this.services.requireService(CAGClientServiceType.class);
     this.status =
@@ -92,6 +102,38 @@ public final class CAGMainView
     this.status.publish(new CAGStatusEvent(
       IDLE, this.strings.format(CAGStringConstants.CARDANT_UI_BOOT)
     ));
+
+    this.controller.tabSelectionRequested()
+      .subscribe(new CAGPerpetualSubscriber<>(kind -> {
+        Platform.runLater(() -> {
+          switch (kind) {
+            case TAB_ITEMS -> {
+              this.mainTabs.getSelectionModel()
+                .select(this.tabItems);
+            }
+            case TAB_LOCATIONS -> {
+              this.mainTabs.getSelectionModel()
+                .select(this.tabLocations);
+            }
+            case TAB_STOCK -> {
+              this.mainTabs.getSelectionModel()
+                .select(this.tabStock);
+            }
+            case TAB_FILES -> {
+              this.mainTabs.getSelectionModel()
+                .select(this.tabFiles);
+            }
+            case TAB_TYPE_PACKAGES -> {
+              this.mainTabs.getSelectionModel()
+                .select(this.tabTypePackages);
+            }
+            case TAB_AUDIT -> {
+              this.mainTabs.getSelectionModel()
+                .select(this.tabAudit);
+            }
+          }
+        });
+      }));
   }
 
   private void onStatusEvent(

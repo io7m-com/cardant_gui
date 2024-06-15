@@ -46,14 +46,17 @@ public final class CAGStockTableLocationCell
   private final ContextMenu customMenu;
   private final MenuItem menuItemLocOpen;
   private final MenuItem menuItemSelectAll;
+  private CALocationSummary locationNow;
 
   /**
    * A cell displaying a location.
    *
-   * @param strings The string resources
+   * @param controller The controller
+   * @param strings    The string resources
    */
 
   public CAGStockTableLocationCell(
+    final CAGControllerType controller,
     final CAGStringsType strings)
   {
     this.textField.setTooltip(this.tooltip);
@@ -71,7 +74,8 @@ public final class CAGStockTableLocationCell
     this.menuItemCopy.setOnAction(event -> this.textField.copy());
     this.menuItemSelectAll.setOnAction(event -> this.textField.selectAll());
     this.menuItemLocOpen.setOnAction(event -> {
-
+      controller.locationGet(this.locationNow.id());
+      controller.tabSelect(CAGTabKind.TAB_LOCATIONS);
     });
 
     this.customMenu =
@@ -98,6 +102,7 @@ public final class CAGStockTableLocationCell
       return;
     }
 
+    this.locationNow = item;
     this.setText(null);
     this.setPadding(Insets.EMPTY);
 

@@ -86,7 +86,7 @@ public final class CAGMainStockTableView
       return new ReadOnlyObjectWrapper<>(param.getValue().location());
     });
     this.colLocation.setCellFactory(param -> {
-      return new CAGStockTableLocationCell(this.strings);
+      return new CAGStockTableLocationCell(this.controller, this.strings);
     });
 
     this.colItem.setReorderable(false);
@@ -94,7 +94,7 @@ public final class CAGMainStockTableView
       return new ReadOnlyObjectWrapper<>(param.getValue().item().id());
     });
     this.colItem.setCellFactory(param -> {
-      return new CAGStockTableItemCell(this.strings);
+      return new CAGStockTableItemCell(this.controller, this.strings);
     });
 
     this.colName.setReorderable(false);

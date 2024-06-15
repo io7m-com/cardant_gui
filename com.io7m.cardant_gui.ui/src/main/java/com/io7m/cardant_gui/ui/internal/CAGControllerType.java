@@ -34,7 +34,8 @@ public interface CAGControllerType
   CAGControllerItemsType,
   CAGControllerStockType,
   CAGControllerLocationsType,
-  CAGControllerTypePackagesType
+  CAGControllerTypePackagesType,
+  CAGControllerViewType
 {
   /**
    * @return The current transfer status

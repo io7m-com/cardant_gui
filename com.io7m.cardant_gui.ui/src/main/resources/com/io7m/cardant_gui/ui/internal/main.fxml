@@ -38,7 +38,7 @@
     </MenuBar>
     <TabPane fx:id="mainTabs" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
       <tabs>
-        <Tab text="%cardant.items">
+        <Tab fx:id="tabItems" text="%cardant.items">
           <content>
             <fx:include source="mainItems.fxml" />
           </content>
@@ -50,7 +50,7 @@
                   </ImageView>
                </graphic>
         </Tab>
-        <Tab text="%cardant.locations">
+        <Tab fx:id="tabLocations" text="%cardant.locations">
           <content>
             <fx:include source="mainLocations.fxml" />
           </content>
@@ -62,7 +62,7 @@
                   </ImageView>
                </graphic>
         </Tab>
-        <Tab text="%cardant.stock">
+        <Tab fx:id="tabStock" text="%cardant.stock">
           <content>
             <fx:include source="mainStock.fxml" />
           </content>
@@ -74,7 +74,7 @@
             </ImageView>
           </graphic>
         </Tab>
-        <Tab text="%cardant.files">
+        <Tab fx:id="tabFiles" text="%cardant.files">
           <content>
             <fx:include source="mainFiles.fxml" />
           </content>
@@ -86,7 +86,7 @@
                   </ImageView>
                </graphic>
         </Tab>
-        <Tab text="%cardant.typePackages">
+        <Tab fx:id="tabTypePackages" text="%cardant.typePackages">
           <content>
             <fx:include source="mainTypePackages.fxml" />
           </content>
@@ -98,7 +98,7 @@
                   </ImageView>
                </graphic>
         </Tab>
-        <Tab text="%cardant.audit">
+        <Tab fx:id="tabAudit" text="%cardant.audit">
           <content>
             <fx:include source="mainAudit.fxml" />
           </content>
