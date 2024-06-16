@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="640.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGItemSelectView">
+   <children>
+      <HBox prefHeight="400.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+         <children>
+            <fx:include fx:id="itemSearch" source="itemSearch.fxml" HBox.hgrow="NEVER" />
+            <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" HBox.hgrow="ALWAYS">
+               <items>
+                  <fx:include fx:id="itemTable" source="itemTable.fxml" />
+                  <fx:include fx:id="itemDetails" source="itemDetails.fxml" />
+               </items>
+            </SplitPane>
+         </children>
+      </HBox>
+      <HBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets top="8.0" />
+         </VBox.margin>
+         <children>
+            <Button cancelButton="true" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#onCancelSelected" prefWidth="128.0" text="%cardant.cancel" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="select" defaultButton="true" disable="true" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#onSelectSelected" prefWidth="128.0" text="%cardant.select" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+   </padding>
+</VBox>

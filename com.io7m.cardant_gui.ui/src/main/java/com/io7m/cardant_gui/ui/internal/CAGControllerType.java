@@ -17,54 +17,13 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
-import com.io7m.cardant.model.CAFileID;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.image.Image;
-
-import java.nio.file.Path;
-import java.util.concurrent.CompletableFuture;
-
 /**
  * The main controller interface.
  */
 
 public interface CAGControllerType
   extends CAGControllerAuditType,
-  CAGControllerFilesType,
-  CAGControllerItemsType,
-  CAGControllerStockType,
-  CAGControllerLocationsType,
-  CAGControllerTypePackagesType,
-  CAGControllerViewType
+  CAGControllerTypePackagesType
 {
-  /**
-   * @return The current transfer status
-   */
 
-  ObservableValue<CAGTransferStatusType> transferStatus();
-
-  /**
-   * Get an image.
-   *
-   * @param fileID        The file ID
-   * @param file          The output file
-   * @param fileTmp       The output temporary file
-   * @param size          The expected size
-   * @param hashAlgorithm The hash algorithm
-   * @param hashValue     The expected hash value
-   * @param width         The requested width
-   * @param height        The requested height
-   *
-   * @return The operation in progress
-   */
-
-  CompletableFuture<Image> imageGet(
-    CAFileID fileID,
-    Path file,
-    Path fileTmp,
-    long size,
-    String hashAlgorithm,
-    String hashValue,
-    int width,
-    int height);
 }

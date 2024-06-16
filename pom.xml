@@ -42,7 +42,7 @@
     <com.io7m.jxtrand.version>2.1.0</com.io7m.jxtrand.version>
     <com.io7m.trasco.version>1.1.0</com.io7m.trasco.version>
     <com.io7m.verona.version>1.0.1</com.io7m.verona.version>
-    <com.io7m.xoanon.version>1.0.1</com.io7m.xoanon.version>
+    <com.io7m.xoanon.version>2.0.0</com.io7m.xoanon.version>
 
     <!-- Third-party dependencies. -->
     <io.opentelemetry.version>1.39.0</io.opentelemetry.version>
@@ -120,6 +120,11 @@
         <version>1.1.2</version>
       </dependency>
 
+      <dependency>
+        <groupId>com.io7m.jaffirm</groupId>
+        <artifactId>com.io7m.jaffirm.core</artifactId>
+        <version>4.0.1</version>
+      </dependency>
       <dependency>
         <groupId>com.io7m.jmulticlose</groupId>
         <artifactId>com.io7m.jmulticlose.core</artifactId>

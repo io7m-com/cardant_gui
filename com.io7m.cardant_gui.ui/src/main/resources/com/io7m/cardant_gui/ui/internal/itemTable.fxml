@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="500.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainItemTableView">
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="500.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGItemTableView">
   <children>
       <HBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0">
          <children>
@@ -45,9 +45,8 @@
       </HBox>
     <TableView fx:id="mainItemTable" styleClass="itemTable" VBox.vgrow="ALWAYS">
       <columns>
-        <TableColumn maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="288.0" resizable="false"
-                     style="-fx-size: 32;" text="%cardant.id" />
-        <TableColumn prefWidth="75.0" text="%cardant.itemSearch.itemName" />
+        <TableColumn fx:id="colId" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="288.0" resizable="false" style="-fx-size: 32;" text="%cardant.id" />
+        <TableColumn fx:id="colName" prefWidth="75.0" text="%cardant.itemSearch.itemName" />
       </columns>
       <columnResizePolicy>
         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

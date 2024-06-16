@@ -55,12 +55,12 @@ public final class CAGFileCreateView
 {
   private static final Tika TIKA = new Tika();
 
-  private final CAGControllerType controller;
   private final CAGFileChoosersType choosers;
   private final Stage stage;
   private final ExecutorService executor;
   private final SimpleObjectProperty<FileDetails> fileDetails;
   private final CAGDatabaseType database;
+  private final CAGFileTransferControllerType transfers;
 
   @FXML private TextField file;
   @FXML private TextField description;
@@ -81,12 +81,12 @@ public final class CAGFileCreateView
     final RPServiceDirectoryType services,
     final Stage inStage)
   {
-    this.controller =
-      services.requireService(CAGControllerType.class);
     this.choosers =
       services.requireService(CAGFileChoosersType.class);
     this.database =
       services.requireService(CAGDatabaseType.class);
+    this.transfers =
+      services.requireService(CAGFileTransferControllerType.class);
 
     this.stage =
       Objects.requireNonNull(inStage, "stage");
@@ -148,7 +148,7 @@ public final class CAGFileCreateView
   {
     final var details = this.fileDetails.get();
 
-    this.controller.fileUpload(
+    this.transfers.fileUpload(
       new CAFileID(UUID.randomUUID()),
       details.file,
       details.mediaType,

@@ -39,7 +39,7 @@ public final class CAGLocationReparentView
 {
   private final Stage stage;
   private final CAGStringsType strings;
-  private final CAGControllerType controller;
+  private final CAGLocationTreeControllerType controller;
   private final CALocationID locationID;
 
   @FXML private TreeView<CALocationSummary> locationTree;
@@ -52,21 +52,23 @@ public final class CAGLocationReparentView
    * @param inStage      The stage
    * @param services     The services
    * @param inLocationID The child location
+   * @param inController The tree controller
    */
 
   public CAGLocationReparentView(
     final Stage inStage,
     final RPServiceDirectoryType services,
-    final CALocationID inLocationID)
+    final CALocationID inLocationID,
+    final CAGLocationTreeControllerType inController)
   {
     this.stage =
       Objects.requireNonNull(inStage, "stage");
     this.strings =
       services.requireService(CAGStringsType.class);
-    this.controller =
-      services.requireService(CAGControllerType.class);
     this.locationID =
       Objects.requireNonNull(inLocationID, "locationID");
+    this.controller =
+      Objects.requireNonNull(inController, "controller");
   }
 
   @Override

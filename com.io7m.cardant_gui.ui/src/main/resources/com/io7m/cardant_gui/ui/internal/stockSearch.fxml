@@ -20,7 +20,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainStockSearchView">
+<VBox prefHeight="500.0" prefWidth="300.0" styleClass="borderPane" xmlns="http://javafx.com/javafx/21.0.1"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGStockSearchView">
   <children>
       <Accordion fx:id="accordion" VBox.vgrow="ALWAYS">
         <panes>
@@ -44,6 +45,7 @@
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
                         </rowConstraints>
                         <children>
                           <Label layoutX="10.0" layoutY="50.0" text="%cardant.location" />
@@ -53,7 +55,7 @@
                                     <Font name="Monospaced Regular" size="13.0" />
                                  </font>
                               </TextField>
-                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onLocationSelectSelected" text="%cardant.stockSearch.location.select" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                              <Button fx:id="locationSelect" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onLocationSelectSelected" text="%cardant.select" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                                  <graphic>
                                     <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -61,16 +63,31 @@
                                        </image>
                                     </ImageView>
                                  </graphic>
+                                 <tooltip>
+                                    <Tooltip text="%cardant.tooltip.locations.select" />
+                                 </tooltip>
                               </Button>
                               <Label layoutX="33.0" layoutY="18.0" text="%cardant.item_id" GridPane.rowIndex="3" />
-                              <ChoiceBox fx:id="idMatch" layoutX="98.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
-                              <TextField fx:id="idField" layoutX="98.0" layoutY="42.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                              <ChoiceBox fx:id="itemMatch" layoutX="98.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
+                              <TextField fx:id="itemField" layoutX="98.0" layoutY="42.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                  <font>
                                     <Font name="Monospaced Regular" size="13.0" />
                                  </font>
                               </TextField>
-                              <CheckBox fx:id="includeSerial" mnemonicParsing="false" selected="true" text="%cardant.stockSearch.includeSerial" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
-                              <CheckBox fx:id="includeSets" mnemonicParsing="false" selected="true" text="%cardant.stockSearch.includeSets" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                              <Button fx:id="itemSelect" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onItemSelectSelected" text="%cardant.select" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                 <graphic>
+                                    <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icons/item-16.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <tooltip>
+                                    <Tooltip text="%cardant.tooltip.items.select" />
+                                 </tooltip>
+                              </Button>
+                              <CheckBox fx:id="includeSerial" mnemonicParsing="false" selected="true" text="%cardant.stockSearch.includeSerial" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
+                              <CheckBox fx:id="includeSets" mnemonicParsing="false" selected="true" text="%cardant.stockSearch.includeSets" GridPane.columnIndex="2" GridPane.rowIndex="7" />
                         </children>
                       </GridPane>
                      </children>
@@ -86,12 +103,12 @@
                   <Tooltip text="%cardant.tooltip.searchClear" />
                </tooltip>
             </Button>
-            <Region minWidth="-Infinity" prefWidth="128.0" HBox.hgrow="ALWAYS" />
+            <Region HBox.hgrow="ALWAYS" />
             <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#onSearchSelected" prefHeight="32.0" prefWidth="128.0" text="%cardant.itemSearch.search">
                <graphic>
-                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icons/search-32.png" />
+                        <Image url="@icons/search-16.png" />
                      </image>
                   </ImageView>
                </graphic>

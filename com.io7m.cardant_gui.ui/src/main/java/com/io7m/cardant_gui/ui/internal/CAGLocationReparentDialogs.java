@@ -18,19 +18,45 @@
 package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.model.CALocationID;
+import com.io7m.cardant_gui.ui.internal.CAGLocationReparentDialogs.Arguments;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.util.Map;
 import java.util.Objects;
+
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_LOCATIONREPARENT_TITLE;
 
 /**
  * A location reparent dialog.
  */
 
 public final class CAGLocationReparentDialogs
-  extends CAGDialogFactoryAbstract<CALocationID, CAGLocationReparentView>
+  extends CAGDialogFactoryAbstract<Arguments, CAGLocationReparentView>
 {
+  /**
+   * The arguments.
+   *
+   * @param controller The location tree controller
+   * @param locationID The location ID
+   */
+
+  public record Arguments(
+    CAGLocationTreeControllerType controller,
+    CALocationID locationID)
+  {
+    /**
+     * The arguments.
+     */
+
+    public Arguments
+    {
+      Objects.requireNonNull(controller, "controller");
+      Objects.requireNonNull(locationID, "locationID");
+    }
+  }
+
   /**
    * A location reparent dialog.
    *
@@ -50,19 +76,33 @@ public final class CAGLocationReparentDialogs
 
   @Override
   protected String createStageTitle(
-    final CALocationID arguments)
+    final Arguments arguments)
   {
     Objects.requireNonNull(arguments, "arguments");
-    return this.strings().format(CAGStringConstants.CARDANT_LOCATIONREPARENT_TITLE);
+
+    return this.strings().format(CARDANT_LOCATIONREPARENT_TITLE);
   }
 
   @Override
-  protected CAGLocationReparentView createController(
-    final CALocationID arguments,
+  protected CAGControllerFactoryType<CAGViewType> controllerFactory(
+    final Arguments arguments,
     final Stage stage)
   {
     Objects.requireNonNull(arguments, "arguments");
-    return new CAGLocationReparentView(stage, this.services(), arguments);
+    Objects.requireNonNull(stage, "stage");
+
+    return CAGControllerFactoryMapped.create(
+      Map.entry(
+        CAGLocationReparentView.class,
+        () -> {
+          return new CAGLocationReparentView(
+            stage,
+            this.services(),
+            arguments.locationID,
+            arguments.controller
+          );
+        })
+    );
   }
 
   @Override

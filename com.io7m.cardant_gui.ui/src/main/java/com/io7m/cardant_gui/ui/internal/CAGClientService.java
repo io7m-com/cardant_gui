@@ -25,6 +25,8 @@ import com.io7m.cardant.client.api.CAClientType;
 import com.io7m.cardant.client.basic.CAClients;
 import com.io7m.cardant.model.CAFileID;
 import com.io7m.cardant.protocol.inventory.CAICommandType;
+import com.io7m.cardant.protocol.inventory.CAIResponseItemGet;
+import com.io7m.cardant.protocol.inventory.CAIResponseLocationGet;
 import com.io7m.cardant.protocol.inventory.CAIResponseType;
 import com.io7m.idstore.model.IdName;
 import com.io7m.jattribute.core.AttributeReadableType;
@@ -71,6 +73,7 @@ public final class CAGClientService
   private final Semaphore commandSemaphore;
   private final CAClientType client;
   private final CAGStatusService statusService;
+  private final CAGEventServiceType events;
   private final CAGStringsType strings;
   private final Semaphore transferSemaphore;
   private final Semaphore imageSemaphore;
@@ -79,16 +82,20 @@ public final class CAGClientService
    * The cardant client service.
    *
    * @param inStatusService The status service
+   * @param inEvents        The event service
    * @param inStrings       The strings
    */
 
   public CAGClientService(
     final CAGStatusService inStatusService,
+    final CAGEventServiceType inEvents,
     final CAGStringsType inStrings)
     throws CAClientException
   {
     this.statusService =
       Objects.requireNonNull(inStatusService, "statusService");
+    this.events =
+      Objects.requireNonNull(inEvents, "inEvents");
     this.strings =
       Objects.requireNonNull(inStrings, "inStrings");
 
@@ -146,6 +153,10 @@ public final class CAGClientService
     final String password)
   {
     LOG.debug("Login: {}", host);
+
+    Objects.requireNonNull(host, "host");
+    Objects.requireNonNull(username, "username");
+    Objects.requireNonNull(password, "password");
 
     this.executor.execute(() -> {
       try {
@@ -214,9 +225,23 @@ public final class CAGClientService
 
       try {
         this.statusService.publish(RUNNING, "Executing command…");
-        future.complete(
-          this.client.sendAndWaitOrThrow(command, Duration.ofSeconds(30L))
-        );
+
+        final var response =
+          this.client.sendAndWaitOrThrow(command, Duration.ofSeconds(30L));
+
+        switch (response) {
+          case final CAIResponseItemGet r -> {
+            this.events.publish(new CAGEventItemUpdated(r.data()));
+          }
+          case final CAIResponseLocationGet r -> {
+            this.events.publish(new CAGEventLocationUpdated(r.data()));
+          }
+          default -> {
+            // Nothing specific!
+          }
+        }
+
+        future.complete(response);
         this.statusService.publish(IDLE, "Executed command.");
       } catch (final InterruptedException e) {
         Thread.currentThread().interrupt();

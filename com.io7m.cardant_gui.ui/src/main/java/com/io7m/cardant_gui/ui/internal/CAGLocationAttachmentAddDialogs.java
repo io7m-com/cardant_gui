@@ -21,12 +21,17 @@ import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.util.Map;
+import java.util.Objects;
+
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ATTACHMENTADD_TITLE;
+
 /**
  * An attachment addition dialog.
  */
 
 public final class CAGLocationAttachmentAddDialogs
-  extends CAGDialogFactoryAbstract<Void, CAGLocationAttachmentAddView>
+  extends CAGDialogFactoryAbstract<CAGLocationAttachmentAddDialogArguments, CAGLocationAttachmentAddView>
 {
   /**
    * An attachment addition dialog.
@@ -47,17 +52,34 @@ public final class CAGLocationAttachmentAddDialogs
 
   @Override
   protected String createStageTitle(
-    final Void arguments)
+    final CAGLocationAttachmentAddDialogArguments arguments)
   {
-    return this.strings().format(CAGStringConstants.CARDANT_ATTACHMENTADD_TITLE);
+    Objects.requireNonNull(arguments, "arguments");
+
+    return this.strings().format(CARDANT_ATTACHMENTADD_TITLE);
   }
 
   @Override
-  protected CAGLocationAttachmentAddView createController(
-    final Void arguments,
+  protected CAGControllerFactoryType<CAGViewType> controllerFactory(
+    final CAGLocationAttachmentAddDialogArguments arguments,
     final Stage stage)
   {
-    return new CAGLocationAttachmentAddView(stage, this.services());
+    Objects.requireNonNull(arguments, "arguments");
+    Objects.requireNonNull(stage, "stage");
+
+    return CAGControllerFactoryMapped.create(
+      Map.entry(
+        CAGLocationAttachmentAddView.class,
+        () -> {
+          return new CAGLocationAttachmentAddView(
+            stage,
+            this.services(),
+            arguments.treeController(),
+            arguments.location()
+          );
+        }
+      )
+    );
   }
 
   @Override

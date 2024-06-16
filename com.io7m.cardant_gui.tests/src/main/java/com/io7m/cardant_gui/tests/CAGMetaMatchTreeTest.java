@@ -31,7 +31,7 @@ import com.io7m.cardant.model.CAMetadataValueMatchType.TimeMatchType;
 import com.io7m.cardant.model.comparisons.CAComparisonExactType.Anything;
 import com.io7m.cardant.model.comparisons.CAComparisonExactType.IsEqualTo;
 import com.io7m.cardant.model.comparisons.CAComparisonExactType.IsNotEqualTo;
-import com.io7m.cardant_gui.ui.internal.CAGMainItemSearchView;
+import com.io7m.cardant_gui.ui.internal.CAGItemSearchView;
 import com.io7m.cardant_gui.ui.internal.CAGMetaMatchNodeType;
 import com.io7m.cardant_gui.ui.internal.CAGMetaMatchTree;
 import com.io7m.cardant_gui.ui.internal.CAGStrings;
@@ -57,7 +57,7 @@ public final class CAGMetaMatchTreeTest
   private CAGStrings strings;
   private RPServiceDirectory services;
   private Parent pane;
-  private CAGMainItemSearchView controller;
+  private CAGItemSearchView controller;
   private TreeView<CAGMetaMatchNodeType> treeView;
   private CAGMetaMatchTree metaTree;
 

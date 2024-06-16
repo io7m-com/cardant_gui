@@ -17,37 +17,13 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
-import com.io7m.cardant.client.api.CAClientTransferStatistics;
-import com.io7m.cardant.model.CAAttachment;
 import com.io7m.cardant.model.CAAuditEvent;
 import com.io7m.cardant.model.CAAuditSearchParameters;
-import com.io7m.cardant.model.CAFileID;
-import com.io7m.cardant.model.CAFileSearchParameters;
 import com.io7m.cardant.model.CAFileType;
-import com.io7m.cardant.model.CAItemID;
-import com.io7m.cardant.model.CAItemSearchParameters;
-import com.io7m.cardant.model.CAItemSummary;
-import com.io7m.cardant.model.CALocation;
-import com.io7m.cardant.model.CALocationID;
-import com.io7m.cardant.model.CALocationSummary;
-import com.io7m.cardant.model.CAMetadataType;
-import com.io7m.cardant.model.CAStockOccurrenceType;
-import com.io7m.cardant.model.CAStockSearchParameters;
-import com.io7m.cardant.model.CATypeRecordIdentifier;
 import com.io7m.cardant.model.type_package.CATypePackageIdentifier;
 import com.io7m.cardant.model.type_package.CATypePackageSearchParameters;
 import com.io7m.cardant.model.type_package.CATypePackageSummary;
 import com.io7m.cardant.protocol.inventory.CAICommandAuditSearchBegin;
-import com.io7m.cardant.protocol.inventory.CAICommandFileSearchBegin;
-import com.io7m.cardant.protocol.inventory.CAICommandItemAttachmentAdd;
-import com.io7m.cardant.protocol.inventory.CAICommandItemGet;
-import com.io7m.cardant.protocol.inventory.CAICommandItemSearchBegin;
-import com.io7m.cardant.protocol.inventory.CAICommandLocationAttachmentAdd;
-import com.io7m.cardant.protocol.inventory.CAICommandLocationDelete;
-import com.io7m.cardant.protocol.inventory.CAICommandLocationGet;
-import com.io7m.cardant.protocol.inventory.CAICommandLocationList;
-import com.io7m.cardant.protocol.inventory.CAICommandLocationPut;
-import com.io7m.cardant.protocol.inventory.CAICommandStockSearchBegin;
 import com.io7m.cardant.protocol.inventory.CAICommandTypePackageGetText;
 import com.io7m.cardant.protocol.inventory.CAICommandTypePackageInstall;
 import com.io7m.cardant.protocol.inventory.CAICommandTypePackageSearchBegin;
@@ -58,8 +34,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import javafx.scene.control.TreeItem;
-import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,18 +50,8 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Flow;
-import java.util.concurrent.SubmissionPublisher;
-import java.util.stream.Collectors;
 
-import static com.io7m.cardant_gui.ui.internal.CAGTransferStatusType.Idle.IDLE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -99,45 +63,17 @@ public final class CAGController implements CAGControllerType
   private static final Logger LOG =
     LoggerFactory.getLogger(CAGController.class);
 
-  private static final CALocationID ROOT_LOCATION =
-    CALocationID.of("00000000-0000-0000-0000-000000000000");
-
-  private static final CALocationSummary ROOT_LOCATION_SUMMARY =
-    new CALocationSummary(ROOT_LOCATION, Optional.empty(), "Everywhere");
-
   private final CAGClientServiceType clientService;
-  private final ObservableList<CAAttachment> itemSelectedAttachments;
   private final ObservableList<CAAuditEvent> auditEvents;
   private final ObservableList<CAFileType.CAFileWithoutData> files;
-  private final ObservableList<CAItemSummary> items;
-  private final ObservableList<CAItemSummary> itemsRead;
-  private final ObservableList<CAMetadataType> itemSelectedMeta;
   private final ObservableList<CATypePackageSummary> typePackages;
   private final SimpleObjectProperty<CAGPageRange> auditEventPages;
   private final SimpleObjectProperty<CAGPageRange> filePages;
-  private final SimpleObjectProperty<CAGPageRange> itemPages;
   private final SimpleObjectProperty<CAGPageRange> typePackagePages;
-  private final SimpleObjectProperty<CAGTransferStatusType> transferStatus;
-  private final SimpleObjectProperty<CAItemSummary> itemSelected;
   private final SimpleStringProperty typePackageTextSelected;
   private final SortedList<CAAuditEvent> auditEventsSorted;
-  private final SortedList<CAItemSummary> itemsSorted;
-  private final SortedList<CAMetadataType> itemSelectedMetaSorted;
   private final SortedList<CATypePackageSummary> typePackagesSorted;
-  private final ObservableList<CAMetadataType> locationSelectedMeta;
-  private final SortedList<CAMetadataType> locationSelectedMetaSorted;
-  private final ObservableList<CAAttachment> locationSelectedAttachments;
-  private final SimpleObjectProperty<CAGPageRange> locationPages;
-  private final SimpleObjectProperty<CALocationSummary> locationSelected;
-  private final SimpleObjectProperty<TreeItem<CALocationSummary>> locationTree;
-  private final ObservableList<CATypeRecordIdentifier> itemSelectedTypes;
-  private final SortedList<CATypeRecordIdentifier> itemSelectedTypesSorted;
   private final SimpleObjectProperty<CATypePackageIdentifier> typePackageSelected;
-  private final ObservableList<CAStockOccurrenceType> stockRead;
-  private final SortedList<CAStockOccurrenceType> stockSorted;
-  private final ObservableList<CAStockOccurrenceType> stock;
-  private final SimpleObjectProperty<CAGPageRange> stockPages;
-  private final SubmissionPublisher<CAGTabKind> tabSelection;
 
   private CAGController(
     final CAGClientServiceType inClientService)
@@ -145,50 +81,10 @@ public final class CAGController implements CAGControllerType
     this.clientService =
       Objects.requireNonNull(inClientService, "clientService");
 
-    this.tabSelection =
-      new SubmissionPublisher<>();
-
-    this.items =
-      FXCollections.observableArrayList();
-    this.itemsSorted =
-      new SortedList<>(this.items);
-    this.itemsRead =
-      FXCollections.unmodifiableObservableList(this.items);
-
-    this.stock =
-      FXCollections.observableArrayList();
-    this.stockSorted =
-      new SortedList<>(this.stock);
-    this.stockRead =
-      FXCollections.unmodifiableObservableList(this.stock);
-
-    this.stockPages =
-      new SimpleObjectProperty<>(new CAGPageRange(0L, 0L));
-
-    this.itemPages =
-      new SimpleObjectProperty<>(new CAGPageRange(0L, 0L));
-    this.itemSelected =
-      new SimpleObjectProperty<>();
-
-    this.itemSelectedMeta =
-      FXCollections.observableArrayList();
-    this.itemSelectedMetaSorted =
-      new SortedList<>(this.itemSelectedMeta);
-    this.itemSelectedAttachments =
-      FXCollections.observableArrayList();
-
-    this.itemSelectedTypes =
-      FXCollections.observableArrayList();
-    this.itemSelectedTypesSorted =
-      new SortedList<>(this.itemSelectedTypes);
-
     this.filePages =
       new SimpleObjectProperty<>(new CAGPageRange(0L, 0L));
     this.files =
       FXCollections.observableArrayList();
-
-    this.transferStatus =
-      new SimpleObjectProperty<>(IDLE);
 
     this.auditEventPages =
       new SimpleObjectProperty<>(new CAGPageRange(0L, 0L));
@@ -207,21 +103,6 @@ public final class CAGController implements CAGControllerType
     this.typePackageTextSelected =
       new SimpleStringProperty();
     this.typePackageSelected =
-      new SimpleObjectProperty<CATypePackageIdentifier>();
-
-    this.locationSelectedMeta =
-      FXCollections.observableArrayList();
-    this.locationSelectedMetaSorted =
-      new SortedList<>(this.locationSelectedMeta);
-    this.locationSelectedAttachments =
-      FXCollections.observableArrayList();
-
-    this.locationPages =
-      new SimpleObjectProperty<>(new CAGPageRange(0L, 0L));
-    this.locationSelected =
-      new SimpleObjectProperty<>();
-
-    this.locationTree =
       new SimpleObjectProperty<>();
   }
 
@@ -245,7 +126,6 @@ public final class CAGController implements CAGControllerType
 
   private void onClientStatusChanged()
   {
-    this.items.clear();
     this.auditEvents.clear();
     this.files.clear();
   }
@@ -254,98 +134,6 @@ public final class CAGController implements CAGControllerType
   public String description()
   {
     return "Main controller";
-  }
-
-  @Override
-  public ObservableList<CAItemSummary> itemsView()
-  {
-    return this.itemsRead;
-  }
-
-  @Override
-  public SortedList<CAItemSummary> itemsViewSorted()
-  {
-    return this.itemsSorted;
-  }
-
-  @Override
-  public void itemSearchBegin(
-    final CAItemSearchParameters searchParameters)
-  {
-    final var future =
-      this.clientService.execute(
-        new CAICommandItemSearchBegin(searchParameters)
-      );
-
-    future.thenAccept(response -> {
-      Platform.runLater(() -> {
-        final var data =
-          response.data();
-
-        final var newItemPage =
-          new ArrayList<>(data.items());
-
-        LOG.debug("Received {} items", newItemPage.size());
-        this.itemPages.set(
-          new CAGPageRange(
-            (long) data.pageIndex(),
-            (long) data.pageCount()
-          )
-        );
-        this.items.setAll(newItemPage);
-      });
-    });
-  }
-
-  @Override
-  public void itemGet(
-    final CAItemID id)
-  {
-    final var future =
-      this.clientService.execute(new CAICommandItemGet(id));
-
-    future.thenAccept(response -> {
-      Platform.runLater(() -> {
-        final var item = response.data();
-
-        this.itemSelected.set(item.summary());
-
-        this.itemSelectedMeta.setAll(
-          item.metadata()
-            .values()
-            .stream()
-            .toList()
-        );
-
-        this.itemSelectedAttachments.setAll(
-          item.attachments()
-            .values()
-            .stream()
-            .sorted(Comparator.comparing(o -> o.key().fileID()))
-            .collect(Collectors.toList())
-        );
-
-        this.itemSelectedTypes.setAll(item.types());
-      });
-    });
-  }
-
-  @Override
-  public ObservableValue<CAGPageRange> itemPages()
-  {
-    return this.itemPages;
-  }
-
-  @Override
-  public ObservableValue<CAItemSummary> itemSelected()
-  {
-    return this.itemSelected;
-  }
-
-  @Override
-  public SortedList<CATypeRecordIdentifier> itemSelectedTypes()
-  {
-    return this.itemSelectedTypesSorted;
   }
 
   @Override
@@ -405,166 +193,6 @@ public final class CAGController implements CAGControllerType
   public void typePackageSelectNothing()
   {
     this.typePackageTextSelected.set(null);
-  }
-
-  @Override
-  public SortedList<CAMetadataType> itemSelectedMetadata()
-  {
-    return this.itemSelectedMetaSorted;
-  }
-
-  @Override
-  public void itemSelectNothing()
-  {
-    this.itemSelectedMeta.clear();
-    this.itemSelected.set(null);
-    this.itemSelectedAttachments.clear();
-  }
-
-  @Override
-  public ObservableList<CAAttachment> itemSelectedAttachments()
-  {
-    return this.itemSelectedAttachments;
-  }
-
-  @Override
-  public void fileSearchBegin(
-    final CAFileSearchParameters searchParameters)
-  {
-    final var future =
-      this.clientService.execute(
-        new CAICommandFileSearchBegin(searchParameters)
-      );
-
-    future.thenAccept(response -> {
-      Platform.runLater(() -> {
-        final var data =
-          response.data();
-
-        final var newItemPage =
-          new ArrayList<>(data.items());
-
-        LOG.debug("Received {} files", newItemPage.size());
-        this.filePages.set(
-          new CAGPageRange(
-            (long) data.pageIndex(),
-            (long) data.pageCount()
-          )
-        );
-        this.files.setAll(newItemPage);
-      });
-    });
-  }
-
-  @Override
-  public ObservableList<CAFileType.CAFileWithoutData> filesView()
-  {
-    return this.files;
-  }
-
-  @Override
-  public ObservableValue<CAGTransferStatusType> transferStatus()
-  {
-    return this.transferStatus;
-  }
-
-  @Override
-  public void fileUpload(
-    final CAFileID fileID,
-    final Path file,
-    final String contentType,
-    final String description)
-  {
-    final var future =
-      this.clientService.fileUpload(
-        fileID,
-        file,
-        contentType,
-        description,
-        statistics -> {
-          Platform.runLater(() -> this.onUploadStatisticsChanged(statistics));
-        }
-      );
-
-    future.thenAccept(response -> {
-      Platform.runLater(() -> this.transferStatus.set(IDLE));
-    });
-  }
-
-  @Override
-  public void fileDownload(
-    final CAFileID fileID,
-    final Path file,
-    final Path fileTmp,
-    final long size,
-    final String hashAlgorithm,
-    final String hashValue)
-  {
-    final var future =
-      this.clientService.fileDownload(
-        fileID,
-        file,
-        fileTmp,
-        size,
-        hashAlgorithm,
-        hashValue,
-        statistics -> {
-          Platform.runLater(() -> this.onDownloadStatisticsChanged(statistics));
-        }
-      );
-
-    future.thenAccept(response -> {
-      Platform.runLater(() -> this.transferStatus.set(IDLE));
-    });
-  }
-
-  private void onDownloadStatisticsChanged(
-    final CAClientTransferStatistics statistics)
-  {
-    this.transferStatus.set(new CAGTransferStatusType.Downloading(statistics));
-  }
-
-  private void onUploadStatisticsChanged(
-    final CAClientTransferStatistics statistics)
-  {
-    this.transferStatus.set(new CAGTransferStatusType.Uploading(statistics));
-  }
-
-  @Override
-  public ObservableValue<CAGPageRange> filePages()
-  {
-    return this.filePages;
-  }
-
-  @Override
-  public CompletableFuture<Image> imageGet(
-    final CAFileID fileID,
-    final Path file,
-    final Path fileTmp,
-    final long size,
-    final String hashAlgorithm,
-    final String hashValue,
-    final int width,
-    final int height)
-  {
-    return this.clientService.imageGet(
-      fileID,
-      file,
-      fileTmp,
-      size,
-      hashAlgorithm,
-      hashValue,
-      width,
-      height
-    );
-  }
-
-  @Override
-  public void itemAttachmentAdd(
-    final CAICommandItemAttachmentAdd command)
-  {
-    this.clientService.execute(command);
-    this.itemGet(command.item());
   }
 
   @Override
@@ -678,282 +306,6 @@ public final class CAGController implements CAGControllerType
     return String.format(
       "[CAGController 0x%08x]",
       Integer.valueOf(this.hashCode())
-    );
-  }
-
-  @Override
-  public ObservableValue<TreeItem<CALocationSummary>> locationTree()
-  {
-    return this.locationTree;
-  }
-
-  @Override
-  public void locationSearchBegin()
-  {
-    final var future =
-      this.clientService.execute(new CAICommandLocationList());
-
-    future.thenAccept(response -> {
-      Platform.runLater(() -> {
-        final var data =
-          response.data();
-        final var summaries =
-          data.locations();
-
-        LOG.debug("Received {} locations", summaries.size());
-
-        final var treeItems =
-          new HashMap<CALocationID, TreeItem<CALocationSummary>>(summaries.size());
-        final var newRoot =
-          new TreeItem<>(ROOT_LOCATION_SUMMARY);
-
-        for (final var location : summaries.values()) {
-          final var item = new TreeItem<>(location);
-          treeItems.put(location.id(), item);
-        }
-
-        for (final var location : summaries.values()) {
-          final var locationItem =
-            treeItems.get(location.id());
-          final var parent =
-            location.parent();
-
-          if (parent.isEmpty()) {
-            newRoot.getChildren().add(locationItem);
-            continue;
-          }
-
-          final var parentId =
-            parent.get();
-          final var parentItem =
-            treeItems.get(parentId);
-
-          if (parentItem == null) {
-            LOG.warn(
-              "Location {} provided a nonexistent parent {}",
-              location.id(),
-              parentId);
-            continue;
-          }
-
-          parentItem.getChildren().add(locationItem);
-        }
-
-        this.locationTree.set(newRoot);
-      });
-    });
-  }
-
-  @Override
-  public void locationGet(
-    final CALocationID id)
-  {
-    if (Objects.equals(id, ROOT_LOCATION)) {
-      this.locationSelectNothing();
-      return;
-    }
-
-    final var future =
-      this.clientService.execute(new CAICommandLocationGet(id));
-
-    future.thenAccept(response -> {
-      Platform.runLater(() -> {
-        final var location = response.data();
-
-        this.locationSelected.set(location.summary());
-
-        this.locationSelectedMeta.setAll(
-          location.metadata()
-            .values()
-            .stream()
-            .toList()
-        );
-
-        this.locationSelectedAttachments.setAll(
-          location.attachments()
-            .values()
-            .stream()
-            .sorted(Comparator.comparing(o -> o.key().fileID()))
-            .collect(Collectors.toList())
-        );
-      });
-    });
-  }
-
-  @Override
-  public SortedList<CAMetadataType> locationSelectedMetadata()
-  {
-    return this.locationSelectedMetaSorted;
-  }
-
-  @Override
-  public void locationSelectNothing()
-  {
-    this.locationSelected.set(null);
-  }
-
-  @Override
-  public ObservableList<CAAttachment> locationSelectedAttachments()
-  {
-    return this.locationSelectedAttachments;
-  }
-
-  @Override
-  public void locationAttachmentAdd(
-    final CAICommandLocationAttachmentAdd command)
-  {
-    this.clientService.execute(command);
-    this.locationGet(command.location());
-  }
-
-  @Override
-  public ObservableValue<CAGPageRange> locationPages()
-  {
-    return this.locationPages;
-  }
-
-  @Override
-  public ObservableValue<CALocationSummary> locationSelected()
-  {
-    return this.locationSelected;
-  }
-
-  @Override
-  public void locationRemove()
-  {
-    final var location = this.locationSelected.get();
-    if (location == null) {
-      return;
-    }
-
-    final var future =
-      this.clientService.execute(new CAICommandLocationDelete(location.id()));
-
-    future.thenAccept(response -> {
-      Platform.runLater(() -> {
-        this.locationTreeDelete(this.locationTree.get(), location.id());
-      });
-    });
-  }
-
-  @Override
-  public void locationCreate(
-    final String name)
-  {
-    final var future =
-      this.clientService.execute(new CAICommandLocationPut(
-        new CALocation(
-          CALocationID.random(),
-          Optional.empty(),
-          name,
-          new TreeMap<>(),
-          new TreeMap<>(),
-          new TreeSet<>()
-        )
-      ));
-
-    future.thenAccept(response -> this.locationSearchBegin());
-  }
-
-  @Override
-  public void locationReparent(
-    final CALocationID location,
-    final CALocationID newParent)
-  {
-    final var future0 =
-      this.clientService.execute(new CAICommandLocationGet(location));
-
-    final var future1 =
-      future0.thenCompose(response -> {
-        final var source = response.data();
-        return this.clientService.execute(
-          new CAICommandLocationPut(
-            new CALocation(
-              source.id(),
-              Optional.of(newParent),
-              source.name(),
-              source.metadata(),
-              source.attachments(),
-              source.types()
-            )
-          )
-        );
-      });
-
-    future1.thenAccept(response -> this.locationSearchBegin());
-  }
-
-  private boolean locationTreeDelete(
-    final TreeItem<CALocationSummary> tree,
-    final CALocationID id)
-  {
-    if (Objects.equals(tree.getValue().id(), id)) {
-      tree.getParent()
-        .getChildren()
-        .remove(tree);
-      return true;
-    }
-    for (final var c : tree.getChildren()) {
-      if (this.locationTreeDelete(c, id)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  @Override
-  public ObservableList<CAStockOccurrenceType> stockView()
-  {
-    return this.stockRead;
-  }
-
-  @Override
-  public SortedList<CAStockOccurrenceType> stockViewSorted()
-  {
-    return this.stockSorted;
-  }
-
-  @Override
-  public void stockSearchBegin(
-    final CAStockSearchParameters searchParameters)
-  {
-    final var future =
-      this.clientService.execute(
-        new CAICommandStockSearchBegin(searchParameters)
-      );
-
-    future.thenAccept(response -> {
-      Platform.runLater(() -> {
-        final var data =
-          response.data();
-
-        final var newItemPage =
-          new ArrayList<>(data.items());
-
-        LOG.debug("Received {} stock", newItemPage.size());
-        this.stockPages.set(
-          new CAGPageRange(
-            (long) data.pageIndex(),
-            (long) data.pageCount()
-          )
-        );
-        this.stock.setAll(newItemPage);
-      });
-    });
-  }
-
-  @Override
-  public Flow.Publisher<CAGTabKind> tabSelectionRequested()
-  {
-    return this.tabSelection;
-  }
-
-  @Override
-  public void tabSelect(
-    final CAGTabKind tabKind)
-  {
-    this.tabSelection.submit(
-      Objects.requireNonNull(tabKind, "tabKind")
     );
   }
 }

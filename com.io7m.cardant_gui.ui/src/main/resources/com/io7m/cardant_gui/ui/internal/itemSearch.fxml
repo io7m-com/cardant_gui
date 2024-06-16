@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainItemSearchView">
+<VBox prefHeight="500.0" prefWidth="300.0" styleClass="borderPane" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGItemSearchView">
   <children>
       <Accordion fx:id="accordion" VBox.vgrow="ALWAYS">
         <panes>
@@ -121,19 +121,19 @@
           </TitledPane>
         </panes>
       </Accordion>
-      <HBox>
+      <HBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0">
          <children>
             <Button maxHeight="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSearchClearSelected" prefWidth="128.0" text="%cardant.itemSearch.searchClear">
                <tooltip>
                   <Tooltip text="%cardant.tooltip.searchClear" />
                </tooltip>
             </Button>
-            <Region minWidth="-Infinity" prefWidth="128.0" HBox.hgrow="ALWAYS" />
-            <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#onSearchSelected" prefHeight="32.0" prefWidth="128.0" text="%cardant.itemSearch.search">
+            <Region minWidth="-Infinity" HBox.hgrow="ALWAYS" />
+            <Button maxHeight="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSearchSelected" prefHeight="32.0" prefWidth="128.0" text="%cardant.itemSearch.search">
                <graphic>
-                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icons/search-32.png" />
+                        <Image url="@icons/search-16.png" />
                      </image>
                   </ImageView>
                </graphic>

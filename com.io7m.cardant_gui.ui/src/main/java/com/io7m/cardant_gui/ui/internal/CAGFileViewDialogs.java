@@ -21,12 +21,17 @@ import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.util.Map;
+import java.util.Objects;
+
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_FILECREATE_OPENFILE;
+
 /**
  * A file creation dialog.
  */
 
 public final class CAGFileViewDialogs
-  extends CAGDialogFactoryAbstract<Void, CAGFileCreateView>
+  extends CAGDialogFactoryAbstract<CAGUnit, CAGFileCreateView>
 {
   /**
    * A file creation dialog.
@@ -47,17 +52,27 @@ public final class CAGFileViewDialogs
 
   @Override
   protected String createStageTitle(
-    final Void arguments)
+    final CAGUnit arguments)
   {
-    return this.strings().format(CAGStringConstants.CARDANT_FILECREATE_OPENFILE);
+    Objects.requireNonNull(arguments, "arguments");
+
+    return this.strings().format(CARDANT_FILECREATE_OPENFILE);
   }
 
   @Override
-  protected CAGFileCreateView createController(
-    final Void arguments,
+  protected CAGControllerFactoryType<CAGViewType> controllerFactory(
+    final CAGUnit arguments,
     final Stage stage)
   {
-    return new CAGFileCreateView(this.services(), stage);
+    Objects.requireNonNull(arguments, "arguments");
+    Objects.requireNonNull(stage, "stage");
+
+    return CAGControllerFactoryMapped.create(
+      Map.entry(
+        CAGFileCreateView.class,
+        () -> new CAGFileCreateView(this.services(), stage)
+      )
+    );
   }
 
   @Override

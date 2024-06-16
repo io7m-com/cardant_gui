@@ -37,6 +37,7 @@ open module com.io7m.cardant_gui.ui
   requires com.io7m.darco.api;
   requires com.io7m.darco.sqlite;
   requires com.io7m.jade.api;
+  requires com.io7m.jaffirm.core;
   requires com.io7m.jattribute.core;
   requires com.io7m.jmulticlose.core;
   requires com.io7m.jsx.prettyprint;

@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<TabPane fx:id="mainItemDetails" prefHeight="480.0" prefWidth="640.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainItemDetailsView">
+<TabPane fx:id="mainItemDetails" prefHeight="480.0" prefWidth="640.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGItemDetailsView">
   <tabs>
     <Tab text="%cardant.attributes">
       <content>

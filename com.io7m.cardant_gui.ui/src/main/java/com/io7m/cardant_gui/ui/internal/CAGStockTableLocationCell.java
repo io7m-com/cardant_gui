@@ -51,12 +51,10 @@ public final class CAGStockTableLocationCell
   /**
    * A cell displaying a location.
    *
-   * @param controller The controller
    * @param strings    The string resources
    */
 
   public CAGStockTableLocationCell(
-    final CAGControllerType controller,
     final CAGStringsType strings)
   {
     this.textField.setTooltip(this.tooltip);
@@ -74,8 +72,7 @@ public final class CAGStockTableLocationCell
     this.menuItemCopy.setOnAction(event -> this.textField.copy());
     this.menuItemSelectAll.setOnAction(event -> this.textField.selectAll());
     this.menuItemLocOpen.setOnAction(event -> {
-      controller.locationGet(this.locationNow.id());
-      controller.tabSelect(CAGTabKind.TAB_LOCATIONS);
+      throw new IllegalStateException();
     });
 
     this.customMenu =

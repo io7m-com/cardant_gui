@@ -28,5 +28,15 @@ public record CAGPageRange(
   long pageIndex,
   long pageCount)
 {
+  private static final CAGPageRange ZERO =
+    new CAGPageRange(0L, 0L);
 
+  /**
+   * @return The zero page range
+   */
+
+  public static CAGPageRange zero()
+  {
+    return ZERO;
+  }
 }

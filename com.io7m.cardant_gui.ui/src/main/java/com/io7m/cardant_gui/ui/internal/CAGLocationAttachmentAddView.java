@@ -20,22 +20,23 @@ package com.io7m.cardant_gui.ui.internal;
 import com.io7m.cardant.model.CAFileID;
 import com.io7m.cardant.model.CAFileType;
 import com.io7m.cardant.model.CALocationID;
-import com.io7m.cardant.model.CALocationSummary;
 import com.io7m.cardant.protocol.inventory.CAICommandLocationAttachmentAdd;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.UUID;
+
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ERROR_RELATIONEMPTY;
 
 /**
  * The attachment addition view.
@@ -45,8 +46,12 @@ public final class CAGLocationAttachmentAddView
   implements CAGViewType
 {
   private final Stage stage;
+  private final CAGLocationTreeControllerType treeController;
   private final CAGStringsType strings;
-  private final CAGControllerType controller;
+  private final CALocationID location;
+  private final CAGFileSelectDialogs fileSelectDialogs;
+  private final CAGClientServiceType client;
+  private final CAGFileSearchControllerType fileSearchController;
 
   @FXML private Button addButton;
   @FXML private Label resultsLabel;
@@ -58,20 +63,33 @@ public final class CAGLocationAttachmentAddView
   /**
    * The attachment addition view.
    *
-   * @param inStage  The stage
-   * @param services The services
+   * @param inLocation   The location
+   * @param inStage      The stage
+   * @param services     The services
+   * @param inController The controller
    */
 
   public CAGLocationAttachmentAddView(
     final Stage inStage,
-    final RPServiceDirectoryType services)
+    final RPServiceDirectoryType services,
+    final CAGLocationTreeControllerType inController,
+    final CALocationID inLocation)
   {
     this.stage =
       Objects.requireNonNull(inStage, "stage");
     this.strings =
       services.requireService(CAGStringsType.class);
-    this.controller =
-      services.requireService(CAGControllerType.class);
+    this.fileSelectDialogs =
+      services.requireService(CAGFileSelectDialogs.class);
+    this.client =
+      services.requireService(CAGClientServiceType.class);
+
+    this.fileSearchController =
+      CAGFileSearchController.create(this.client);
+    this.treeController =
+      Objects.requireNonNull(inController, "controller");
+    this.location =
+      Objects.requireNonNull(inLocation, "inLocation");
   }
 
   @Override
@@ -79,53 +97,21 @@ public final class CAGLocationAttachmentAddView
     final URL url,
     final ResourceBundle resourceBundle)
   {
-    this.addButton.setDisable(true);
+    this.locationField.setText(this.location.displayId());
 
-    this.files.setCellFactory(
-      new CAGFileCellFactory(this.strings));
-    this.files.setItems(
-      this.controller.filesView());
-    this.files.getSelectionModel()
-      .setSelectionMode(SelectionMode.SINGLE);
-    this.files.getSelectionModel()
-      .getSelectedItems()
-      .addListener((ListChangeListener<? super CAFileType.CAFileWithoutData>) this::onFileSelectionChanged);
-
-    this.controller.filesView()
-      .addListener(this::onFilesViewChanged);
-
-    this.controller.locationSelected()
+    this.fileSearchController.fileSelected()
       .addListener((observable, oldValue, newValue) -> {
-        this.onLocationSelectionChanged(newValue);
+        this.addButton.setDisable(newValue.isEmpty());
       });
 
-    this.locationField.textProperty()
-      .addListener(observable -> {
-        this.validate();
+    this.fileSearchController.fileSelected()
+      .addListener((observable, oldValue, newValue) -> {
+        if (newValue.isPresent()) {
+          this.fileField.setText(newValue.get().id().displayId());
+        } else {
+          this.fileField.setText("");
+        }
       });
-
-    this.fileField.textProperty()
-      .addListener(observable -> {
-        this.validate();
-      });
-
-    this.relationField.textProperty()
-      .addListener(observable -> {
-        this.validate();
-      });
-  }
-
-  private void validate()
-  {
-    this.addButton.setDisable(true);
-
-    try {
-      this.createCommand();
-      this.addButton.setDisable(false);
-    } catch (final Exception e) {
-      // Ignored
-      this.addButton.setDisable(true);
-    }
   }
 
   private CAICommandLocationAttachmentAdd createCommand()
@@ -138,6 +124,13 @@ public final class CAGLocationAttachmentAddView
       this.fileField.getText().trim();
 
     if (relationText.isEmpty()) {
+      final var alert =
+        new Alert(
+          Alert.AlertType.ERROR,
+          this.strings.format(CARDANT_ERROR_RELATIONEMPTY)
+        );
+
+      alert.showAndWait();
       throw new IllegalArgumentException();
     }
 
@@ -148,70 +141,23 @@ public final class CAGLocationAttachmentAddView
     );
   }
 
-  private void onLocationSelectionChanged(
-    final CALocationSummary location)
-  {
-    if (location == null) {
-      this.locationField.setText("");
-      return;
-    }
-
-    this.locationField.setText(location.id().displayId());
-  }
-
-  private void onFilesViewChanged(
-    final ListChangeListener.Change<? extends CAFileType.CAFileWithoutData> c)
-  {
-    final var size = c.getList().size();
-    if (size > 0) {
-      final var range =
-        this.controller.filePages().getValue();
-
-      this.resultsLabel.setText(
-        this.strings.format(
-          CAGStringConstants.CARDANT_FILESEARCH_PAGEOF,
-          Long.valueOf(range.pageIndex()),
-          Long.valueOf(range.pageCount())
-        )
-      );
-    } else {
-      this.resultsLabel.setText("");
-    }
-  }
-
-  private void onFileSelectionChanged(
-    final ListChangeListener.Change<? extends CAFileType.CAFileWithoutData> c)
-  {
-    final var selected = c.getList();
-    if (selected.isEmpty()) {
-      return;
-    }
-
-    this.fileField.setText(selected.get(0).id().id().toString());
-  }
-
   @FXML
   private void onAddSelected()
   {
-    this.controller.locationAttachmentAdd(this.createCommand());
+    this.treeController.locationAttachmentAdd(this.createCommand());
     this.stage.close();
+  }
+
+  @FXML
+  private void onFileSelectSelected()
+    throws IOException
+  {
+    this.fileSelectDialogs.openDialogAndWait(this.fileSearchController);
   }
 
   @FXML
   private void onCancelSelected()
   {
     this.stage.close();
-  }
-
-  @FXML
-  private void onPageNextSelected()
-  {
-
-  }
-
-  @FXML
-  private void onPagePreviousSelected()
-  {
-
   }
 }

@@ -199,3 +199,9 @@
   -fx-background-color: transparent;
   -fx-background-insets: 0px;
 }
+
+.borderPane
+{
+  -fx-border-insets: 0;
+  -fx-border-color: #dddddd;
+}

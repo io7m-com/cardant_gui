@@ -23,6 +23,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -38,6 +40,9 @@ import java.util.Objects;
 public abstract class CAGDialogFactoryAbstract<A, C>
   implements CAGDialogFactoryType<A, C>
 {
+  private static final Logger LOG =
+    LoggerFactory.getLogger(CAGDialogFactoryAbstract.class);
+
   private final RPServiceDirectoryType services;
   private final Class<C> controllerClass;
   private final String fxmlResource;
@@ -82,10 +87,9 @@ public abstract class CAGDialogFactoryAbstract<A, C>
     A arguments
   );
 
-  protected abstract C createController(
+  protected abstract CAGControllerFactoryType<CAGViewType> controllerFactory(
     A arguments,
-    Stage stage
-  );
+    Stage stage);
 
   @Override
   public final C createDialogForStage(
@@ -93,6 +97,7 @@ public abstract class CAGDialogFactoryAbstract<A, C>
     final Stage stage)
     throws IOException
   {
+    Objects.requireNonNull(arguments, "arguments");
     Objects.requireNonNull(stage, "stage");
 
     final var xml =
@@ -102,9 +107,12 @@ public abstract class CAGDialogFactoryAbstract<A, C>
     final var loader =
       new FXMLLoader(xml, resources);
 
-    loader.setControllerFactory(
-      clazz -> this.createController(arguments, stage)
-    );
+    final var controllerFactory =
+      this.controllerFactory(arguments, stage);
+
+    loader.setControllerFactory(param -> {
+      return controllerFactory.call((Class<? extends CAGViewType>) param);
+    });
 
     final Pane pane = loader.load();
     CAGCSS.setCSS(pane);
@@ -120,6 +128,8 @@ public abstract class CAGDialogFactoryAbstract<A, C>
     final A arguments)
     throws IOException
   {
+    Objects.requireNonNull(arguments, "arguments");
+
     final var result = this.createDialog(arguments);
     result.stage().showAndWait();
     return result.view();
@@ -130,6 +140,8 @@ public abstract class CAGDialogFactoryAbstract<A, C>
     final A arguments)
     throws IOException
   {
+    Objects.requireNonNull(arguments, "arguments");
+
     final var stage = new Stage();
     final var controller =
       this.createDialogForStage(arguments, stage);

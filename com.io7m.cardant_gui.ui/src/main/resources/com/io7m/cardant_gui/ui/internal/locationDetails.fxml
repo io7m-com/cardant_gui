@@ -24,9 +24,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<TabPane fx:id="mainItemDetails" prefHeight="480.0" prefWidth="640.0" tabClosingPolicy="UNAVAILABLE"
-         xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainLocationDetailsView">
+<TabPane fx:id="mainItemDetails" prefHeight="480.0" prefWidth="640.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGLocationDetailsView">
   <tabs>
     <Tab text="%cardant.attributes">
       <content>
@@ -110,10 +108,10 @@
                         </HBox>
                         <TableView fx:id="meta" styleClass="metaTable" VBox.vgrow="ALWAYS">
                           <columns>
-                            <TableColumn editable="false" prefWidth="75.0" style="-fx-size: 32;" text="%cardant.package" />
-                            <TableColumn editable="false" prefWidth="75.0" text="%cardant.type" />
-                              <TableColumn editable="false" prefWidth="75.0" text="%cardant.field" />
-                              <TableColumn editable="false" prefWidth="75.0" text="%cardant.value" />
+                            <TableColumn fx:id="colPkg" editable="false" prefWidth="75.0" style="-fx-size: 32;" text="%cardant.package" />
+                            <TableColumn fx:id="colType" editable="false" prefWidth="75.0" text="%cardant.type" />
+                              <TableColumn fx:id="colField" editable="false" prefWidth="75.0" text="%cardant.field" />
+                              <TableColumn fx:id="colValue" editable="false" prefWidth="75.0" text="%cardant.value" />
                           </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
