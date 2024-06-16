@@ -14,9 +14,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="480.0" prefWidth="640.0" styleClass="borderPane" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGFileListView">
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGFileListView">
    <children>
-      <HBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" styleClass="borderPane">
+      <HBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0">
          <children>
             <Region HBox.hgrow="ALWAYS" />
             <Button fx:id="fileDownload" disable="true" layoutX="586.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onFileDownloadSelected" prefHeight="32.0" prefWidth="32.0">

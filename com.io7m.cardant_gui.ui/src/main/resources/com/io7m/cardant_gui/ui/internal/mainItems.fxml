@@ -3,22 +3,13 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.HBox?>
 
-<HBox xmlns="http://javafx.com/javafx/21.0.1"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainItemsView">
+<HBox prefHeight="600.0" prefWidth="800.0" styleClass="borderedOutset" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainItemsView">
   <children>
-    <fx:include source="itemSearch.fxml"
-                fx:id="itemSearchView"/>
-    <SplitPane dividerPositions="0.5"
-               orientation="VERTICAL"
-               prefHeight="160.0"
-               prefWidth="200.0"
-               HBox.hgrow="ALWAYS">
+    <fx:include fx:id="itemSearchView" source="itemSearch.fxml" />
+    <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="160.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
       <items>
-        <fx:include source="itemTable.fxml"
-                    fx:id="itemTableView"/>
-        <fx:include source="itemDetails.fxml"
-                    fx:id="itemDetailsView"/>
+        <fx:include fx:id="itemTableView" source="itemTable.fxml" />
+        <fx:include fx:id="itemDetailsView" source="itemDetails.fxml" />
       </items>
     </SplitPane>
   </children>

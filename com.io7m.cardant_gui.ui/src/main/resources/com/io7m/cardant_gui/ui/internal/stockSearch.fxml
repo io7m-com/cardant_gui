@@ -15,13 +15,11 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="500.0" prefWidth="300.0" styleClass="borderPane" xmlns="http://javafx.com/javafx/21.0.1"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGStockSearchView">
+<VBox xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGStockSearchView">
   <children>
       <Accordion fx:id="accordion" VBox.vgrow="ALWAYS">
         <panes>
@@ -96,15 +94,14 @@
             </TitledPane>
         </panes>
       </Accordion>
-      <HBox>
+      <HBox prefHeight="32.0">
          <children>
-            <Button maxHeight="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSearchClearSelected" prefWidth="128.0" text="%cardant.itemSearch.searchClear">
+            <Button maxHeight="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSearchClearSelected" prefWidth="160.0" text="%cardant.itemSearch.searchClear">
                <tooltip>
                   <Tooltip text="%cardant.tooltip.searchClear" />
                </tooltip>
             </Button>
-            <Region HBox.hgrow="ALWAYS" />
-            <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#onSearchSelected" prefHeight="32.0" prefWidth="128.0" text="%cardant.itemSearch.search">
+            <Button maxHeight="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSearchSelected" prefWidth="160.0" text="%cardant.itemSearch.search">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -117,7 +114,7 @@
                </tooltip></Button>
          </children>
          <VBox.margin>
-            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+            <Insets />
          </VBox.margin>
       </HBox>
   </children>

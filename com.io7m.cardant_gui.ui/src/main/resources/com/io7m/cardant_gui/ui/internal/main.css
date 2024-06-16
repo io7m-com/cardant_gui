@@ -200,8 +200,9 @@
   -fx-background-insets: 0px;
 }
 
-.borderPane
+.borderedOutset
 {
+  -fx-border-color: #aaaaaa;
   -fx-border-insets: 0;
-  -fx-border-color: #dddddd;
+  -fx-border-width:  0.25;
 }

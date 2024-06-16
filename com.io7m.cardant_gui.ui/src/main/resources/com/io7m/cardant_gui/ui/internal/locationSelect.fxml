@@ -8,7 +8,11 @@
 
 <VBox prefWidth="600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGLocationSelectView">
    <children>
-      <fx:include fx:id="locationTree" source="locationTree.fxml" />
+      <VBox prefHeight="200.0" prefWidth="100.0" styleClass="borderedOutset" VBox.vgrow="ALWAYS">
+         <children>
+            <fx:include fx:id="locationTree" source="locationTree.fxml" />
+         </children>
+      </VBox>
       <HBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0">
          <children>
             <Button cancelButton="true" maxHeight="1.7976931348623157E308" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCancelSelected" prefWidth="128.0" text="%cardant.cancel" />

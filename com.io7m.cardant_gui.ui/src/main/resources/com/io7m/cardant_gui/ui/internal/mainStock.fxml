@@ -2,14 +2,9 @@
 
 <?import javafx.scene.layout.HBox?>
 
-<HBox xmlns="http://javafx.com/javafx/21.0.1"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainStockView">
+<HBox prefHeight="600.0" prefWidth="800.0" styleClass="borderedOutset" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainStockView">
   <children>
-    <fx:include source="stockSearch.fxml"
-                fx:id="stockSearchView"/>
-    <fx:include source="stockTable.fxml"
-                HBox.hgrow="ALWAYS"
-                fx:id="stockTableView"/>
+    <fx:include fx:id="stockSearchView" source="stockSearch.fxml" />
+    <fx:include fx:id="stockTableView" source="stockTable.fxml" HBox.hgrow="ALWAYS" />
   </children>
 </HBox>

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.HBox?>
 
-<?import javafx.scene.control.SplitPane?>
-<HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox prefHeight="600.0" prefWidth="800.0" styleClass="borderedOutset" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
-    <fx:include source="typePackageSearch.fxml" />
-      <Separator maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefWidth="1.0" />
+    <fx:include source="typePackageSearch.fxml" HBox.hgrow="NEVER" />
     <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="160.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
       <items>
         <fx:include source="typePackageTable.fxml" />
