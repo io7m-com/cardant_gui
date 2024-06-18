@@ -23,6 +23,7 @@ import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -37,10 +38,10 @@ import java.util.ResourceBundle;
  * The table of audit events.
  */
 
-public final class CAGMainAuditTableView
+public final class CAGAuditTableView
   implements CAGViewType
 {
-  private final CAGControllerType controller;
+  private CAGAuditControllerType controller;
   private final CAGStringsType strings;
 
   @FXML private TableView<CAAuditEvent> auditTable;
@@ -49,8 +50,9 @@ public final class CAGMainAuditTableView
   @FXML private TableColumn<CAAuditEvent, CAUserID> auditTableOwner;
   @FXML private TableColumn<CAAuditEvent, String> auditTableType;
   @FXML private TableColumn<CAAuditEvent, Map<String, String>> auditTableData;
-
   @FXML private Label resultsLabel;
+  @FXML private Button pageNext;
+  @FXML private Button pagePrevious;
 
   /**
    * The table of audit events.
@@ -58,15 +60,36 @@ public final class CAGMainAuditTableView
    * @param inServices The service directory
    */
 
-  public CAGMainAuditTableView(
+  public CAGAuditTableView(
     final RPServiceDirectoryType inServices)
   {
     Objects.requireNonNull(inServices, "services");
 
-    this.controller =
-      inServices.requireService(CAGControllerType.class);
     this.strings =
       inServices.requireService(CAGStringsType.class);
+  }
+
+  /**
+   * Set the controllers.
+   *
+   * @param inController The controller
+   */
+
+  public void setControllers(
+    final CAGAuditControllerType inController)
+  {
+    this.controller =
+      Objects.requireNonNull(inController, "controller");
+
+    this.controller.auditEventsViewSorted()
+      .comparatorProperty()
+      .bind(this.auditTable.comparatorProperty());
+
+    this.auditTable.setItems(
+      this.controller.auditEventsViewSorted());
+
+    this.controller.auditEventsView()
+      .addListener(this::onAuditEventViewChanged);
   }
 
   @Override
@@ -110,17 +133,6 @@ public final class CAGMainAuditTableView
     this.auditTableData.setCellValueFactory(param -> {
       return new SimpleObjectProperty<>(param.getValue().data());
     });
-
-    this.controller.auditEventsViewSorted()
-      .comparatorProperty()
-      .bind(this.auditTable.comparatorProperty());
-
-    this.auditTable.setItems(
-      this.controller.auditEventsViewSorted()
-    );
-
-    this.controller.auditEventsView()
-      .addListener(this::onAuditEventViewChanged);
   }
 
   private void onAuditEventViewChanged(
@@ -138,6 +150,11 @@ public final class CAGMainAuditTableView
           Long.valueOf(range.pageCount())
         )
       );
+
+      this.pagePrevious
+        .setDisable(!range.hasPrevious());
+      this.pageNext
+        .setDisable(!range.hasNext());
     } else {
       this.resultsLabel.setText("");
     }
@@ -146,12 +163,12 @@ public final class CAGMainAuditTableView
   @FXML
   private void onPagePreviousSelected()
   {
-
+    this.controller.auditSearchPrevious();
   }
 
   @FXML
   private void onPageNextSelected()
   {
-
+    this.controller.auditSearchNext();
   }
 }

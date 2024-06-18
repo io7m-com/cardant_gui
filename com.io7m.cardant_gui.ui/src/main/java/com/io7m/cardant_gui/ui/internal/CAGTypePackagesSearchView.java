@@ -28,16 +28,17 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
- * The main type package search view.
+ * The type package search view.
  */
 
-public final class CAGMainTypePackageSearchView
+public final class CAGTypePackagesSearchView
   implements CAGViewType
 {
-  private final CAGControllerType controller;
+  private CAGTypePackagesControllerType controller;
   private final CAGStringsType strings;
 
   @FXML private ChoiceBox<CAGDescriptionMatchKind> descriptionMatch;
@@ -46,18 +47,29 @@ public final class CAGMainTypePackageSearchView
   @FXML private TitledPane basicParameters;
 
   /**
-   * The main type package search view.
+   * The type package search view.
    *
    * @param services The service directory
    */
 
-  public CAGMainTypePackageSearchView(
+  public CAGTypePackagesSearchView(
     final RPServiceDirectoryType services)
   {
-    this.controller =
-      services.requireService(CAGControllerType.class);
     this.strings =
       services.requireService(CAGStringsType.class);
+  }
+
+  /**
+   * Set the controllers.
+   *
+   * @param c The controller
+   */
+
+  public void setControllers(
+    final CAGTypePackagesControllerType c)
+  {
+    this.controller =
+      Objects.requireNonNull(c, "c");
   }
 
   @Override

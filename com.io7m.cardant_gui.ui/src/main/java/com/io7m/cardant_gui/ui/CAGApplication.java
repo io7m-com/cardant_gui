@@ -17,11 +17,12 @@
 
 package com.io7m.cardant_gui.ui;
 
+import com.io7m.cardant_gui.ui.internal.CAGAuditSearchView;
+import com.io7m.cardant_gui.ui.internal.CAGAuditTableView;
 import com.io7m.cardant_gui.ui.internal.CAGCSS;
 import com.io7m.cardant_gui.ui.internal.CAGClientService;
 import com.io7m.cardant_gui.ui.internal.CAGClientServiceType;
-import com.io7m.cardant_gui.ui.internal.CAGController;
-import com.io7m.cardant_gui.ui.internal.CAGControllerType;
+import com.io7m.cardant_gui.ui.internal.CAGControllerFactoryMapped;
 import com.io7m.cardant_gui.ui.internal.CAGEventService;
 import com.io7m.cardant_gui.ui.internal.CAGEventServiceType;
 import com.io7m.cardant_gui.ui.internal.CAGFileChoosers;
@@ -42,15 +43,12 @@ import com.io7m.cardant_gui.ui.internal.CAGLocationDetailsView;
 import com.io7m.cardant_gui.ui.internal.CAGLocationReparentDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGLocationSelectDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGLocationTreeView;
-import com.io7m.cardant_gui.ui.internal.CAGMainAuditSearchView;
-import com.io7m.cardant_gui.ui.internal.CAGMainAuditTableView;
+import com.io7m.cardant_gui.ui.internal.CAGMainAuditView;
 import com.io7m.cardant_gui.ui.internal.CAGMainFilesView;
 import com.io7m.cardant_gui.ui.internal.CAGMainItemsView;
 import com.io7m.cardant_gui.ui.internal.CAGMainLocationsView;
 import com.io7m.cardant_gui.ui.internal.CAGMainStockView;
-import com.io7m.cardant_gui.ui.internal.CAGMainTypePackageDetailsView;
-import com.io7m.cardant_gui.ui.internal.CAGMainTypePackageSearchView;
-import com.io7m.cardant_gui.ui.internal.CAGMainTypePackageTableView;
+import com.io7m.cardant_gui.ui.internal.CAGMainTypePackagesView;
 import com.io7m.cardant_gui.ui.internal.CAGMainView;
 import com.io7m.cardant_gui.ui.internal.CAGStatusService;
 import com.io7m.cardant_gui.ui.internal.CAGStockSearchView;
@@ -58,6 +56,9 @@ import com.io7m.cardant_gui.ui.internal.CAGStockTableView;
 import com.io7m.cardant_gui.ui.internal.CAGStringConstants;
 import com.io7m.cardant_gui.ui.internal.CAGStrings;
 import com.io7m.cardant_gui.ui.internal.CAGStringsType;
+import com.io7m.cardant_gui.ui.internal.CAGTypePackagesDetailsView;
+import com.io7m.cardant_gui.ui.internal.CAGTypePackagesSearchView;
+import com.io7m.cardant_gui.ui.internal.CAGTypePackagesTableView;
 import com.io7m.cardant_gui.ui.internal.CAGViewType;
 import com.io7m.cardant_gui.ui.internal.database.CAGDatabaseConfiguration;
 import com.io7m.cardant_gui.ui.internal.database.CAGDatabaseFactory;
@@ -78,7 +79,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 /**
  * The main application class responsible for starting up the "main" view.
@@ -183,9 +183,6 @@ public final class CAGApplication extends Application
       CAGFileTransferController.create(clientService)
     );
 
-    final var controller = CAGController.create(clientService);
-    services.register(CAGControllerType.class, controller);
-
     final var xml =
       CAGMainView.class.getResource(
         "/com/io7m/cardant_gui/ui/internal/main.fxml"
@@ -195,8 +192,8 @@ public final class CAGApplication extends Application
     final var loader =
       new FXMLLoader(xml, resources);
 
-    final Map<Class<? extends CAGViewType>, Supplier<CAGViewType>> controllers =
-      Map.ofEntries(
+    final var controllers =
+      CAGControllerFactoryMapped.create(
         Map.entry(
           CAGMainView.class,
           () -> new CAGMainView(services)
@@ -218,6 +215,10 @@ public final class CAGApplication extends Application
           () -> new CAGItemDetailsView(services)
         ),
         Map.entry(
+          CAGMainAuditView.class,
+          () -> new CAGMainAuditView(services)
+        ),
+        Map.entry(
           CAGMainLocationsView.class,
           () -> new CAGMainLocationsView(services)
         ),
@@ -234,24 +235,28 @@ public final class CAGApplication extends Application
           () -> new CAGMainStockView(services)
         ),
         Map.entry(
-          CAGMainTypePackageSearchView.class,
-          () -> new CAGMainTypePackageSearchView(services)
+          CAGMainTypePackagesView.class,
+          () -> new CAGMainTypePackagesView(services)
         ),
         Map.entry(
-          CAGMainTypePackageTableView.class,
-          () -> new CAGMainTypePackageTableView(services)
+          CAGTypePackagesSearchView.class,
+          () -> new CAGTypePackagesSearchView(services)
         ),
         Map.entry(
-          CAGMainTypePackageDetailsView.class,
-          () -> new CAGMainTypePackageDetailsView(services)
+          CAGTypePackagesTableView.class,
+          () -> new CAGTypePackagesTableView(services)
         ),
         Map.entry(
-          CAGMainAuditSearchView.class,
-          () -> new CAGMainAuditSearchView(services)
+          CAGTypePackagesDetailsView.class,
+          () -> new CAGTypePackagesDetailsView(services)
         ),
         Map.entry(
-          CAGMainAuditTableView.class,
-          () -> new CAGMainAuditTableView(services)
+          CAGAuditSearchView.class,
+          () -> new CAGAuditSearchView(services)
+        ),
+        Map.entry(
+          CAGAuditTableView.class,
+          () -> new CAGAuditTableView(services)
         ),
         Map.entry(
           CAGFileListView.class,
@@ -275,19 +280,9 @@ public final class CAGApplication extends Application
         )
       );
 
-    loader.setControllerFactory(
-      clazz -> {
-        LOG.debug("Resolving controller {}", clazz);
-
-        final var supplier = controllers.get(clazz);
-        if (supplier == null) {
-          throw new IllegalStateException(
-            "Unrecognized controller class: %s".formatted(clazz)
-          );
-        }
-        return supplier.get();
-      }
-    );
+    loader.setControllerFactory(param -> {
+      return controllers.call((Class<? extends CAGViewType>) param);
+    });
 
     final var pane = loader.<Pane>load();
     CAGCSS.setCSS(pane);

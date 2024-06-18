@@ -17,13 +17,9 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
-import com.io7m.cardant.model.CAAuditEvent;
-import com.io7m.cardant.model.CAAuditSearchParameters;
-import com.io7m.cardant.model.CAFileType;
 import com.io7m.cardant.model.type_package.CATypePackageIdentifier;
 import com.io7m.cardant.model.type_package.CATypePackageSearchParameters;
 import com.io7m.cardant.model.type_package.CATypePackageSummary;
-import com.io7m.cardant.protocol.inventory.CAICommandAuditSearchBegin;
 import com.io7m.cardant.protocol.inventory.CAICommandTypePackageGetText;
 import com.io7m.cardant.protocol.inventory.CAICommandTypePackageInstall;
 import com.io7m.cardant.protocol.inventory.CAICommandTypePackageSearchBegin;
@@ -55,46 +51,30 @@ import java.util.Objects;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * The main controller.
+ * The type package controller.
  */
 
-public final class CAGController implements CAGControllerType
+public final class CAGTypePackagesController
+  implements CAGTypePackagesControllerType
 {
   private static final Logger LOG =
-    LoggerFactory.getLogger(CAGController.class);
+    LoggerFactory.getLogger(CAGTypePackagesController.class);
 
   private final CAGClientServiceType clientService;
-  private final ObservableList<CAAuditEvent> auditEvents;
-  private final ObservableList<CAFileType.CAFileWithoutData> files;
   private final ObservableList<CATypePackageSummary> typePackages;
-  private final SimpleObjectProperty<CAGPageRange> auditEventPages;
-  private final SimpleObjectProperty<CAGPageRange> filePages;
   private final SimpleObjectProperty<CAGPageRange> typePackagePages;
   private final SimpleStringProperty typePackageTextSelected;
-  private final SortedList<CAAuditEvent> auditEventsSorted;
   private final SortedList<CATypePackageSummary> typePackagesSorted;
   private final SimpleObjectProperty<CATypePackageIdentifier> typePackageSelected;
 
-  private CAGController(
+  private CAGTypePackagesController(
     final CAGClientServiceType inClientService)
   {
     this.clientService =
       Objects.requireNonNull(inClientService, "clientService");
 
-    this.filePages =
-      new SimpleObjectProperty<>(new CAGPageRange(0L, 0L));
-    this.files =
-      FXCollections.observableArrayList();
-
-    this.auditEventPages =
-      new SimpleObjectProperty<>(new CAGPageRange(0L, 0L));
-    this.auditEvents =
-      FXCollections.observableArrayList();
-    this.auditEventsSorted =
-      new SortedList<>(this.auditEvents);
-
     this.typePackagePages =
-      new SimpleObjectProperty<>(new CAGPageRange(0L, 0L));
+      new SimpleObjectProperty<>(CAGPageRange.zero());
     this.typePackages =
       FXCollections.observableArrayList();
     this.typePackagesSorted =
@@ -114,10 +94,10 @@ public final class CAGController implements CAGControllerType
    * @return A controller
    */
 
-  public static CAGControllerType create(
+  public static CAGTypePackagesControllerType create(
     final CAGClientServiceType clients)
   {
-    final var controller = new CAGController(clients);
+    final var controller = new CAGTypePackagesController(clients);
     clients.status().subscribe((oldStatus, newStatus) -> {
       controller.onClientStatusChanged();
     });
@@ -126,14 +106,7 @@ public final class CAGController implements CAGControllerType
 
   private void onClientStatusChanged()
   {
-    this.auditEvents.clear();
-    this.files.clear();
-  }
 
-  @Override
-  public String description()
-  {
-    return "Main controller";
   }
 
   @Override
@@ -193,52 +166,6 @@ public final class CAGController implements CAGControllerType
   public void typePackageSelectNothing()
   {
     this.typePackageTextSelected.set(null);
-  }
-
-  @Override
-  public void auditSearchBegin(
-    final CAAuditSearchParameters searchParameters)
-  {
-    final var future =
-      this.clientService.execute(
-        new CAICommandAuditSearchBegin(searchParameters)
-      );
-
-    future.thenAccept(response -> {
-      Platform.runLater(() -> {
-        final var data = response.results();
-
-        final var newItemPage =
-          new ArrayList<>(data.items());
-
-        LOG.debug("Received {} audit events", newItemPage.size());
-        this.auditEventPages.set(
-          new CAGPageRange(
-            (long) data.pageIndex(),
-            (long) data.pageCount()
-          )
-        );
-        this.auditEvents.setAll(newItemPage);
-      });
-    });
-  }
-
-  @Override
-  public ObservableList<CAAuditEvent> auditEventsView()
-  {
-    return this.auditEvents;
-  }
-
-  @Override
-  public SortedList<CAAuditEvent> auditEventsViewSorted()
-  {
-    return this.auditEventsSorted;
-  }
-
-  @Override
-  public ObservableValue<CAGPageRange> auditEventsPages()
-  {
-    return this.auditEventPages;
   }
 
   @Override
@@ -304,7 +231,7 @@ public final class CAGController implements CAGControllerType
   public String toString()
   {
     return String.format(
-      "[CAGController 0x%08x]",
+      "[CAGTypePackageController 0x%08x]",
       Integer.valueOf(this.hashCode())
     );
   }

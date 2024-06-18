@@ -36,6 +36,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -43,13 +44,13 @@ import java.util.ResourceBundle;
  * The main audit search view.
  */
 
-public final class CAGMainAuditSearchView
+public final class CAGAuditSearchView
   implements CAGViewType
 {
   private static final StringConverter<LocalDate> ISO_DATE_CONVERTER =
     new CAGISODateConverter();
 
-  private final CAGControllerType controller;
+  private CAGAuditControllerType controller;
   private final CAGStringsType strings;
 
   @FXML private DatePicker dateLower;
@@ -68,13 +69,24 @@ public final class CAGMainAuditSearchView
    * @param services The service directory
    */
 
-  public CAGMainAuditSearchView(
+  public CAGAuditSearchView(
     final RPServiceDirectoryType services)
   {
-    this.controller =
-      services.requireService(CAGControllerType.class);
     this.strings =
       services.requireService(CAGStringsType.class);
+  }
+
+  /**
+   * Set the controllers.
+   *
+   * @param inController The controller
+   */
+
+  public void setControllers(
+    final CAGAuditControllerType inController)
+  {
+    this.controller =
+      Objects.requireNonNull(inController, "controller");
   }
 
   @Override
@@ -159,7 +171,6 @@ public final class CAGMainAuditSearchView
         upperTime,
         ZoneOffset.UTC
       );
-
 
     Optional<CAUserID> ownerId;
     final var ownerText = this.owner.getText().trim();

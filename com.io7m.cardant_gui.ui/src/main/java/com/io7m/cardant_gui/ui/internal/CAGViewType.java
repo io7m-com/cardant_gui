@@ -24,7 +24,10 @@ import javafx.fxml.Initializable;
  */
 
 public sealed interface CAGViewType
-  extends Initializable permits CAGFileCreateView,
+  extends Initializable permits CAGAboutView,
+  CAGAuditSearchView,
+  CAGAuditTableView,
+  CAGFileCreateView,
   CAGFileListView,
   CAGFileSearchView,
   CAGFileSelectView,
@@ -39,18 +42,18 @@ public sealed interface CAGViewType
   CAGLocationSelectView,
   CAGLocationTreeView,
   CAGLoginView,
-  CAGMainAuditSearchView,
-  CAGMainAuditTableView,
+  CAGMainAuditView,
   CAGMainFilesView,
   CAGMainItemsView,
   CAGMainLocationsView,
   CAGMainStockView,
-  CAGMainTypePackageDetailsView,
-  CAGMainTypePackageSearchView,
-  CAGMainTypePackageTableView,
+  CAGMainTypePackagesView,
   CAGMainView,
   CAGStockSearchView,
-  CAGStockTableView
+  CAGStockTableView,
+  CAGTypePackagesDetailsView,
+  CAGTypePackagesSearchView,
+  CAGTypePackagesTableView
 {
 
 }

@@ -39,4 +39,22 @@ public record CAGPageRange(
   {
     return ZERO;
   }
+
+  /**
+   * @return {@code true} if the page index implies that there is a previous page
+   */
+
+  public boolean hasPrevious()
+  {
+    return Long.compareUnsigned(this.pageIndex, 1L) > 0;
+  }
+
+  /**
+   * @return {@code true} if the page index implies that there is a next page
+   */
+
+  public boolean hasNext()
+  {
+    return Long.compareUnsigned(this.pageIndex, this.pageCount) < 0;
+  }
 }

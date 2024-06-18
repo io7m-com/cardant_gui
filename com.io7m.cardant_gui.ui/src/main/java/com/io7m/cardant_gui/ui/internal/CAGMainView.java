@@ -189,4 +189,36 @@ public final class CAGMainView
   {
     Platform.exit();
   }
+
+  @FXML
+  private void onAboutSelected()
+    throws IOException
+  {
+    final var stage = new Stage();
+
+    final var xml =
+      CAGMainView.class.getResource(
+        "/com/io7m/cardant_gui/ui/internal/about.fxml"
+      );
+    final var resources =
+      this.strings.resources();
+    final var loader =
+      new FXMLLoader(xml, resources);
+
+    loader.setControllerFactory(
+      clazz -> {
+        return new CAGAboutView();
+      }
+    );
+
+    final Pane pane = loader.load();
+    CAGCSS.setCSS(pane);
+
+    loader.getController();
+
+    stage.setScene(new Scene(pane));
+    stage.setResizable(false);
+    stage.setTitle("Cardant");
+    stage.show();
+  }
 }

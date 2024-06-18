@@ -25,36 +25,51 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
- * The main type package details view.
+ * The type package details view.
  */
 
-public final class CAGMainTypePackageDetailsView
+public final class CAGTypePackagesDetailsView
   implements CAGViewType
 {
-  private final CAGControllerType controller;
   private final CAGStringsType strings;
 
   @FXML private TextArea text;
-
   @FXML private ListView<CATypeRecordIdentifier> types;
   @FXML private ListView<CATypeField> fields;
 
+  private CAGTypePackagesControllerType controller;
+
   /**
-   * The main type package details view.
+   * The package details view.
    *
    * @param services The service directory
    */
 
-  public CAGMainTypePackageDetailsView(
+  public CAGTypePackagesDetailsView(
     final RPServiceDirectoryType services)
   {
-    this.controller =
-      services.requireService(CAGControllerType.class);
     this.strings =
       services.requireService(CAGStringsType.class);
+  }
+
+  /**
+   * Set the controllers.
+   *
+   * @param c The controller
+   */
+
+  public void setControllers(
+    final CAGTypePackagesControllerType c)
+  {
+    this.controller =
+      Objects.requireNonNull(c, "c");
+
+    this.text.textProperty()
+      .bind(this.controller.typePackageTextSelected());
   }
 
   @Override
@@ -62,7 +77,6 @@ public final class CAGMainTypePackageDetailsView
     final URL url,
     final ResourceBundle resourceBundle)
   {
-    this.text.textProperty()
-      .bind(this.controller.typePackageTextSelected());
+
   }
 }

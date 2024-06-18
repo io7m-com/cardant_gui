@@ -379,6 +379,14 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <configuration>
+            <suppressionsLocation>checkstyle-filter.xml</suppressionsLocation>
+          </configuration>
+        </plugin>
+
+        <plugin>
           <groupId>com.io7m.jxtrand</groupId>
           <artifactId>com.io7m.jxtrand.maven_plugin</artifactId>
           <version>${com.io7m.jxtrand.version}</version>

@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.HBox?>
-
-<HBox prefHeight="600.0" prefWidth="800.0" styleClass="borderedOutset" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox prefHeight="600.0"
+      prefWidth="800.0"
+      styleClass="borderedOutset"
+      xmlns="http://javafx.com/javafx/21.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.io7m.cardant_gui.ui.internal.CAGMainAuditView">
   <children>
-    <fx:include source="auditSearch.fxml" />
-    <fx:include source="auditTable.fxml" HBox.hgrow="ALWAYS" />
+    <fx:include source="auditSearch.fxml"
+                fx:id="auditSearch"/>
+    <fx:include source="auditTable.fxml"
+                fx:id="auditTable"
+                HBox.hgrow="ALWAYS"/>
   </children>
 </HBox>

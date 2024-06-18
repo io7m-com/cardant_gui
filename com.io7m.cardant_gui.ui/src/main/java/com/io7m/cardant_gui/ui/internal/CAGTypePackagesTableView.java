@@ -43,18 +43,21 @@ import java.util.ResourceBundle;
  * The table of type packages.
  */
 
-public final class CAGMainTypePackageTableView
+public final class CAGTypePackagesTableView
   implements CAGViewType
 {
-  private final CAGControllerType controller;
+  private CAGTypePackagesControllerType controller;
   private final CAGStringsType strings;
   private final CAGFileChoosersType choosers;
   private final CAGDatabaseType database;
 
   @FXML private TableView<CATypePackageSummary> typePackageTable;
-  @FXML private TableColumn<CATypePackageSummary, RDottedName> typePackageTableName;
-  @FXML private TableColumn<CATypePackageSummary, Version> typePackageTableVersion;
-  @FXML private TableColumn<CATypePackageSummary, String> typePackageTableDescription;
+  @FXML
+  private TableColumn<CATypePackageSummary, RDottedName> typePackageTableName;
+  @FXML
+  private TableColumn<CATypePackageSummary, Version> typePackageTableVersion;
+  @FXML
+  private TableColumn<CATypePackageSummary, String> typePackageTableDescription;
   @FXML private Label resultsLabel;
   @FXML private Button typePackageAdd;
   @FXML private Button typePackageRemove;
@@ -65,19 +68,38 @@ public final class CAGMainTypePackageTableView
    * @param services The service directory
    */
 
-  public CAGMainTypePackageTableView(
+  public CAGTypePackagesTableView(
     final RPServiceDirectoryType services)
   {
     Objects.requireNonNull(services, "services");
 
-    this.controller =
-      services.requireService(CAGControllerType.class);
     this.strings =
       services.requireService(CAGStringsType.class);
     this.choosers =
       services.requireService(CAGFileChoosersType.class);
     this.database =
       services.requireService(CAGDatabaseType.class);
+  }
+
+  /**
+   * Set the controllers.
+   *
+   * @param c The controller
+   */
+
+  public void setControllers(
+    final CAGTypePackagesControllerType c)
+  {
+    this.controller =
+      Objects.requireNonNull(c, "c");
+
+    this.typePackageTable.setItems(
+      this.controller.typePackagesViewSorted());
+
+    this.controller.typePackagesViewSorted()
+      .comparatorProperty()
+      .bind(this.typePackageTable.comparatorProperty());
+
   }
 
   @Override
@@ -106,13 +128,6 @@ public final class CAGMainTypePackageTableView
     this.typePackageTableDescription.setCellValueFactory(param -> {
       return new SimpleObjectProperty<>(param.getValue().description());
     });
-
-    this.typePackageTable.setItems(
-      this.controller.typePackagesViewSorted());
-
-    this.controller.typePackagesViewSorted()
-      .comparatorProperty()
-      .bind(this.typePackageTable.comparatorProperty());
 
     this.typePackageTable.getSelectionModel()
       .getSelectedItems()

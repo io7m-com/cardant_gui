@@ -19,7 +19,6 @@ package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.model.CAAuditEvent;
 import com.io7m.cardant.model.CAAuditSearchParameters;
-import com.io7m.repetoir.core.RPServiceType;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -28,8 +27,7 @@ import javafx.collections.transformation.SortedList;
  * Audit methods for the controller.
  */
 
-public interface CAGControllerAuditType
-  extends RPServiceType
+public interface CAGAuditControllerType
 {
   /**
    * Start searching for audit records.
@@ -57,4 +55,16 @@ public interface CAGControllerAuditType
    */
 
   ObservableValue<CAGPageRange> auditEventsPages();
+
+  /**
+   * Go to the next page of audit records.
+   */
+
+  void auditSearchNext();
+
+  /**
+   * Go to the previous page of audit records.
+   */
+
+  void auditSearchPrevious();
 }

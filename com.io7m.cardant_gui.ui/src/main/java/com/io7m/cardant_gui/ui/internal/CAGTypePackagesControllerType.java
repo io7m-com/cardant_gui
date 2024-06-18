@@ -20,7 +20,6 @@ package com.io7m.cardant_gui.ui.internal;
 import com.io7m.cardant.model.type_package.CATypePackageIdentifier;
 import com.io7m.cardant.model.type_package.CATypePackageSearchParameters;
 import com.io7m.cardant.model.type_package.CATypePackageSummary;
-import com.io7m.repetoir.core.RPServiceType;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -31,8 +30,7 @@ import java.nio.file.Path;
  * Type package methods for the controller.
  */
 
-public interface CAGControllerTypePackagesType
-  extends RPServiceType
+public interface CAGTypePackagesControllerType
 {
   /**
    * Start searching for type packages.
