@@ -34,6 +34,7 @@ import com.io7m.cardant_gui.ui.internal.CAGFileTransferController;
 import com.io7m.cardant_gui.ui.internal.CAGFileTransferControllerType;
 import com.io7m.cardant_gui.ui.internal.CAGFileViewDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGItemAttachmentAddDialogs;
+import com.io7m.cardant_gui.ui.internal.CAGItemCreateDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGItemDetailsView;
 import com.io7m.cardant_gui.ui.internal.CAGItemSearchView;
 import com.io7m.cardant_gui.ui.internal.CAGItemSelectDialogs;
@@ -132,6 +133,10 @@ public final class CAGApplication extends Application
       CAGDatabaseType.class,
       database
     );
+
+    final var events = CAGEventService.create();
+    services.register(CAGEventServiceType.class, events);
+
     services.register(
       CAGFileChoosersType.class,
       new CAGFileChoosers(services)
@@ -172,15 +177,16 @@ public final class CAGApplication extends Application
     final var status = new CAGStatusService();
     services.register(CAGStatusService.class, status);
 
-    final var events = CAGEventService.create();
-    services.register(CAGEventServiceType.class, events);
-
     final var clientService = new CAGClientService(status, events, strings);
     services.register(CAGClientServiceType.class, clientService);
 
     services.register(
       CAGFileTransferControllerType.class,
       CAGFileTransferController.create(clientService)
+    );
+    services.register(
+      CAGItemCreateDialogs.class,
+      new CAGItemCreateDialogs(services)
     );
 
     final var xml =

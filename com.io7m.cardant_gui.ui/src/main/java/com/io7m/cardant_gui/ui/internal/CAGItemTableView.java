@@ -22,14 +22,25 @@ import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_CANCEL;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_DELETE;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMDELETE;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMDELETE_TITLE;
+import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+import static javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE;
+import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
 
 /**
  * The table of items.
@@ -39,6 +50,7 @@ public final class CAGItemTableView
   implements CAGViewType
 {
   private final CAGStringsType strings;
+  private final CAGItemCreateDialogs createDialogs;
   private CAGItemSearchControllerType search;
   private CAGItemDetailsControllerType details;
 
@@ -62,6 +74,8 @@ public final class CAGItemTableView
 
     this.strings =
       inServices.requireService(CAGStringsType.class);
+    this.createDialogs =
+      inServices.requireService(CAGItemCreateDialogs.class);
   }
 
   /**
@@ -172,13 +186,52 @@ public final class CAGItemTableView
 
   @FXML
   private void onItemAddSelected()
+    throws IOException
   {
-
+    this.createDialogs.openDialogAndWait(this.details);
   }
 
   @FXML
   private void onItemRemoveSelected()
   {
+    final var confirmMessage =
+      this.strings.format(CARDANT_ITEMDELETE);
+    final var deleteButtonMessage =
+      this.strings.format(CARDANT_DELETE);
 
+    final var confirm =
+      new ButtonType(deleteButtonMessage, OK_DONE);
+    final var cancel =
+      new ButtonType(this.strings.format(CARDANT_CANCEL), CANCEL_CLOSE);
+
+    final var dialog =
+      new Alert(CONFIRMATION, confirmMessage);
+
+    CAGCSS.setCSS(dialog.getDialogPane());
+
+    dialog.setHeaderText(
+      this.strings.format(CARDANT_ITEMDELETE_TITLE));
+
+    final var dialogButtons =
+      dialog.getButtonTypes();
+
+    dialogButtons.clear();
+    dialogButtons.add(cancel);
+    dialogButtons.add(confirm);
+
+    final var r = dialog.showAndWait();
+    if (r.isEmpty()) {
+      return;
+    }
+
+    if (r.get().equals(confirm)) {
+      this.details.itemDelete(
+        this.details.itemSelected()
+          .summary()
+          .getValue()
+          .orElseThrow()
+          .id()
+      );
+    }
   }
 }

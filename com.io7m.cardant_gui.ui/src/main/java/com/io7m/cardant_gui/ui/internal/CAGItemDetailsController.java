@@ -20,6 +20,8 @@ package com.io7m.cardant_gui.ui.internal;
 import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSummary;
 import com.io7m.cardant.protocol.inventory.CAICommandItemAttachmentAdd;
+import com.io7m.cardant.protocol.inventory.CAICommandItemCreate;
+import com.io7m.cardant.protocol.inventory.CAICommandItemDelete;
 import com.io7m.cardant.protocol.inventory.CAICommandItemGet;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -33,9 +35,11 @@ import java.util.Objects;
  */
 
 public final class CAGItemDetailsController
+  extends CAGAbstractResourceHolder
   implements CAGItemDetailsControllerType
 {
   private final CAGClientServiceType client;
+  private final CAGEventServiceType events;
   private final CAGItemModelType itemSelected;
   private final ObservableList<CAItemSummary> items;
   private final SortedList<CAItemSummary> itemsSorted;
@@ -44,19 +48,47 @@ public final class CAGItemDetailsController
   /**
    * Create a controller.
    *
+   * @param events  The event service
    * @param clients The client service
    *
    * @return A controller
    */
 
   public static CAGItemDetailsControllerType create(
+    final CAGEventServiceType events,
     final CAGClientServiceType clients)
   {
-    final var controller = new CAGItemDetailsController(clients);
-    clients.status().subscribe((oldStatus, newStatus) -> {
-      controller.onClientStatusChanged();
-    });
+    final var controller =
+      new CAGItemDetailsController(clients, events);
+
+    controller.trackResource(
+      clients.status().subscribe((oldStatus, newStatus) -> {
+        controller.onClientStatusChanged();
+      })
+    );
+
+    final var subscriber =
+      controller.trackResource(
+        CAGCloseableSubscriber.create(controller::onEvent));
+
+    events.events().subscribe(subscriber);
     return controller;
+  }
+
+  private void onEvent(
+    final CAGEventType event)
+  {
+    switch (event) {
+      case final CAGEventItemDeleted e -> {
+        Platform.runLater(() -> this.itemSelected.clearIfMatchingID(e.item()));
+      }
+      case final CAGEventItemUpdated e -> {
+        Platform.runLater(() -> this.itemSelected.updateIfMatchingID(e.item()));
+      }
+      case final CAGEventLocationUpdated e -> {
+        // Nothing to do
+      }
+    }
   }
 
   private void onClientStatusChanged()
@@ -66,10 +98,13 @@ public final class CAGItemDetailsController
   }
 
   private CAGItemDetailsController(
-    final CAGClientServiceType inClientService)
+    final CAGClientServiceType inClientService,
+    final CAGEventServiceType inEvents)
   {
     this.client =
       Objects.requireNonNull(inClientService, "inClientService");
+    this.events =
+      Objects.requireNonNull(inEvents, "events");
 
     this.itemSelected =
       CAGItemModel.create();
@@ -125,5 +160,29 @@ public final class CAGItemDetailsController
   public CAGItemModelReadableType itemSelected()
   {
     return this.itemSelected;
+  }
+
+  @Override
+  public void itemCreate(
+    final CAItemID id,
+    final String name)
+  {
+    this.client.execute(new CAICommandItemCreate(id, name));
+    this.itemSelect(id);
+  }
+
+  @Override
+  public void itemDelete(
+    final CAItemID id)
+  {
+    final var future =
+      this.client.execute(new CAICommandItemDelete(id));
+
+    future.thenAccept(response -> {
+      Platform.runLater(() -> {
+        this.itemSelected.clearIfMatchingID(id);
+      });
+      this.events.publish(new CAGEventItemDeleted(id));
+    });
   }
 }

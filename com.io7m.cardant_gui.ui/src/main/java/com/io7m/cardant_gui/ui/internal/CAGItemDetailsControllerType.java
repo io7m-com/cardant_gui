@@ -28,6 +28,7 @@ import javafx.collections.transformation.SortedList;
  */
 
 public interface CAGItemDetailsControllerType
+  extends AutoCloseable
 {
   /**
    * @return The items for the current search query
@@ -69,4 +70,24 @@ public interface CAGItemDetailsControllerType
    */
 
   CAGItemModelReadableType itemSelected();
+
+  /**
+   * Create an item.
+   *
+   * @param id   The item ID
+   * @param name The name
+   */
+
+  void itemCreate(
+    CAItemID id,
+    String name);
+
+  /**
+   * Delete an item.
+   *
+   * @param id The item ID
+   */
+
+  void itemDelete(
+    CAItemID id);
 }

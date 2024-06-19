@@ -17,12 +17,28 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
+import com.io7m.cardant.model.CAItemID;
+
+import java.util.Objects;
+
 /**
- * The type of events.
+ * An item was deleted.
+ *
+ * @param item The item
  */
 
-public sealed interface CAGEventType
-  permits CAGEventItemDeleted, CAGEventItemUpdated, CAGEventLocationUpdated
+public record CAGEventItemDeleted(
+  CAItemID item)
+  implements CAGEventType
 {
+  /**
+   * An item was deleted.
+   *
+   * @param item The item
+   */
 
+  public CAGEventItemDeleted
+  {
+    Objects.requireNonNull(item, "item");
+  }
 }

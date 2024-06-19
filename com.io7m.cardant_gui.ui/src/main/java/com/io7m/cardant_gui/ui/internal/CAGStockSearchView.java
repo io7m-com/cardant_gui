@@ -55,17 +55,18 @@ import static javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE;
 import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
 
 /**
- * The main stock search view.
+ * A stock search view.
  */
 
 public final class CAGStockSearchView
+  extends CAGAbstractResourceHolder
   implements CAGViewType
 {
   private final CAGStringsType strings;
   private final CAGLocationSelectDialogs locationSelectDialogs;
   private final CAGClientServiceType client;
   private final CAGItemSelectDialogs itemSelectDialogs;
-  private CAGStockSearchControllerType controller;
+  private final CAGEventServiceType events;
 
   @FXML private ChoiceBox<CAGLocationMatchKind> locationMatch;
   @FXML private TextField locationField;
@@ -78,8 +79,12 @@ public final class CAGStockSearchView
   @FXML private Button locationSelect;
   @FXML private Button itemSelect;
 
+  private CAGStockSearchControllerType controller;
+  private CAGItemSearchControllerType searchController;
+  private CAGItemDetailsControllerType detailsController;
+
   /**
-   * The main stock search view.
+   * A stock search view.
    *
    * @param services The service directory
    */
@@ -95,6 +100,8 @@ public final class CAGStockSearchView
       services.requireService(CAGLocationSelectDialogs.class);
     this.itemSelectDialogs =
       services.requireService(CAGItemSelectDialogs.class);
+    this.events =
+      services.requireService(CAGEventServiceType.class);
   }
 
   /**
@@ -108,6 +115,15 @@ public final class CAGStockSearchView
   {
     this.controller =
       Objects.requireNonNull(inController, "controller");
+
+    this.searchController =
+      this.trackResource(
+        CAGItemSearchController.create(this.events, this.client)
+      );
+    this.detailsController =
+      this.trackResource(
+        CAGItemDetailsController.create(this.events, this.client)
+      );
   }
 
   private void clearParameters()
@@ -184,20 +200,15 @@ public final class CAGStockSearchView
   private void onItemSelectSelected()
     throws IOException
   {
-    final var searchController =
-      CAGItemSearchController.create(this.client);
-    final var detailsController =
-      CAGItemDetailsController.create(this.client);
-
     this.itemSelectDialogs.openDialogAndWait(
       new CAGItemSelectDialogArguments(
-        detailsController,
-        searchController
+        this.detailsController,
+        this.searchController
       )
     );
 
     final var selectedLocationOpt =
-      detailsController.itemSelected()
+      this.detailsController.itemSelected()
         .summary()
         .getValue();
 

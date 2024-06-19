@@ -34,6 +34,7 @@ import java.util.Objects;
  */
 
 public final class CAGItemSearchController
+  extends CAGAbstractResourceHolder
   implements CAGItemSearchControllerType
 {
   private final ObservableList<CAItemSummary> itemsView;
@@ -55,19 +56,55 @@ public final class CAGItemSearchController
   }
 
   /**
+   * @param events The event service
    * @param client The client
    *
    * @return An item search controller.
    */
 
   public static CAGItemSearchControllerType create(
+    final CAGEventServiceType events,
     final CAGClientServiceType client)
   {
     final var controller = new CAGItemSearchController(client);
-    client.status().subscribe((oldStatus, newStatus) -> {
-      controller.onClientStatusChanged();
-    });
+
+    controller.trackResource(
+      client.status()
+        .subscribe((oldStatus, newStatus) -> controller.onClientStatusChanged())
+    );
+
+    final var subscriber =
+      controller.trackResource(
+        CAGCloseableSubscriber.create(controller::onEvent));
+
+    events.events().subscribe(subscriber);
     return controller;
+  }
+
+  private void onEvent(
+    final CAGEventType event)
+  {
+    switch (event) {
+      case final CAGEventItemDeleted e -> {
+        Platform.runLater(() -> {
+          this.itemsView.removeIf(i -> Objects.equals(i.id(), e.item()));
+        });
+      }
+      case final CAGEventItemUpdated e -> {
+        Platform.runLater(() -> {
+          this.itemsView.replaceAll(summary -> {
+            if (Objects.equals(summary.id(), e.item().id())) {
+              return e.item().summary();
+            } else {
+              return summary;
+            }
+          });
+        });
+      }
+      case final CAGEventLocationUpdated e -> {
+        // Nothing to do
+      }
+    }
   }
 
   private void onClientStatusChanged()

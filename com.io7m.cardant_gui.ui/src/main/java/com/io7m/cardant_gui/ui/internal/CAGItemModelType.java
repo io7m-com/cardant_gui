@@ -18,6 +18,7 @@
 package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.model.CAItem;
+import com.io7m.cardant.model.CAItemID;
 
 /**
  * An observable item.
@@ -38,4 +39,20 @@ public interface CAGItemModelType extends CAGItemModelReadableType
    */
 
   void clear();
+
+  /**
+   * Clear the item if the current item has the given ID.
+   *
+   * @param id The ID
+   */
+
+  void clearIfMatchingID(CAItemID id);
+
+  /**
+   * Set all the item values if the existing ID matches.
+   *
+   * @param item The item
+   */
+
+  void updateIfMatchingID(CAItem item);
 }

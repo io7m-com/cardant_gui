@@ -28,6 +28,7 @@ import javafx.collections.transformation.SortedList;
  */
 
 public interface CAGItemSearchControllerType
+  extends AutoCloseable
 {
   /**
    * Start searching for items.

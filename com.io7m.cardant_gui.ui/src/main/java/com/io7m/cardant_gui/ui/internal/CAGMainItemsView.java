@@ -29,7 +29,9 @@ import java.util.ResourceBundle;
  * The main items view.
  */
 
-public final class CAGMainItemsView implements CAGViewType
+public final class CAGMainItemsView
+  extends CAGAbstractResourceHolder
+  implements CAGViewType
 {
   private final CAGClientServiceType client;
 
@@ -56,10 +58,13 @@ public final class CAGMainItemsView implements CAGViewType
 
     this.client =
       services.requireService(CAGClientServiceType.class);
+    final var events =
+      services.requireService(CAGEventServiceType.class);
+
     this.itemDetailsController =
-      CAGItemDetailsController.create(this.client);
+      this.trackResource(CAGItemDetailsController.create(events, this.client));
     this.itemSearchController =
-      CAGItemSearchController.create(this.client);
+      this.trackResource(CAGItemSearchController.create(events, this.client));
   }
 
   @Override

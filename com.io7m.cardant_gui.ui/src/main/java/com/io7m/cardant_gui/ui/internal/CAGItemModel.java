@@ -19,6 +19,7 @@ package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.model.CAAttachment;
 import com.io7m.cardant.model.CAItem;
+import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSummary;
 import com.io7m.cardant.model.CAMetadataType;
 import com.io7m.cardant.model.CATypeRecordIdentifier;
@@ -29,6 +30,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -101,6 +103,8 @@ public final class CAGItemModel implements CAGItemModelType
   public void update(
     final CAItem item)
   {
+    Objects.requireNonNull(item, "item");
+
     this.summary.set(Optional.of(item.summary()));
 
     this.metadata.setAll(
@@ -128,5 +132,43 @@ public final class CAGItemModel implements CAGItemModelType
     this.metadata.clear();
     this.attachments.clear();
     this.types.clear();
+  }
+
+  @Override
+  public void clearIfMatchingID(
+    final CAItemID id)
+  {
+    Objects.requireNonNull(id, "id");
+
+    final var existingOpt = this.summary.get();
+    if (existingOpt.isEmpty()) {
+      return;
+    }
+
+    final var existingSummary = existingOpt.get();
+    if (!Objects.equals(existingSummary.id(), id)) {
+      return;
+    }
+
+    this.clear();
+  }
+
+  @Override
+  public void updateIfMatchingID(
+    final CAItem item)
+  {
+    Objects.requireNonNull(item, "item");
+
+    final var existingOpt = this.summary.get();
+    if (existingOpt.isEmpty()) {
+      return;
+    }
+
+    final var existingSummary = existingOpt.get();
+    if (!Objects.equals(existingSummary.id(), item.id())) {
+      return;
+    }
+
+    this.update(item);
   }
 }

@@ -17,6 +17,7 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
+import com.io7m.cardant.model.CAIncludeDeleted;
 import com.io7m.cardant.model.CAItemColumn;
 import com.io7m.cardant.model.CAItemColumnOrdering;
 import com.io7m.cardant.model.CAItemSearchParameters;
@@ -267,6 +268,7 @@ public final class CAGItemSearchView
         new CAComparisonFuzzyType.Anything<>(),
         this.typeMatch(),
         this.metadataMatch(),
+        CAIncludeDeleted.INCLUDE_ONLY_LIVE,
         new CAItemColumnOrdering(CAItemColumn.BY_NAME, true),
         100L
       )
