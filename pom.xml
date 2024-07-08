@@ -45,7 +45,7 @@
     <com.io7m.xoanon.version>2.0.0</com.io7m.xoanon.version>
 
     <!-- Third-party dependencies. -->
-    <io.opentelemetry.version>1.39.0</io.opentelemetry.version>
+    <io.opentelemetry.version>1.40.0</io.opentelemetry.version>
     <org.apache.tika.version>2.9.2</org.apache.tika.version>
     <org.javafx.version>23-ea+20</org.javafx.version>
     <org.jooq.version>3.19.10</org.jooq.version>
