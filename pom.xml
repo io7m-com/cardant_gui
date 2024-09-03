@@ -33,7 +33,7 @@
 
     <!-- io7m dependencies. -->
     <com.io7m.cardant.version>1.0.0-SNAPSHOT</com.io7m.cardant.version>
-    <com.io7m.darco.version>1.0.0-SNAPSHOT</com.io7m.darco.version>
+    <com.io7m.darco.version>1.0.0</com.io7m.darco.version>
     <com.io7m.idstore.version>2.0.1</com.io7m.idstore.version>
     <com.io7m.jade.version>1.0.3</com.io7m.jade.version>
     <com.io7m.jattribute.version>1.0.0</com.io7m.jattribute.version>
