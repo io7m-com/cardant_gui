@@ -37,7 +37,7 @@
     <com.io7m.idstore.version>2.0.1</com.io7m.idstore.version>
     <com.io7m.jade.version>1.0.3</com.io7m.jade.version>
     <com.io7m.jattribute.version>1.0.1</com.io7m.jattribute.version>
-    <com.io7m.jsx.version>3.1.1</com.io7m.jsx.version>
+    <com.io7m.jsx.version>4.0.0</com.io7m.jsx.version>
     <com.io7m.jwheatsheaf.version>4.0.0</com.io7m.jwheatsheaf.version>
     <com.io7m.jxtrand.version>2.1.0</com.io7m.jxtrand.version>
     <com.io7m.trasco.version>1.1.0</com.io7m.trasco.version>
