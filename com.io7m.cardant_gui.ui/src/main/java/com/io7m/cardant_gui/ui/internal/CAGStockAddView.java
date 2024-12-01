@@ -182,7 +182,7 @@ public final class CAGStockAddView
   {
     switch (this.stockKind.getValue()) {
       case SERIAL -> {
-        this.stock.stockIntroduceSerial(
+        this.stock.stockSerialIntroduce(
           CAStockInstanceID.random(),
           CALocationID.of(this.locationField.getText()),
           CAItemID.of(this.itemField.getText()),
@@ -193,7 +193,7 @@ public final class CAGStockAddView
         );
       }
       case SET -> {
-        this.stock.stockIntroduceSet(
+        this.stock.stockSetIntroduce(
           CAStockInstanceID.random(),
           CALocationID.of(this.locationField.getText()),
           CAItemID.of(this.itemField.getText()),
@@ -201,6 +201,8 @@ public final class CAGStockAddView
         );
       }
     }
+
+    this.stage.close();
   }
 
   @FXML

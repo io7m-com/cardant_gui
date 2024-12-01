@@ -25,6 +25,8 @@ import com.io7m.cardant.model.CAStockOccurrenceSerial;
 import com.io7m.cardant.model.CAStockOccurrenceType;
 import com.io7m.cardant.model.CAStockRepositSerialIntroduce;
 import com.io7m.cardant.model.CAStockRepositSerialMove;
+import com.io7m.cardant.model.CAStockRepositSerialNumberAdd;
+import com.io7m.cardant.model.CAStockRepositSerialNumberRemove;
 import com.io7m.cardant.model.CAStockRepositSetIntroduce;
 import com.io7m.cardant.model.CAStockSearchParameters;
 import com.io7m.cardant.protocol.inventory.CAICommandStockReposit;
@@ -152,20 +154,23 @@ public final class CAGStockSearchController
       );
 
     future.thenAccept(response -> {
-      Platform.runLater(() -> {
-        final var newInstance = response.data();
-        for (int index = 0; index < this.stock.size(); ++index) {
-          final var oldInstance = this.stock.get(index);
-          if (Objects.equals(oldInstance.instance(), newInstance.instance())) {
-            this.stock.set(index, newInstance);
-          }
-        }
-      });
+      Platform.runLater(() -> this.updateStockOccurrence(response.data()));
     });
   }
 
+  private void updateStockOccurrence(
+    final CAStockOccurrenceType newInstance)
+  {
+    for (int index = 0; index < this.stock.size(); ++index) {
+      final var oldInstance = this.stock.get(index);
+      if (Objects.equals(oldInstance.instance(), newInstance.instance())) {
+        this.stock.set(index, newInstance);
+      }
+    }
+  }
+
   @Override
-  public void stockIntroduceSet(
+  public void stockSetIntroduce(
     final CAStockInstanceID instance,
     final CALocationID location,
     final CAItemID item,
@@ -188,7 +193,7 @@ public final class CAGStockSearchController
   }
 
   @Override
-  public void stockIntroduceSerial(
+  public void stockSerialIntroduce(
     final CAStockInstanceID instance,
     final CALocationID location,
     final CAItemID item,
@@ -209,5 +214,51 @@ public final class CAGStockSearchController
         )
       )
     );
+  }
+
+  @Override
+  public void stockSerialAdd(
+    final CAStockInstanceID instance,
+    final CAItemSerial serial)
+  {
+    Objects.requireNonNull(instance, "instance");
+    Objects.requireNonNull(serial, "serial");
+
+    final var future =
+      this.client.execute(
+        new CAICommandStockReposit(
+          new CAStockRepositSerialNumberAdd(
+            instance,
+            serial
+          )
+        )
+      );
+
+    future.thenAccept(response -> {
+      Platform.runLater(() -> this.updateStockOccurrence(response.data()));
+    });
+  }
+
+  @Override
+  public void stockSerialRemove(
+    final CAStockInstanceID instance,
+    final CAItemSerial serial)
+  {
+    Objects.requireNonNull(instance, "instance");
+    Objects.requireNonNull(serial, "serial");
+
+    final var future =
+      this.client.execute(
+        new CAICommandStockReposit(
+          new CAStockRepositSerialNumberRemove(
+            instance,
+            serial
+          )
+        )
+      );
+
+    future.thenAccept(response -> {
+      Platform.runLater(() -> this.updateStockOccurrence(response.data()));
+    });
   }
 }

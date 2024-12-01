@@ -31,6 +31,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -55,11 +56,12 @@ import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_STOCKS
 public final class CAGStockTableView
   implements CAGViewType
 {
-  private final CAGEventServiceType events;
   private CAGStockSearchControllerType controller;
   private final CAGClientServiceType client;
+  private final CAGEventServiceType events;
   private final CAGLocationSelectDialogs locationDialogs;
   private final CAGStockAddDialogs stockAddDialogs;
+  private final CAGStockSerialAddDialogs stockSerialAddDialogs;
   private final CAGStringsType strings;
   private final MenuItem contextItemOpen;
   private final MenuItem contextLocationOpen;
@@ -100,6 +102,8 @@ public final class CAGStockTableView
       inServices.requireService(CAGLocationSelectDialogs.class);
     this.stockAddDialogs =
       inServices.requireService(CAGStockAddDialogs.class);
+    this.stockSerialAddDialogs =
+      inServices.requireService(CAGStockSerialAddDialogs.class);
     this.client =
       inServices.requireService(CAGClientServiceType.class);
 
@@ -349,13 +353,31 @@ public final class CAGStockTableView
 
   @FXML
   private void onSerialAddSelected()
+    throws IOException
   {
+    final var existing =
+      this.stockTable.getSelectionModel()
+        .getSelectedItem();
 
+    this.stockSerialAddDialogs.openDialogAndWait(
+      new CAGStockSerialAddDialogArguments(
+        existing.instance(),
+        this.controller
+      )
+    );
   }
 
   @FXML
   private void onSerialRemoveSelected()
   {
+    final var instanceExisting =
+      this.stockTable.getSelectionModel()
+        .getSelectedItem();
+
+    final var serialExisting =
+      this.serialList.getSelectionModel()
+        .getSelectedItem();
+
     final var alert =
       new Alert(
         Alert.AlertType.CONFIRMATION,
@@ -363,7 +385,16 @@ public final class CAGStockTableView
       );
 
     CAGCSS.setCSS(alert.getDialogPane());
-    alert.showAndWait();
+    final var r = alert.showAndWait();
+    if (r.isPresent()) {
+      final var rr = r.get();
+      if (rr.equals(ButtonType.OK)) {
+        this.controller.stockSerialRemove(
+          instanceExisting.instance(),
+          serialExisting
+        );
+      }
+    }
   }
 
   private void onRequestItemOpen()

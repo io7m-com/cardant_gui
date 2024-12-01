@@ -63,7 +63,8 @@ public interface CAGStockSearchControllerType
 
   void stockSerialMove(
     CAStockOccurrenceSerial serial,
-    CALocationID location);
+    CALocationID location
+  );
 
   /**
    * Introduce a stock set.
@@ -74,7 +75,7 @@ public interface CAGStockSearchControllerType
    * @param count    The count
    */
 
-  void stockIntroduceSet(
+  void stockSetIntroduce(
     CAStockInstanceID instance,
     CALocationID location,
     CAItemID item,
@@ -90,10 +91,34 @@ public interface CAGStockSearchControllerType
    * @param serial   The serial
    */
 
-  void stockIntroduceSerial(
+  void stockSerialIntroduce(
     CAStockInstanceID instance,
     CALocationID location,
     CAItemID item,
+    CAItemSerial serial
+  );
+
+  /**
+   * Add a serial number to a stock instance.
+   *
+   * @param instance The stock instance
+   * @param serial   The serial
+   */
+
+  void stockSerialAdd(
+    CAStockInstanceID instance,
+    CAItemSerial serial
+  );
+
+  /**
+   * Remove a serial number from a stock instance.
+   *
+   * @param instance The stock instance
+   * @param serial   The serial
+   */
+
+  void stockSerialRemove(
+    CAStockInstanceID instance,
     CAItemSerial serial
   );
 }

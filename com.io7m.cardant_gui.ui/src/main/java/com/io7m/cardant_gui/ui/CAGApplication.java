@@ -54,6 +54,7 @@ import com.io7m.cardant_gui.ui.internal.CAGMainView;
 import com.io7m.cardant_gui.ui.internal.CAGStatusService;
 import com.io7m.cardant_gui.ui.internal.CAGStockAddDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGStockSearchView;
+import com.io7m.cardant_gui.ui.internal.CAGStockSerialAddDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGStockTableView;
 import com.io7m.cardant_gui.ui.internal.CAGStringConstants;
 import com.io7m.cardant_gui.ui.internal.CAGStrings;
@@ -165,6 +166,10 @@ public final class CAGApplication extends Application
     services.register(
       CAGStockAddDialogs.class,
       new CAGStockAddDialogs(services)
+    );
+    services.register(
+      CAGStockSerialAddDialogs.class,
+      new CAGStockSerialAddDialogs(services)
     );
     services.register(
       CAGLocationReparentDialogs.class,
