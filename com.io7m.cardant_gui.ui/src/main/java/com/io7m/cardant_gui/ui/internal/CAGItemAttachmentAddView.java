@@ -90,15 +90,16 @@ public final class CAGItemAttachmentAddView
     final URL url,
     final ResourceBundle resourceBundle)
   {
+    this.relationField.setText("image");
     this.itemField.setText(this.itemId.displayId());
 
     this.fileSearchController.fileSelected()
-      .addListener((observable, oldValue, newValue) -> {
+      .addListener((_, _, newValue) -> {
         this.addButton.setDisable(newValue.isEmpty());
       });
 
     this.fileSearchController.fileSelected()
-      .addListener((observable, oldValue, newValue) -> {
+      .addListener((_, _, newValue) -> {
         if (newValue.isPresent()) {
           this.fileField.setText(newValue.get().id().displayId());
         } else {

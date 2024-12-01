@@ -19,6 +19,7 @@ package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.model.CALocation;
 import com.io7m.cardant.model.CALocationID;
+import com.io7m.cardant.model.CALocationPath;
 import com.io7m.cardant.model.CALocationSummary;
 import com.io7m.cardant.protocol.inventory.CAICommandLocationAttachmentAdd;
 import com.io7m.cardant.protocol.inventory.CAICommandLocationDelete;
@@ -54,7 +55,11 @@ public final class CAGLocationTreeController
     CALocationID.of("00000000-0000-0000-0000-000000000000");
 
   private static final CALocationSummary ROOT_LOCATION_SUMMARY =
-    new CALocationSummary(ROOT_LOCATION, Optional.empty(), "Everywhere");
+    new CALocationSummary(
+      ROOT_LOCATION,
+      Optional.empty(),
+      CALocationPath.singleton("Everywhere")
+    );
 
   private final ObservableList<CALocationSummary> locationsView;
   private final SimpleObjectProperty<CAGPageRange> locationPages;
@@ -189,7 +194,7 @@ public final class CAGLocationTreeController
         new CALocation(
           CALocationID.random(),
           Optional.empty(),
-          name,
+          CALocationPath.singleton(name),
           new TreeMap<>(),
           new TreeMap<>(),
           new TreeSet<>()
@@ -215,7 +220,7 @@ public final class CAGLocationTreeController
             new CALocation(
               source.id(),
               Optional.of(newParent),
-              source.name(),
+              source.path(),
               source.metadata(),
               source.attachments(),
               source.types()

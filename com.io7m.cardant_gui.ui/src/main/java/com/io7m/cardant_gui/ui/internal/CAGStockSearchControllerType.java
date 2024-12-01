@@ -17,6 +17,11 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
+import com.io7m.cardant.model.CAItemID;
+import com.io7m.cardant.model.CAItemSerial;
+import com.io7m.cardant.model.CALocationID;
+import com.io7m.cardant.model.CAStockInstanceID;
+import com.io7m.cardant.model.CAStockOccurrenceSerial;
 import com.io7m.cardant.model.CAStockOccurrenceType;
 import com.io7m.cardant.model.CAStockSearchParameters;
 import javafx.collections.ObservableList;
@@ -48,4 +53,47 @@ public interface CAGStockSearchControllerType
 
   void stockSearchBegin(
     CAStockSearchParameters searchParameters);
+
+  /**
+   * Move the given serial stock occurrence to the given location.
+   *
+   * @param serial   The stock
+   * @param location The target location
+   */
+
+  void stockSerialMove(
+    CAStockOccurrenceSerial serial,
+    CALocationID location);
+
+  /**
+   * Introduce a stock set.
+   *
+   * @param instance The instance
+   * @param location The location
+   * @param item     The item
+   * @param count    The count
+   */
+
+  void stockIntroduceSet(
+    CAStockInstanceID instance,
+    CALocationID location,
+    CAItemID item,
+    long count
+  );
+
+  /**
+   * Introduce a stock serial.
+   *
+   * @param instance The instance
+   * @param location The location
+   * @param item     The item
+   * @param serial   The serial
+   */
+
+  void stockIntroduceSerial(
+    CAStockInstanceID instance,
+    CALocationID location,
+    CAItemID item,
+    CAItemSerial serial
+  );
 }

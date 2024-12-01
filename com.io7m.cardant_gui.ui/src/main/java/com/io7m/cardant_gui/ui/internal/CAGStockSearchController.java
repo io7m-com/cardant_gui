@@ -17,8 +17,17 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
+import com.io7m.cardant.model.CAItemID;
+import com.io7m.cardant.model.CAItemSerial;
+import com.io7m.cardant.model.CALocationID;
+import com.io7m.cardant.model.CAStockInstanceID;
+import com.io7m.cardant.model.CAStockOccurrenceSerial;
 import com.io7m.cardant.model.CAStockOccurrenceType;
+import com.io7m.cardant.model.CAStockRepositSerialIntroduce;
+import com.io7m.cardant.model.CAStockRepositSerialMove;
+import com.io7m.cardant.model.CAStockRepositSetIntroduce;
 import com.io7m.cardant.model.CAStockSearchParameters;
+import com.io7m.cardant.protocol.inventory.CAICommandStockReposit;
 import com.io7m.cardant.protocol.inventory.CAICommandStockSearchBegin;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
@@ -125,5 +134,80 @@ public final class CAGStockSearchController
         this.stock.setAll(newItemPage);
       });
     });
+  }
+
+  @Override
+  public void stockSerialMove(
+    final CAStockOccurrenceSerial serial,
+    final CALocationID location)
+  {
+    Objects.requireNonNull(serial, "serial");
+    Objects.requireNonNull(location, "location");
+
+    final var future =
+      this.client.execute(
+        new CAICommandStockReposit(
+          new CAStockRepositSerialMove(serial.instance(), location)
+        )
+      );
+
+    future.thenAccept(response -> {
+      Platform.runLater(() -> {
+        final var newInstance = response.data();
+        for (int index = 0; index < this.stock.size(); ++index) {
+          final var oldInstance = this.stock.get(index);
+          if (Objects.equals(oldInstance.instance(), newInstance.instance())) {
+            this.stock.set(index, newInstance);
+          }
+        }
+      });
+    });
+  }
+
+  @Override
+  public void stockIntroduceSet(
+    final CAStockInstanceID instance,
+    final CALocationID location,
+    final CAItemID item,
+    final long count)
+  {
+    Objects.requireNonNull(instance, "instance");
+    Objects.requireNonNull(location, "location");
+    Objects.requireNonNull(item, "item");
+
+    this.client.execute(
+      new CAICommandStockReposit(
+        new CAStockRepositSetIntroduce(
+          instance,
+          item,
+          location,
+          count
+        )
+      )
+    );
+  }
+
+  @Override
+  public void stockIntroduceSerial(
+    final CAStockInstanceID instance,
+    final CALocationID location,
+    final CAItemID item,
+    final CAItemSerial serial)
+  {
+    Objects.requireNonNull(instance, "instance");
+    Objects.requireNonNull(location, "location");
+    Objects.requireNonNull(item, "item");
+    Objects.requireNonNull(serial, "serial");
+
+    this.client.execute(
+      new CAICommandStockReposit(
+        new CAStockRepositSerialIntroduce(
+          instance,
+          item,
+          location,
+          serial
+        )
+      )
+    );
   }
 }

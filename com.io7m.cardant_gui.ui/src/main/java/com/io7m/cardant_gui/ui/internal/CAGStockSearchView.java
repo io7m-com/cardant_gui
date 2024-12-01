@@ -149,7 +149,7 @@ public final class CAGStockSearchView
       .select(CAGItemIDMatchKind.ANY);
     this.itemMatch.getSelectionModel()
       .selectedItemProperty()
-      .addListener((observable, oldValue, newValue) -> {
+      .addListener((_, _, newValue) -> {
         this.onIDMatchChanged(newValue);
       });
 
@@ -161,7 +161,7 @@ public final class CAGStockSearchView
       .select(CAGLocationMatchKind.ANY);
     this.locationMatch.getSelectionModel()
       .selectedItemProperty()
-      .addListener((observable, oldValue, newValue) -> {
+      .addListener((_, _, newValue) -> {
         this.onLocationMatchChanged(newValue);
       });
   }

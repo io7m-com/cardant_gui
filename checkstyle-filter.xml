@@ -5,6 +5,9 @@
   "https://checkstyle.org/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-  <suppress files="CAGApplication.java"
+  <suppress files="CAGApplication\.java"
             checks="ClassDataAbstractionCoupling"/>
+
+  <suppress files=".*\.java"
+            checks="RedundantModifier"/>
 </suppressions>

@@ -195,7 +195,7 @@ public final class CAGLocationDetailsView
     final var newValue = newOpt.orElseThrow();
     this.mainItemDetails.setDisable(false);
     this.idField.setText(newValue.id().toString());
-    this.nameField.setText(newValue.name());
+    this.nameField.setText(newValue.name().value());
     this.clearThumbnail();
   }
 

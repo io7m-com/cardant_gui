@@ -18,21 +18,35 @@
 package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.model.CAItemID;
-import com.io7m.cardant.model.CALocationSummary;
+import com.io7m.cardant.model.CAItemSerial;
+import com.io7m.cardant.model.CAStockOccurrenceSerial;
+import com.io7m.cardant.model.CAStockOccurrenceSet;
 import com.io7m.cardant.model.CAStockOccurrenceType;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.beans.Observable;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.Pane;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_STOCKSEARCH_CONFIRMDELETE;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_STOCKSEARCH_CONFIRMDELETESERIAL;
 
 /**
  * The table of stock.
@@ -41,19 +55,31 @@ import java.util.ResourceBundle;
 public final class CAGStockTableView
   implements CAGViewType
 {
-  private final CAGStringsType strings;
+  private final CAGEventServiceType events;
   private CAGStockSearchControllerType controller;
+  private final CAGClientServiceType client;
+  private final CAGLocationSelectDialogs locationDialogs;
+  private final CAGStockAddDialogs stockAddDialogs;
+  private final CAGStringsType strings;
+  private final MenuItem contextItemOpen;
+  private final MenuItem contextLocationOpen;
+  private final ObservableList<CAItemSerial> serials;
 
-  @FXML private TableView<CAStockOccurrenceType> stockTable;
-  @FXML private TableColumn<CAStockOccurrenceType, CALocationSummary> colLocation;
-  @FXML private TableColumn<CAStockOccurrenceType, CAItemID> colItem;
-  @FXML private TableColumn<CAStockOccurrenceType, String> colName;
-  @FXML private TableColumn<CAStockOccurrenceType, CAStockOccurrenceType> colSerial;
-  @FXML private TableColumn<CAStockOccurrenceType, CAStockOccurrenceType> colCount;
+  @FXML private Button serialAdd;
+  @FXML private Button serialRemove;
+  @FXML private Button stockAdd;
+  @FXML private Button stockMove;
+  @FXML private Button stockRemove;
   @FXML private Label resultsLabel;
-  @FXML private Button itemAdd;
-  @FXML private Button itemRemove;
-  @FXML private Button itemMove;
+  @FXML private ListView<CAItemSerial> serialList;
+  @FXML private Pane stockDetails;
+  @FXML private TableColumn<CAStockOccurrenceType, CAItemID> colItem;
+  @FXML private TableColumn<CAStockOccurrenceType, Long> colCount;
+  @FXML private TableColumn<CAStockOccurrenceType, String> colLocation;
+  @FXML private TableColumn<CAStockOccurrenceType, String> colName;
+  @FXML private TableColumn<CAStockOccurrenceType, String> colSerial;
+  @FXML private TableView<CAStockOccurrenceType> stockTable;
+  @FXML private final ContextMenu contextMenu;
 
   /**
    * The table of stock.
@@ -68,6 +94,31 @@ public final class CAGStockTableView
 
     this.strings =
       inServices.requireService(CAGStringsType.class);
+    this.events =
+      inServices.requireService(CAGEventServiceType.class);
+    this.locationDialogs =
+      inServices.requireService(CAGLocationSelectDialogs.class);
+    this.stockAddDialogs =
+      inServices.requireService(CAGStockAddDialogs.class);
+    this.client =
+      inServices.requireService(CAGClientServiceType.class);
+
+    this.contextLocationOpen = new MenuItem("Open in location view…");
+    this.contextLocationOpen.setOnAction(_ -> this.onRequestLocationOpen());
+
+    this.contextItemOpen = new MenuItem("Open in item view…");
+    this.contextItemOpen.setOnAction(_ -> this.onRequestItemOpen());
+
+    this.contextMenu = new ContextMenu();
+    this.contextMenu.getItems()
+      .setAll(
+        List.of(
+          this.contextLocationOpen,
+          this.contextItemOpen
+        )
+      );
+
+    this.serials = FXCollections.observableArrayList();
   }
 
   /**
@@ -96,48 +147,120 @@ public final class CAGStockTableView
   {
     this.resultsLabel.setText("");
 
+    this.stockDetails.setDisable(true);
+    this.stockMove.setDisable(true);
+    this.stockRemove.setDisable(true);
+
+    this.serialList.setItems(this.serials);
+    this.serialList.getSelectionModel()
+      .selectedItemProperty()
+      .addListener((_, _, newValue) -> {
+        this.onSerialSelectionChanged(newValue);
+      });
+
+    this.serialRemove.setDisable(true);
+
     this.stockTable.setPlaceholder(new Label(""));
-    this.stockTable.setSelectionModel(null);
+    this.stockTable.getSelectionModel()
+      .selectedItemProperty()
+      .addListener((_, _, newValue) -> this.onTableSelectionChanged(newValue));
 
     this.colLocation.setReorderable(false);
     this.colLocation.setCellValueFactory(param -> {
-      return new ReadOnlyObjectWrapper<>(param.getValue().location());
-    });
-    this.colLocation.setCellFactory(param -> {
-      return new CAGStockTableLocationCell(this.strings);
+      return new ReadOnlyObjectWrapper<>(
+        param.getValue().location().path().toString()
+      );
     });
 
     this.colItem.setReorderable(false);
     this.colItem.setCellValueFactory(param -> {
       return new ReadOnlyObjectWrapper<>(param.getValue().item().id());
     });
-    this.colItem.setCellFactory(param -> {
-      return new CAGStockTableItemCell(this.strings);
-    });
 
     this.colName.setReorderable(false);
     this.colName.setCellValueFactory(param -> {
       return new ReadOnlyStringWrapper(param.getValue().item().name());
     });
-    this.colName.setCellFactory(param -> {
-      return new CAGStockTableNameCell();
-    });
 
     this.colSerial.setReorderable(false);
     this.colSerial.setCellValueFactory(param -> {
-      return new ReadOnlyObjectWrapper<>(param.getValue());
-    });
-    this.colSerial.setCellFactory(param -> {
-      return new CAGStockTableSerialCell();
+      return new ReadOnlyObjectWrapper<>(stockSerialText(param.getValue()));
     });
 
     this.colCount.setReorderable(false);
     this.colCount.setCellValueFactory(param -> {
-      return new ReadOnlyObjectWrapper<>(param.getValue());
+      return new ReadOnlyObjectWrapper<>(stockCount(param.getValue()));
     });
-    this.colCount.setCellFactory(param -> {
-      return new CAGStockTableCountCell();
-    });
+  }
+
+  private void onSerialSelectionChanged(
+    final CAItemSerial newValue)
+  {
+    if (newValue == null) {
+      this.serialRemove.setDisable(true);
+      return;
+    }
+
+    this.serialRemove.setDisable(false);
+  }
+
+  private void onTableSelectionChanged(
+    final CAStockOccurrenceType occurrence)
+  {
+    if (occurrence == null) {
+      this.stockTable.setContextMenu(null);
+      this.stockDetails.setDisable(true);
+      this.stockRemove.setDisable(true);
+      this.stockMove.setDisable(true);
+      this.serials.clear();
+      return;
+    }
+
+    this.stockTable.setContextMenu(this.contextMenu);
+    this.stockDetails.setDisable(false);
+    this.stockMove.setDisable(false);
+    this.stockRemove.setDisable(false);
+
+    switch (occurrence) {
+      case final CAStockOccurrenceSerial serial -> {
+        this.serials.setAll(serial.serials());
+        this.serialAdd.setDisable(false);
+      }
+      case final CAStockOccurrenceSet _ -> {
+        this.serialRemove.setDisable(true);
+        this.serialAdd.setDisable(true);
+        this.serials.clear();
+      }
+    }
+  }
+
+  private static Long stockCount(
+    final CAStockOccurrenceType value)
+  {
+    return switch (value) {
+      case final CAStockOccurrenceSerial _ -> Long.valueOf(1L);
+      case final CAStockOccurrenceSet set -> Long.valueOf(set.count());
+    };
+  }
+
+  private static String stockSerialText(
+    final CAStockOccurrenceType value)
+  {
+    return switch (value) {
+      case final CAStockOccurrenceSerial serial -> {
+        final var serials = serial.serials();
+        if (serials.isEmpty()) {
+          yield "";
+        }
+        final var text = new StringBuilder();
+        text.append(serials.getFirst().value());
+        if (serials.size() > 1) {
+          text.append(", …");
+        }
+        yield text.toString();
+      }
+      case final CAStockOccurrenceSet _ -> "";
+    };
   }
 
   private void onStocksViewChanged(
@@ -160,18 +283,95 @@ public final class CAGStockTableView
 
   @FXML
   private void onStockAddSelected()
+    throws IOException
   {
+    final var locationController =
+      CAGLocationTreeController.create(this.client);
+    final var itemSearchController =
+      CAGItemSearchController.create(this.events, this.client);
+    final var itemDetailsController =
+      CAGItemDetailsController.create(this.events, this.client);
 
+    this.stockAddDialogs.openDialogAndWait(
+      new CAGStockAddDialogArguments(
+        this.controller,
+        locationController,
+        itemDetailsController,
+        itemSearchController
+      )
+    );
   }
 
   @FXML
   private void onStockMoveSelected()
+    throws IOException
+  {
+    final var existing =
+      this.stockTable.getSelectionModel()
+        .getSelectedItem();
+
+    switch (existing) {
+      case final CAStockOccurrenceSerial serial -> {
+        final var locationController =
+          CAGLocationTreeController.create(this.client);
+
+        this.locationDialogs.openDialogAndWait(locationController);
+
+        final var locationSelected =
+          locationController.locationSelected();
+        final var summaryOpt =
+          locationSelected.summary().getValue();
+
+        if (summaryOpt.isEmpty()) {
+          return;
+        }
+
+        this.controller.stockSerialMove(serial, summaryOpt.get().id());
+      }
+      case final CAStockOccurrenceSet set -> {
+
+      }
+    }
+  }
+
+  @FXML
+  private void onStockRemoveSelected()
+  {
+    final var alert =
+      new Alert(
+        Alert.AlertType.CONFIRMATION,
+        this.strings.format(CARDANT_STOCKSEARCH_CONFIRMDELETE)
+      );
+
+    CAGCSS.setCSS(alert.getDialogPane());
+    alert.showAndWait();
+  }
+
+  @FXML
+  private void onSerialAddSelected()
   {
 
   }
 
   @FXML
-  private void onStockRemoveSelected()
+  private void onSerialRemoveSelected()
+  {
+    final var alert =
+      new Alert(
+        Alert.AlertType.CONFIRMATION,
+        this.strings.format(CARDANT_STOCKSEARCH_CONFIRMDELETESERIAL)
+      );
+
+    CAGCSS.setCSS(alert.getDialogPane());
+    alert.showAndWait();
+  }
+
+  private void onRequestItemOpen()
+  {
+
+  }
+
+  private void onRequestLocationOpen()
   {
 
   }
