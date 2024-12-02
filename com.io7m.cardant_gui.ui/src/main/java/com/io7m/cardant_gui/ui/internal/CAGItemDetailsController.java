@@ -28,10 +28,12 @@ import com.io7m.cardant.protocol.inventory.CAICommandItemDelete;
 import com.io7m.cardant.protocol.inventory.CAICommandItemGet;
 import com.io7m.cardant.protocol.inventory.CAICommandItemMetadataPut;
 import com.io7m.cardant.protocol.inventory.CAICommandItemMetadataRemove;
+import com.io7m.cardant.protocol.inventory.CAICommandItemSetName;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemCreate;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemDelete;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemMetadataPut;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemMetadataRemove;
+import com.io7m.cardant.protocol.inventory.CAIResponseItemSetName;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -95,7 +97,7 @@ public final class CAGItemDetailsController
         Platform.runLater(() -> this.itemSelected.clearIfMatchingID(e.item()));
       }
       case final CAGEventItemUpdated e -> {
-        Platform.runLater(() -> this.itemSelected.updateIfMatchingID(e.item()));
+        Platform.runLater(() -> this.itemUpdateReceived(e.item()));
       }
       case final CAGEventLocationUpdated _ -> {
         // Nothing to do
@@ -219,11 +221,24 @@ public final class CAGItemDetailsController
       ));
 
     future.thenAccept(r -> {
-      Platform.runLater(() -> this.itemSelected.updateIfMatchingID(r.data()));
+      Platform.runLater(() -> this.itemUpdateReceived(r.data()));
       this.events.publish(new CAGEventItemUpdated(r.data()));
     });
 
     return future.thenApply(CAIResponseItemMetadataPut::data);
+  }
+
+  private void itemUpdateReceived(
+    final CAItem newItem)
+  {
+    this.itemSelected.updateIfMatchingID(newItem);
+
+    for (int index = 0; index < this.items.size(); ++index) {
+      if (Objects.equals(this.items.get(index).id(), newItem.id())) {
+        this.items.set(index, newItem.summary());
+        return;
+      }
+    }
   }
 
   @Override
@@ -241,10 +256,31 @@ public final class CAGItemDetailsController
       ));
 
     future.thenAccept(r -> {
-      Platform.runLater(() -> this.itemSelected.updateIfMatchingID(r.data()));
+      Platform.runLater(() -> this.itemUpdateReceived(r.data()));
       this.events.publish(new CAGEventItemUpdated(r.data()));
     });
 
     return future.thenApply(CAIResponseItemMetadataRemove::data);
+  }
+
+  @Override
+  public CompletableFuture<CAItem> itemSetName(
+    final CAItemID item,
+    final String newName)
+  {
+    Objects.requireNonNull(item, "item");
+    Objects.requireNonNull(newName, "newName");
+
+    final var future =
+      this.client.execute(
+        new CAICommandItemSetName(item, newName)
+      );
+
+    future.thenAccept(r -> {
+      Platform.runLater(() -> this.itemUpdateReceived(r.data()));
+      this.events.publish(new CAGEventItemUpdated(r.data()));
+    });
+
+    return future.thenApply(CAIResponseItemSetName::data);
   }
 }

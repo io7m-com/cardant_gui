@@ -125,4 +125,18 @@ public interface CAGItemDetailsControllerType
   CompletableFuture<CAItem> itemMetadataRemove(
     CAItemID item,
     CATypeRecordFieldIdentifier metadata);
+
+  /**
+   * Set the name of an item.
+   *
+   * @param itemId  The item ID
+   * @param newName The new name
+   *
+   * @return The operation in progress
+   */
+
+  CompletableFuture<CAItem> itemSetName(
+    CAItemID itemId,
+    String newName);
+
 }

@@ -34,6 +34,7 @@ public sealed interface CAGViewType
   CAGItemAttachmentAddView,
   CAGItemCreateView,
   CAGItemDetailsView,
+  CAGItemNameSetView,
   CAGItemSearchView,
   CAGItemSelectView,
   CAGItemTableView,

@@ -36,6 +36,7 @@ import com.io7m.cardant_gui.ui.internal.CAGFileViewDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGItemAttachmentAddDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGItemCreateDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGItemDetailsView;
+import com.io7m.cardant_gui.ui.internal.CAGItemNameSetDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGItemSearchView;
 import com.io7m.cardant_gui.ui.internal.CAGItemSelectDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGItemTableView;
@@ -175,6 +176,10 @@ public final class CAGApplication extends Application
     services.register(
       CAGMetadataAddDialogs.class,
       new CAGMetadataAddDialogs(services)
+    );
+    services.register(
+      CAGItemNameSetDialogs.class,
+      new CAGItemNameSetDialogs(services)
     );
     services.register(
       CAGLocationReparentDialogs.class,
