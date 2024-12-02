@@ -23,8 +23,10 @@ import com.io7m.cardant.model.CATypeRecordFieldIdentifier;
 import com.io7m.cardant.model.CATypeRecordIdentifier;
 import com.io7m.lanark.core.RDottedName;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Control;
@@ -55,6 +57,7 @@ public final class CAGMetadataAddView
   private final CAGItemDetailsControllerType itemController;
   private final CAItemID item;
 
+  @FXML private Parent root;
   @FXML private TextField packageField;
   @FXML private TextField typeField;
   @FXML private TextField fieldField;
@@ -117,6 +120,8 @@ public final class CAGMetadataAddView
       .addListener(_ -> this.setFieldVisibility());
     this.kind.setValue(
       CAMetadataValueKind.INTEGRAL);
+
+    this.valueIntegerField.setValueFactory(new CAGSpinnerSignedLongFactory());
 
     this.packageField.textProperty()
       .addListener(_ -> this.validate());
@@ -240,6 +245,8 @@ public final class CAGMetadataAddView
   @FXML
   private void onAddSelected()
   {
+    this.root.setDisable(true);
+
     final var id =
       new CATypeRecordFieldIdentifier(
         new CATypeRecordIdentifier(
@@ -288,7 +295,13 @@ public final class CAGMetadataAddView
         }
       };
 
-    this.itemController.itemMetadataAdd(this.item, meta);
-    this.stage.close();
+    this.itemController.itemMetadataAdd(this.item, meta)
+      .whenComplete((_, exception) -> {
+        Platform.runLater(() -> this.root.setDisable(false));
+
+        if (exception == null) {
+          Platform.runLater(this.stage::close);
+        }
+      });
   }
 }

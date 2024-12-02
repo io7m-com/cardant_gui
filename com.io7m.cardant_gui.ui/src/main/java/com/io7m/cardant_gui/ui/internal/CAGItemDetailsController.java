@@ -17,6 +17,7 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
+import com.io7m.cardant.model.CAItem;
 import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSummary;
 import com.io7m.cardant.model.CAMetadataType;
@@ -27,6 +28,10 @@ import com.io7m.cardant.protocol.inventory.CAICommandItemDelete;
 import com.io7m.cardant.protocol.inventory.CAICommandItemGet;
 import com.io7m.cardant.protocol.inventory.CAICommandItemMetadataPut;
 import com.io7m.cardant.protocol.inventory.CAICommandItemMetadataRemove;
+import com.io7m.cardant.protocol.inventory.CAIResponseItemCreate;
+import com.io7m.cardant.protocol.inventory.CAIResponseItemDelete;
+import com.io7m.cardant.protocol.inventory.CAIResponseItemMetadataPut;
+import com.io7m.cardant.protocol.inventory.CAIResponseItemMetadataRemove;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,6 +40,7 @@ import javafx.collections.transformation.SortedList;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * An item details controller.
@@ -142,9 +148,7 @@ public final class CAGItemDetailsController
       this.client.execute(new CAICommandItemGet(id));
 
     future.thenAccept(response -> {
-      Platform.runLater(() -> {
-        this.itemSelected.update(response.data());
-      });
+      Platform.runLater(() -> this.itemSelected.update(response.data()));
     });
   }
 
@@ -169,16 +173,19 @@ public final class CAGItemDetailsController
   }
 
   @Override
-  public void itemCreate(
+  public CompletableFuture<CAItem> itemCreate(
     final CAItemID id,
     final String name)
   {
-    this.client.execute(new CAICommandItemCreate(id, name));
+    final var future =
+      this.client.execute(new CAICommandItemCreate(id, name));
+
     this.itemSelect(id);
+    return future.thenApply(CAIResponseItemCreate::data);
   }
 
   @Override
-  public void itemDelete(
+  public CompletableFuture<CAItemID> itemDelete(
     final CAItemID id)
   {
     Objects.requireNonNull(id, "id");
@@ -187,15 +194,15 @@ public final class CAGItemDetailsController
       this.client.execute(new CAICommandItemDelete(id));
 
     future.thenAccept(_ -> {
-      Platform.runLater(() -> {
-        this.itemSelected.clearIfMatchingID(id);
-      });
+      Platform.runLater(() -> this.itemSelected.clearIfMatchingID(id));
       this.events.publish(new CAGEventItemDeleted(id));
     });
+
+    return future.thenApply(CAIResponseItemDelete::data);
   }
 
   @Override
-  public void itemMetadataAdd(
+  public CompletableFuture<CAItem> itemMetadataAdd(
     final CAItemID item,
     final CAMetadataType metadata)
   {
@@ -212,15 +219,15 @@ public final class CAGItemDetailsController
       ));
 
     future.thenAccept(r -> {
-      Platform.runLater(() -> {
-        this.itemSelected.updateIfMatchingID(r.data());
-      });
+      Platform.runLater(() -> this.itemSelected.updateIfMatchingID(r.data()));
       this.events.publish(new CAGEventItemUpdated(r.data()));
     });
+
+    return future.thenApply(CAIResponseItemMetadataPut::data);
   }
 
   @Override
-  public void itemMetadataRemove(
+  public CompletableFuture<CAItem> itemMetadataRemove(
     final CAItemID item,
     final CATypeRecordFieldIdentifier metadata)
   {
@@ -234,10 +241,10 @@ public final class CAGItemDetailsController
       ));
 
     future.thenAccept(r -> {
-      Platform.runLater(() -> {
-        this.itemSelected.updateIfMatchingID(r.data());
-      });
+      Platform.runLater(() -> this.itemSelected.updateIfMatchingID(r.data()));
       this.events.publish(new CAGEventItemUpdated(r.data()));
     });
+
+    return future.thenApply(CAIResponseItemMetadataRemove::data);
   }
 }

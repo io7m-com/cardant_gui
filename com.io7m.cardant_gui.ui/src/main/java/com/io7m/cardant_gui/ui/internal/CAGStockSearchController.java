@@ -31,6 +31,7 @@ import com.io7m.cardant.model.CAStockRepositSetIntroduce;
 import com.io7m.cardant.model.CAStockSearchParameters;
 import com.io7m.cardant.protocol.inventory.CAICommandStockReposit;
 import com.io7m.cardant.protocol.inventory.CAICommandStockSearchBegin;
+import com.io7m.cardant.protocol.inventory.CAIResponseStockReposit;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -41,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * A stock search controller.
@@ -170,7 +172,7 @@ public final class CAGStockSearchController
   }
 
   @Override
-  public void stockSetIntroduce(
+  public CompletableFuture<CAGUnit> stockSetIntroduce(
     final CAStockInstanceID instance,
     final CALocationID location,
     final CAItemID item,
@@ -180,7 +182,7 @@ public final class CAGStockSearchController
     Objects.requireNonNull(location, "location");
     Objects.requireNonNull(item, "item");
 
-    this.client.execute(
+    return this.client.execute(
       new CAICommandStockReposit(
         new CAStockRepositSetIntroduce(
           instance,
@@ -189,11 +191,11 @@ public final class CAGStockSearchController
           count
         )
       )
-    );
+    ).thenApply(_ -> CAGUnit.UNIT);
   }
 
   @Override
-  public void stockSerialIntroduce(
+  public CompletableFuture<CAGUnit> stockSerialIntroduce(
     final CAStockInstanceID instance,
     final CALocationID location,
     final CAItemID item,
@@ -204,7 +206,7 @@ public final class CAGStockSearchController
     Objects.requireNonNull(item, "item");
     Objects.requireNonNull(serial, "serial");
 
-    this.client.execute(
+    return this.client.execute(
       new CAICommandStockReposit(
         new CAStockRepositSerialIntroduce(
           instance,
@@ -213,11 +215,11 @@ public final class CAGStockSearchController
           serial
         )
       )
-    );
+    ).thenApply(_ -> CAGUnit.UNIT);
   }
 
   @Override
-  public void stockSerialAdd(
+  public CompletableFuture<CAStockOccurrenceType> stockSerialAdd(
     final CAStockInstanceID instance,
     final CAItemSerial serial)
   {
@@ -237,10 +239,12 @@ public final class CAGStockSearchController
     future.thenAccept(response -> {
       Platform.runLater(() -> this.updateStockOccurrence(response.data()));
     });
+
+    return future.thenApply(CAIResponseStockReposit::data);
   }
 
   @Override
-  public void stockSerialRemove(
+  public CompletableFuture<CAStockOccurrenceType> stockSerialRemove(
     final CAStockInstanceID instance,
     final CAItemSerial serial)
   {
@@ -260,5 +264,7 @@ public final class CAGStockSearchController
     future.thenAccept(response -> {
       Platform.runLater(() -> this.updateStockOccurrence(response.data()));
     });
+
+    return future.thenApply(CAIResponseStockReposit::data);
   }
 }

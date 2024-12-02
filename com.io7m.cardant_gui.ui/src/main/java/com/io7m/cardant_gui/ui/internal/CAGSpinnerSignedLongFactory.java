@@ -20,17 +20,17 @@ package com.io7m.cardant_gui.ui.internal;
 import javafx.scene.control.SpinnerValueFactory;
 
 /**
- * A spinner factory for unsigned long values.
+ * A spinner factory for signed long values.
  */
 
-public final class CAGSpinnerLongFactory
+public final class CAGSpinnerSignedLongFactory
   extends SpinnerValueFactory<Long>
 {
   /**
-   * A spinner factory for unsigned long values.
+   * A spinner factory for signed long values.
    */
 
-  public CAGSpinnerLongFactory()
+  public CAGSpinnerSignedLongFactory()
   {
     this.setValue(Long.valueOf(0L));
   }
@@ -39,17 +39,13 @@ public final class CAGSpinnerLongFactory
   public void decrement(
     final int steps)
   {
-    this.setValue(
-      Long.valueOf(Math.max(0L, this.getValue().longValue() - steps))
-    );
+    this.setValue(Long.valueOf(this.getValue().longValue() - steps));
   }
 
   @Override
   public void increment(
     final int steps)
   {
-    this.setValue(
-      Long.valueOf(Math.max(0L, this.getValue().longValue() + steps))
-    );
+    this.setValue(Long.valueOf(this.getValue().longValue() + steps));
   }
 }

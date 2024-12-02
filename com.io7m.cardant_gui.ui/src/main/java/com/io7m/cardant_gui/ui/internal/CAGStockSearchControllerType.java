@@ -27,6 +27,8 @@ import com.io7m.cardant.model.CAStockSearchParameters;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Stock methods for the controller.
  */
@@ -73,9 +75,11 @@ public interface CAGStockSearchControllerType
    * @param location The location
    * @param item     The item
    * @param count    The count
+   *
+   * @return The operation in progress
    */
 
-  void stockSetIntroduce(
+  CompletableFuture<CAGUnit> stockSetIntroduce(
     CAStockInstanceID instance,
     CALocationID location,
     CAItemID item,
@@ -89,9 +93,11 @@ public interface CAGStockSearchControllerType
    * @param location The location
    * @param item     The item
    * @param serial   The serial
+   *
+   * @return The operation in progress
    */
 
-  void stockSerialIntroduce(
+  CompletableFuture<CAGUnit> stockSerialIntroduce(
     CAStockInstanceID instance,
     CALocationID location,
     CAItemID item,
@@ -103,9 +109,11 @@ public interface CAGStockSearchControllerType
    *
    * @param instance The stock instance
    * @param serial   The serial
+   *
+   * @return The operation in progress
    */
 
-  void stockSerialAdd(
+  CompletableFuture<CAStockOccurrenceType> stockSerialAdd(
     CAStockInstanceID instance,
     CAItemSerial serial
   );
@@ -115,9 +123,11 @@ public interface CAGStockSearchControllerType
    *
    * @param instance The stock instance
    * @param serial   The serial
+   *
+   * @return The operation in progress
    */
 
-  void stockSerialRemove(
+  CompletableFuture<CAStockOccurrenceType> stockSerialRemove(
     CAStockInstanceID instance,
     CAItemSerial serial
   );

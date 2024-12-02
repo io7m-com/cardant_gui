@@ -20,7 +20,9 @@ package com.io7m.cardant_gui.ui.internal;
 import com.io7m.cardant.model.CAItemSerial;
 import com.io7m.cardant.model.CAStockInstanceID;
 import com.io7m.lanark.core.RDottedName;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -40,6 +42,7 @@ public final class CAGStockSerialAddView
   private final CAGStockSearchControllerType stock;
   private final CAStockInstanceID instance;
 
+  @FXML private Parent root;
   @FXML private TextField typeField;
   @FXML private TextField valueField;
   @FXML private Button addButton;
@@ -99,14 +102,23 @@ public final class CAGStockSerialAddView
   @FXML
   private void onStockSerialAddSelected()
   {
-    this.stock.stockSerialAdd(
-      this.instance,
-      new CAItemSerial(
-        new RDottedName(this.typeField.getText().trim()),
-        this.valueField.getText().trim()
-      )
-    );
+    this.root.setDisable(true);
 
-    this.stage.close();
+    final var future =
+      this.stock.stockSerialAdd(
+        this.instance,
+        new CAItemSerial(
+          new RDottedName(this.typeField.getText().trim()),
+          this.valueField.getText().trim()
+        )
+      );
+
+    future.whenComplete((_, exception) -> {
+      Platform.runLater(() -> this.root.setDisable(false));
+
+      if (exception == null) {
+        Platform.runLater(this.stage::close);
+      }
+    });
   }
 }

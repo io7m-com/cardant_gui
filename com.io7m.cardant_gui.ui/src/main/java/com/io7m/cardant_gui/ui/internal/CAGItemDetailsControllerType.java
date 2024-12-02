@@ -17,6 +17,7 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
+import com.io7m.cardant.model.CAItem;
 import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSummary;
 import com.io7m.cardant.model.CAMetadataType;
@@ -24,6 +25,8 @@ import com.io7m.cardant.model.CATypeRecordFieldIdentifier;
 import com.io7m.cardant.protocol.inventory.CAICommandItemAttachmentAdd;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Controller methods for the item details view.
@@ -78,9 +81,11 @@ public interface CAGItemDetailsControllerType
    *
    * @param id   The item ID
    * @param name The name
+   *
+   * @return The operation in progress
    */
 
-  void itemCreate(
+  CompletableFuture<CAItem> itemCreate(
     CAItemID id,
     String name);
 
@@ -88,9 +93,11 @@ public interface CAGItemDetailsControllerType
    * Delete an item.
    *
    * @param id The item ID
+   *
+   * @return The operation in progress
    */
 
-  void itemDelete(
+  CompletableFuture<CAItemID> itemDelete(
     CAItemID id);
 
   /**
@@ -98,9 +105,11 @@ public interface CAGItemDetailsControllerType
    *
    * @param item     The item
    * @param metadata The metadata
+   *
+   * @return The operation in progress
    */
 
-  void itemMetadataAdd(
+  CompletableFuture<CAItem> itemMetadataAdd(
     CAItemID item,
     CAMetadataType metadata);
 
@@ -109,9 +118,11 @@ public interface CAGItemDetailsControllerType
    *
    * @param item     The item
    * @param metadata The metadata
+   *
+   * @return The operation in progress
    */
 
-  void itemMetadataRemove(
+  CompletableFuture<CAItem> itemMetadataRemove(
     CAItemID item,
     CATypeRecordFieldIdentifier metadata);
 }

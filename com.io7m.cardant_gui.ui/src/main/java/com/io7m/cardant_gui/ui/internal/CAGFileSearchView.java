@@ -123,9 +123,9 @@ public final class CAGFileSearchView
     this.fileDescription.setDisable(true);
 
     this.fileSizeLower.setValueFactory(
-      new CAGSpinnerLongFactory());
+      new CAGSpinnerUnsignedLongFactory());
     this.fileSizeUpper.setValueFactory(
-      new CAGSpinnerLongFactory());
+      new CAGSpinnerUnsignedLongFactory());
 
     this.fileDescriptionMatch.setItems(
       FXCollections.observableArrayList(CAGDescriptionMatchKind.values()));

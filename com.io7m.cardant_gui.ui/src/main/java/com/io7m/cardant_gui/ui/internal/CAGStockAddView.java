@@ -23,8 +23,10 @@ import com.io7m.cardant.model.CALocationID;
 import com.io7m.cardant.model.CAStockInstanceID;
 import com.io7m.lanark.core.RDottedName;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
@@ -44,7 +46,6 @@ public final class CAGStockAddView
   implements CAGViewType
 {
   private final Stage stage;
-  private final CAGStringsType strings;
   private final CAGItemSearchControllerType itemSearch;
   private final CAGLocationTreeControllerType locationSearch;
   private final CAGItemSelectDialogs itemSelectDialogs;
@@ -52,6 +53,7 @@ public final class CAGStockAddView
   private final CAGItemDetailsControllerType itemDetails;
   private final CAGStockSearchControllerType stock;
 
+  @FXML private Parent root;
   @FXML private TextField itemField;
   @FXML private TextField locationField;
   @FXML private Button itemSelectButton;
@@ -77,8 +79,6 @@ public final class CAGStockAddView
   {
     this.stage =
       Objects.requireNonNull(inStage, "stage");
-    this.strings =
-      services.requireService(CAGStringsType.class);
     this.stock =
       arguments.stockController();
     this.itemSearch =
@@ -114,7 +114,7 @@ public final class CAGStockAddView
       .select(CAGStockKind.SET);
 
     this.countSpinner.setValueFactory(
-      new CAGSpinnerLongFactory());
+      new CAGSpinnerUnsignedLongFactory());
 
     this.itemField.textProperty()
       .addListener(_ -> this.validate());
@@ -180,29 +180,38 @@ public final class CAGStockAddView
   @FXML
   private void onStockAddSelected()
   {
-    switch (this.stockKind.getValue()) {
-      case SERIAL -> {
-        this.stock.stockSerialIntroduce(
-          CAStockInstanceID.random(),
-          CALocationID.of(this.locationField.getText()),
-          CAItemID.of(this.itemField.getText()),
-          new CAItemSerial(
-            new RDottedName(this.serialTypeField.getText().trim()),
-            this.serialValueField.getText().trim()
-          )
-        );
-      }
-      case SET -> {
-        this.stock.stockSetIntroduce(
-          CAStockInstanceID.random(),
-          CALocationID.of(this.locationField.getText()),
-          CAItemID.of(this.itemField.getText()),
-          this.countSpinner.getValue().longValue()
-        );
-      }
-    }
+    this.root.setDisable(true);
 
-    this.stage.close();
+    final var future =
+      switch (this.stockKind.getValue()) {
+        case SERIAL -> {
+          yield this.stock.stockSerialIntroduce(
+            CAStockInstanceID.random(),
+            CALocationID.of(this.locationField.getText()),
+            CAItemID.of(this.itemField.getText()),
+            new CAItemSerial(
+              new RDottedName(this.serialTypeField.getText().trim()),
+              this.serialValueField.getText().trim()
+            )
+          );
+        }
+        case SET -> {
+          yield this.stock.stockSetIntroduce(
+            CAStockInstanceID.random(),
+            CALocationID.of(this.locationField.getText()),
+            CAItemID.of(this.itemField.getText()),
+            this.countSpinner.getValue().longValue()
+          );
+        }
+      };
+
+    future.whenComplete((_, exception) -> {
+      Platform.runLater(() -> this.root.setDisable(false));
+
+      if (exception == null) {
+        Platform.runLater(this.stage::close);
+      }
+    });
   }
 
   @FXML
