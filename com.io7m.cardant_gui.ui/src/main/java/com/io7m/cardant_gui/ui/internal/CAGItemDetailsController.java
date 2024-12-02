@@ -19,16 +19,22 @@ package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSummary;
+import com.io7m.cardant.model.CAMetadataType;
+import com.io7m.cardant.model.CATypeRecordFieldIdentifier;
 import com.io7m.cardant.protocol.inventory.CAICommandItemAttachmentAdd;
 import com.io7m.cardant.protocol.inventory.CAICommandItemCreate;
 import com.io7m.cardant.protocol.inventory.CAICommandItemDelete;
 import com.io7m.cardant.protocol.inventory.CAICommandItemGet;
+import com.io7m.cardant.protocol.inventory.CAICommandItemMetadataPut;
+import com.io7m.cardant.protocol.inventory.CAICommandItemMetadataRemove;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * An item details controller.
@@ -85,7 +91,7 @@ public final class CAGItemDetailsController
       case final CAGEventItemUpdated e -> {
         Platform.runLater(() -> this.itemSelected.updateIfMatchingID(e.item()));
       }
-      case final CAGEventLocationUpdated e -> {
+      case final CAGEventLocationUpdated _ -> {
         // Nothing to do
       }
     }
@@ -175,14 +181,63 @@ public final class CAGItemDetailsController
   public void itemDelete(
     final CAItemID id)
   {
+    Objects.requireNonNull(id, "id");
+
     final var future =
       this.client.execute(new CAICommandItemDelete(id));
 
-    future.thenAccept(response -> {
+    future.thenAccept(_ -> {
       Platform.runLater(() -> {
         this.itemSelected.clearIfMatchingID(id);
       });
       this.events.publish(new CAGEventItemDeleted(id));
+    });
+  }
+
+  @Override
+  public void itemMetadataAdd(
+    final CAItemID item,
+    final CAMetadataType metadata)
+  {
+    Objects.requireNonNull(item, "item");
+    Objects.requireNonNull(metadata, "metadata");
+
+    final var meta = new HashSet<>(this.itemSelected.metadata());
+    meta.add(metadata);
+
+    final var future =
+      this.client.execute(new CAICommandItemMetadataPut(
+        this.itemSelected.summary().getValue().get().id(),
+        Set.copyOf(meta)
+      ));
+
+    future.thenAccept(r -> {
+      Platform.runLater(() -> {
+        this.itemSelected.updateIfMatchingID(r.data());
+      });
+      this.events.publish(new CAGEventItemUpdated(r.data()));
+    });
+  }
+
+  @Override
+  public void itemMetadataRemove(
+    final CAItemID item,
+    final CATypeRecordFieldIdentifier metadata)
+  {
+    Objects.requireNonNull(item, "item");
+    Objects.requireNonNull(metadata, "metadata");
+
+    final var future =
+      this.client.execute(new CAICommandItemMetadataRemove(
+        this.itemSelected.summary().getValue().get().id(),
+        Set.of(metadata)
+      ));
+
+    future.thenAccept(r -> {
+      Platform.runLater(() -> {
+        this.itemSelected.updateIfMatchingID(r.data());
+      });
+      this.events.publish(new CAGEventItemUpdated(r.data()));
     });
   }
 }

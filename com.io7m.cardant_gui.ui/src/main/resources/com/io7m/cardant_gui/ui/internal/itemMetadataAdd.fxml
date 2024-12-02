@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="128.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGMetadataAddView">
+   <children>
+      <GridPane>
+        <columnConstraints>
+          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="128.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="8.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" prefWidth="256.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="256.0" />
+            <ColumnConstraints />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="8.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label alignment="CENTER_RIGHT" text="%cardant.itemMetadata.package" GridPane.halignment="RIGHT" />
+            <TextField fx:id="packageField" layoutX="128.0" layoutY="42.0" maxHeight="1.7976931348623157E308" styleClass="dataField" GridPane.columnIndex="2" GridPane.columnSpan="2" />
+            <Label alignment="CENTER_RIGHT" layoutX="107.0" layoutY="18.0" text="%cardant.itemMetadata.type" GridPane.rowIndex="1" />
+            <TextField fx:id="typeField" layoutX="146.0" layoutY="10.0" maxHeight="1.7976931348623157E308" styleClass="dataField" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+            <Label alignment="CENTER_RIGHT" layoutX="105.0" layoutY="50.0" text="%cardant.itemMetadata.field" GridPane.rowIndex="2" />
+            <TextField fx:id="fieldField" layoutX="146.0" layoutY="42.0" maxHeight="1.7976931348623157E308" styleClass="dataField" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+            <Label alignment="CENTER_RIGHT" layoutX="106.0" layoutY="82.0" text="%cardant.itemMetadata.value" GridPane.rowIndex="4" />
+            <ChoiceBox fx:id="kind" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
+            <TextField fx:id="valueTextField" layoutX="146.0" layoutY="74.0" maxHeight="1.7976931348623157E308" promptText="%cardant.metadata.text" styleClass="dataField" visible="false" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
+            <Spinner fx:id="valueIntegerField" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" visible="false" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
+            <DatePicker fx:id="valueDateField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="%cardant.metadata.date" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <TextField fx:id="valueTimeField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="%cardant.metadata.time" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+            <TextField fx:id="valueMoneyCurrencyField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="%cardant.metadata.moneyCurrency" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <TextField fx:id="valueMoneyValueField" layoutX="146.0" layoutY="138.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="%cardant.metadata.moneyValue" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+            <TextField fx:id="valueRealField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="%cardant.metadata.realValue" visible="false" GridPane.columnIndex="2" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </GridPane>
+      <TextArea fx:id="errorText" editable="false" minHeight="64.0">
+         <VBox.margin>
+            <Insets bottom="8.0" />
+         </VBox.margin>
+         <font>
+            <Font name="Monospaced Regular" size="12.0" />
+         </font>
+      </TextArea>
+      <HBox VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <children>
+            <Button cancelButton="true" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCancelSelected" prefHeight="32.0" prefWidth="128.0" text="%cardant.cancel" />
+            <Region maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="128.0" HBox.hgrow="ALWAYS" />
+            <Button fx:id="addButton" defaultButton="true" disable="true" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onAddSelected" prefHeight="32.0" prefWidth="128.0" text="%cardant.attachmentAdd.add" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+   </padding>
+</VBox>

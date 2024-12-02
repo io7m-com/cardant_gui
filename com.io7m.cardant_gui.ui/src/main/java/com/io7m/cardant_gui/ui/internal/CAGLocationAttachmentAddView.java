@@ -100,12 +100,12 @@ public final class CAGLocationAttachmentAddView
     this.locationField.setText(this.location.displayId());
 
     this.fileSearchController.fileSelected()
-      .addListener((observable, oldValue, newValue) -> {
+      .addListener((_, _, newValue) -> {
         this.addButton.setDisable(newValue.isEmpty());
       });
 
     this.fileSearchController.fileSelected()
-      .addListener((observable, oldValue, newValue) -> {
+      .addListener((_, _, newValue) -> {
         if (newValue.isPresent()) {
           this.fileField.setText(newValue.get().id().displayId());
         } else {

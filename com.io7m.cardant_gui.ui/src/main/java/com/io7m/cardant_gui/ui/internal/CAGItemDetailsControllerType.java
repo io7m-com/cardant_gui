@@ -19,6 +19,8 @@ package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSummary;
+import com.io7m.cardant.model.CAMetadataType;
+import com.io7m.cardant.model.CATypeRecordFieldIdentifier;
 import com.io7m.cardant.protocol.inventory.CAICommandItemAttachmentAdd;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -90,4 +92,26 @@ public interface CAGItemDetailsControllerType
 
   void itemDelete(
     CAItemID id);
+
+  /**
+   * Add metadata to an item.
+   *
+   * @param item     The item
+   * @param metadata The metadata
+   */
+
+  void itemMetadataAdd(
+    CAItemID item,
+    CAMetadataType metadata);
+
+  /**
+   * Remove metadata from an item.
+   *
+   * @param item     The item
+   * @param metadata The metadata
+   */
+
+  void itemMetadataRemove(
+    CAItemID item,
+    CATypeRecordFieldIdentifier metadata);
 }

@@ -29,7 +29,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TabPane;
@@ -47,6 +49,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMMETADATA_DELETE;
+
 /**
  * The main item details view.
  */
@@ -60,6 +64,7 @@ public final class CAGItemDetailsView
   private final CAGStringsType strings;
   private final CAGItemAttachmentAddDialogs attachmentAddDialogs;
   private final CAGClientServiceType client;
+  private final CAGMetadataAddDialogs metadataAddDialogs;
   private CAGItemDetailsControllerType itemDetailsController;
   private CAGViewAndStage<CAGItemAttachmentAddView> attachmentAddDialog;
 
@@ -99,6 +104,8 @@ public final class CAGItemDetailsView
       services.requireService(CAGStringsType.class);
     this.attachmentAddDialogs =
       services.requireService(CAGItemAttachmentAddDialogs.class);
+    this.metadataAddDialogs =
+      services.requireService(CAGMetadataAddDialogs.class);
   }
 
   /**
@@ -129,7 +136,7 @@ public final class CAGItemDetailsView
     this.attachments.setItems(itemSelected.attachments());
 
     itemSelected.summary()
-      .addListener((observable, oldValue, newValue) -> {
+      .addListener((_, _, newValue) -> {
         this.itemSelectionChanged(newValue);
       });
 
@@ -137,6 +144,26 @@ public final class CAGItemDetailsView
       .addListener((ListChangeListener<? super CAAttachment>) c -> {
         this.loadThumbnail();
       });
+
+    this.meta.getSelectionModel()
+      .selectedItemProperty()
+      .addListener(_ -> {
+        this.onMetaSelectionChanged();
+      });
+  }
+
+  private void onMetaSelectionChanged()
+  {
+    final var selected =
+      this.meta.getSelectionModel()
+        .getSelectedItem();
+
+    if (selected == null) {
+      this.metaRemove.setDisable(true);
+      return;
+    }
+
+    this.metaRemove.setDisable(false);
   }
 
   @Override
@@ -222,6 +249,8 @@ public final class CAGItemDetailsView
     final Optional<CAItemSummary> newOpt)
   {
     if (newOpt.isEmpty()) {
+      this.metaAdd.setDisable(true);
+      this.metaRemove.setDisable(true);
       this.mainItemDetails.setDisable(true);
       this.idField.setText("");
       this.nameField.setText("");
@@ -231,6 +260,7 @@ public final class CAGItemDetailsView
 
     final var newValue = newOpt.orElseThrow();
     this.mainItemDetails.setDisable(false);
+    this.metaAdd.setDisable(false);
     this.idField.setText(newValue.id().toString());
     this.nameField.setText(newValue.name());
     this.clearThumbnail();
@@ -302,14 +332,47 @@ public final class CAGItemDetailsView
 
   @FXML
   private void onMetaAddSelected()
+    throws IOException
   {
-
+    this.metadataAddDialogs.openDialogAndWait(
+      new CAGMetadataAddDialogArguments(
+        this.itemDetailsController.itemSelected()
+          .summary()
+          .getValue()
+          .get()
+          .id(),
+        this.itemDetailsController
+      )
+    );
   }
 
   @FXML
   private void onMetaRemoveSelected()
   {
+    final var alert =
+      new Alert(
+        Alert.AlertType.CONFIRMATION,
+        this.strings.format(CARDANT_ITEMMETADATA_DELETE)
+      );
 
+    CAGCSS.setCSS(alert.getDialogPane());
+    final var r = alert.showAndWait();
+    if (r.isPresent()) {
+      if (r.get().equals(ButtonType.OK)) {
+        final var selected =
+          this.meta.getSelectionModel()
+            .getSelectedItem();
+
+        this.itemDetailsController.itemMetadataRemove(
+          this.itemDetailsController.itemSelected()
+            .summary()
+            .getValue()
+            .get()
+            .id(),
+          selected.name()
+        );
+      }
+    }
   }
 
   @FXML
@@ -320,7 +383,8 @@ public final class CAGItemDetailsView
       this.attachmentAddDialog =
         this.attachmentAddDialogs.createDialog(
           new CAGItemAttachmentAddDialogArguments(
-            this.itemDetailsController, this.itemDetailsController.itemSelected()
+            this.itemDetailsController,
+            this.itemDetailsController.itemSelected()
               .summary()
               .getValue()
               .orElseThrow()
