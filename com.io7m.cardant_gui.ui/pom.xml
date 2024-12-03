@@ -43,6 +43,11 @@
     </dependency>
 
     <dependency>
+      <groupId>com.io7m.miscue</groupId>
+      <artifactId>com.io7m.miscue.fx.seltzer</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>com.io7m.idstore</groupId>
       <artifactId>com.io7m.idstore.model</artifactId>
     </dependency>

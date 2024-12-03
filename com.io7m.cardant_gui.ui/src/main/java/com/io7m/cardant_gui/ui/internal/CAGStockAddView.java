@@ -210,6 +210,8 @@ public final class CAGStockAddView
 
       if (exception == null) {
         Platform.runLater(this.stage::close);
+      } else {
+        Platform.runLater(() -> CAGErrors.showThrowableAndWait(exception));
       }
     });
   }

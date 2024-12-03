@@ -17,13 +17,15 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
-import com.io7m.cardant.model.CAItemSerial;
-import com.io7m.cardant.model.CAStockInstanceID;
+import com.io7m.cardant.model.CAItemID;
+import com.io7m.cardant.model.CATypeRecordIdentifier;
 import com.io7m.lanark.core.RDottedName;
+import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -32,38 +34,42 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
- * The stock serial addition view.
+ * The type assignment view.
  */
 
-public final class CAGStockSerialAddView
+public final class CAGTypeAssignView
   implements CAGViewType
 {
   private final Stage stage;
-  private final CAGStockSearchControllerType stock;
-  private final CAStockInstanceID instance;
+  private final CAGItemDetailsControllerType itemController;
+  private final CAItemID item;
 
   @FXML private Parent root;
+  @FXML private TextField packageField;
   @FXML private TextField typeField;
-  @FXML private TextField valueField;
-  @FXML private Button addButton;
+  @FXML private Button assignButton;
+  @FXML private TextArea errorText;
 
   /**
-   * The stock addition view.
+   * The type assignment view.
    *
    * @param inStage   The stage
+   * @param services  The services
    * @param arguments The arguments
    */
 
-  public CAGStockSerialAddView(
+  public CAGTypeAssignView(
     final Stage inStage,
-    final CAGStockSerialAddDialogArguments arguments)
+    final RPServiceDirectoryType services,
+    final CAGTypeAssignDialogArguments arguments)
   {
     this.stage =
       Objects.requireNonNull(inStage, "stage");
-    this.stock =
-      arguments.stockController();
-    this.instance =
-      arguments.stockInstance();
+
+    this.item =
+      arguments.item();
+    this.itemController =
+      arguments.itemController();
   }
 
   @Override
@@ -71,26 +77,31 @@ public final class CAGStockSerialAddView
     final URL url,
     final ResourceBundle resourceBundle)
   {
-    this.addButton.setDisable(true);
-
-    this.typeField.textProperty()
+    this.packageField.textProperty()
       .addListener(_ -> this.validate());
-    this.valueField.textProperty()
+    this.typeField.textProperty()
       .addListener(_ -> this.validate());
   }
 
   private void validate()
   {
     var ok = true;
-
     try {
-      new RDottedName(this.typeField.getText().trim());
+      new CATypeRecordIdentifier(
+        new RDottedName(this.packageField.getText().trim()),
+        new RDottedName(this.typeField.getText().trim())
+      );
     } catch (final Exception e) {
+      this.errorText.setText(e.getMessage());
+      this.errorText.setVisible(true);
       ok = false;
     }
 
-    ok = ok && !this.valueField.getText().isBlank();
-    this.addButton.setDisable(!ok);
+    if (ok) {
+      this.errorText.setText("");
+    }
+
+    this.assignButton.setDisable(!ok);
   }
 
   @FXML
@@ -100,16 +111,16 @@ public final class CAGStockSerialAddView
   }
 
   @FXML
-  private void onStockSerialAddSelected()
+  private void onAddSelected()
   {
     this.root.setDisable(true);
 
     final var future =
-      this.stock.stockSerialAdd(
-        this.instance,
-        new CAItemSerial(
-          new RDottedName(this.typeField.getText().trim()),
-          this.valueField.getText().trim()
+      this.itemController.itemTypeAssign(
+        this.item,
+        new CATypeRecordIdentifier(
+          new RDottedName(this.packageField.getText().trim()),
+          new RDottedName(this.typeField.getText().trim())
         )
       );
 

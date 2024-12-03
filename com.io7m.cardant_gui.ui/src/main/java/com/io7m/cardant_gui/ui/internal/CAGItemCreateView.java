@@ -87,14 +87,9 @@ public final class CAGItemCreateView implements CAGViewType
     final ResourceBundle resources)
   {
     this.itemId.textProperty()
-      .addListener((observable, oldValue, newValue) -> {
-        this.validate();
-      });
-
+      .addListener((_, _, _) -> this.validate());
     this.itemName.textProperty()
-      .addListener((observable, oldValue, newValue) -> {
-        this.validate();
-      });
+      .addListener((_, _, _) -> this.validate());
   }
 
   private void validate()

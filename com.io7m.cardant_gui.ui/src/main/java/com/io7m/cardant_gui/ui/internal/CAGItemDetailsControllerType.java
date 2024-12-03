@@ -22,6 +22,7 @@ import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSummary;
 import com.io7m.cardant.model.CAMetadataType;
 import com.io7m.cardant.model.CATypeRecordFieldIdentifier;
+import com.io7m.cardant.model.CATypeRecordIdentifier;
 import com.io7m.cardant.protocol.inventory.CAICommandItemAttachmentAdd;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -139,4 +140,16 @@ public interface CAGItemDetailsControllerType
     CAItemID itemId,
     String newName);
 
+  /**
+   * Assign a type to an item.
+   *
+   * @param item The item
+   * @param type The type
+   *
+   * @return The operation in progress
+   */
+
+  CompletableFuture<CAItem> itemTypeAssign(
+    CAItemID item,
+    CATypeRecordIdentifier type);
 }

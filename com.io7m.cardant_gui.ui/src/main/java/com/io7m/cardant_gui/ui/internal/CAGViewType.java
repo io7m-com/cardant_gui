@@ -56,6 +56,7 @@ public sealed interface CAGViewType
   CAGStockSearchView,
   CAGStockSerialAddView,
   CAGStockTableView,
+  CAGTypeAssignView,
   CAGTypePackagesDetailsView,
   CAGTypePackagesSearchView,
   CAGTypePackagesTableView

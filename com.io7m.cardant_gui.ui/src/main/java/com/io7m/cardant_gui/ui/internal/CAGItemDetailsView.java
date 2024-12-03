@@ -66,6 +66,7 @@ public final class CAGItemDetailsView
   private final CAGClientServiceType client;
   private final CAGMetadataAddDialogs metadataAddDialogs;
   private final CAGItemNameSetDialogs itemNameSetDialogs;
+  private final CAGTypeAssignDialogs typeAssignDialogs;
   private CAGItemDetailsControllerType itemDetailsController;
   private CAGViewAndStage<CAGItemAttachmentAddView> attachmentAddDialog;
 
@@ -109,6 +110,8 @@ public final class CAGItemDetailsView
       services.requireService(CAGMetadataAddDialogs.class);
     this.itemNameSetDialogs =
       services.requireService(CAGItemNameSetDialogs.class);
+    this.typeAssignDialogs =
+      services.requireService(CAGTypeAssignDialogs.class);
   }
 
   /**
@@ -427,8 +430,21 @@ public final class CAGItemDetailsView
 
   @FXML
   private void onTypeAssignSelected()
+    throws IOException
   {
+    final var item =
+      this.itemDetailsController.itemSelected()
+        .summary()
+        .getValue()
+        .get()
+        .id();
 
+    this.typeAssignDialogs.openDialogAndWait(
+      new CAGTypeAssignDialogArguments(
+        item,
+        this.itemDetailsController
+      )
+    );
   }
 
   @FXML

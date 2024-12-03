@@ -22,6 +22,7 @@ import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSummary;
 import com.io7m.cardant.model.CAMetadataType;
 import com.io7m.cardant.model.CATypeRecordFieldIdentifier;
+import com.io7m.cardant.model.CATypeRecordIdentifier;
 import com.io7m.cardant.protocol.inventory.CAICommandItemAttachmentAdd;
 import com.io7m.cardant.protocol.inventory.CAICommandItemCreate;
 import com.io7m.cardant.protocol.inventory.CAICommandItemDelete;
@@ -29,11 +30,13 @@ import com.io7m.cardant.protocol.inventory.CAICommandItemGet;
 import com.io7m.cardant.protocol.inventory.CAICommandItemMetadataPut;
 import com.io7m.cardant.protocol.inventory.CAICommandItemMetadataRemove;
 import com.io7m.cardant.protocol.inventory.CAICommandItemSetName;
+import com.io7m.cardant.protocol.inventory.CAICommandItemTypesAssign;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemCreate;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemDelete;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemMetadataPut;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemMetadataRemove;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemSetName;
+import com.io7m.cardant.protocol.inventory.CAIResponseItemTypesAssign;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -282,5 +285,26 @@ public final class CAGItemDetailsController
     });
 
     return future.thenApply(CAIResponseItemSetName::data);
+  }
+
+  @Override
+  public CompletableFuture<CAItem> itemTypeAssign(
+    final CAItemID item,
+    final CATypeRecordIdentifier type)
+  {
+    Objects.requireNonNull(item, "item");
+    Objects.requireNonNull(type, "type");
+
+    final var future =
+      this.client.execute(
+        new CAICommandItemTypesAssign(item, Set.of(type))
+      );
+
+    future.thenAccept(r -> {
+      Platform.runLater(() -> this.itemUpdateReceived(r.data()));
+      this.events.publish(new CAGEventItemUpdated(r.data()));
+    });
+
+    return future.thenApply(CAIResponseItemTypesAssign::data);
   }
 }
