@@ -49,6 +49,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ATTACHMENTREMOVE_CONFIRM;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMMETADATA_DELETE;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_TYPEUNASSIGN_CONFIRM;
 
@@ -377,7 +378,11 @@ public final class CAGItemDetailsView
             .get()
             .id(),
           selected.name()
-        );
+        ).whenComplete((_, exception) -> {
+          if (exception != null) {
+            Platform.runLater(() -> CAGErrors.showThrowableAndWait(exception));
+          }
+        });
       }
     }
   }
@@ -407,7 +412,35 @@ public final class CAGItemDetailsView
   @FXML
   private void onAttachmentRemoveSelected()
   {
+    final var alert =
+      new Alert(
+        Alert.AlertType.CONFIRMATION,
+        this.strings.format(CARDANT_ATTACHMENTREMOVE_CONFIRM)
+      );
 
+    CAGCSS.setCSS(alert.getDialogPane());
+    final var r = alert.showAndWait();
+    if (r.isPresent()) {
+      if (r.get().equals(ButtonType.OK)) {
+        final var attachment =
+          this.attachments.getSelectionModel()
+            .getSelectedItem();
+
+        final var item =
+          this.itemDetailsController.itemSelected()
+            .summary()
+            .getValue()
+            .get()
+            .id();
+
+        this.itemDetailsController.itemAttachmentRemove(item, attachment)
+          .whenComplete((_, exception) -> {
+            if (exception != null) {
+              Platform.runLater(() -> CAGErrors.showThrowableAndWait(exception));
+            }
+          });
+      }
+    }
   }
 
   @FXML
@@ -472,7 +505,12 @@ public final class CAGItemDetailsView
             .get()
             .id();
 
-        this.itemDetailsController.itemTypeUnassign(item, type);
+        this.itemDetailsController.itemTypeUnassign(item, type)
+          .whenComplete((_, exception) -> {
+            if (exception != null) {
+              Platform.runLater(() -> CAGErrors.showThrowableAndWait(exception));
+            }
+          });
       }
     }
   }

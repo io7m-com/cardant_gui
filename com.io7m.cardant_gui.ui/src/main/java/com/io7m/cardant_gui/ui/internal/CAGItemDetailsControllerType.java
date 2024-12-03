@@ -17,6 +17,7 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
+import com.io7m.cardant.model.CAAttachment;
 import com.io7m.cardant.model.CAItem;
 import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSummary;
@@ -165,4 +166,17 @@ public interface CAGItemDetailsControllerType
   CompletableFuture<CAItem> itemTypeUnassign(
     CAItemID item,
     CATypeRecordIdentifier type);
+
+  /**
+   * Remove an attachment from an item.
+   *
+   * @param item       The item
+   * @param attachment The attachment
+   *
+   * @return The operation in progress
+   */
+
+  CompletableFuture<CAItem> itemAttachmentRemove(
+    CAItemID item,
+    CAAttachment attachment);
 }

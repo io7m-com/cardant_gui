@@ -17,6 +17,7 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
+import com.io7m.cardant.model.CAAttachment;
 import com.io7m.cardant.model.CAItem;
 import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSummary;
@@ -24,6 +25,7 @@ import com.io7m.cardant.model.CAMetadataType;
 import com.io7m.cardant.model.CATypeRecordFieldIdentifier;
 import com.io7m.cardant.model.CATypeRecordIdentifier;
 import com.io7m.cardant.protocol.inventory.CAICommandItemAttachmentAdd;
+import com.io7m.cardant.protocol.inventory.CAICommandItemAttachmentRemove;
 import com.io7m.cardant.protocol.inventory.CAICommandItemCreate;
 import com.io7m.cardant.protocol.inventory.CAICommandItemDelete;
 import com.io7m.cardant.protocol.inventory.CAICommandItemGet;
@@ -32,6 +34,7 @@ import com.io7m.cardant.protocol.inventory.CAICommandItemMetadataRemove;
 import com.io7m.cardant.protocol.inventory.CAICommandItemSetName;
 import com.io7m.cardant.protocol.inventory.CAICommandItemTypesAssign;
 import com.io7m.cardant.protocol.inventory.CAICommandItemTypesRevoke;
+import com.io7m.cardant.protocol.inventory.CAIResponseItemAttachmentRemove;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemCreate;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemDelete;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemMetadataPut;
@@ -329,5 +332,30 @@ public final class CAGItemDetailsController
     });
 
     return future.thenApply(CAIResponseItemTypesRevoke::data);
+  }
+
+  @Override
+  public CompletableFuture<CAItem> itemAttachmentRemove(
+    final CAItemID item,
+    final CAAttachment attachment)
+  {
+    Objects.requireNonNull(item, "item");
+    Objects.requireNonNull(attachment, "attachment");
+
+    final var future =
+      this.client.execute(
+        new CAICommandItemAttachmentRemove(
+          item,
+          attachment.file().id(),
+          attachment.relation()
+        )
+      );
+
+    future.thenAccept(r -> {
+      Platform.runLater(() -> this.itemUpdateReceived(r.data()));
+      this.events.publish(new CAGEventItemUpdated(r.data()));
+    });
+
+    return future.thenApply(CAIResponseItemAttachmentRemove::data);
   }
 }
