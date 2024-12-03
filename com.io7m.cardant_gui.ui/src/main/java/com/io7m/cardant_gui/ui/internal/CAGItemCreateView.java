@@ -18,7 +18,9 @@
 package com.io7m.cardant_gui.ui.internal;
 
 import com.io7m.cardant.model.CAItemID;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -36,6 +38,7 @@ public final class CAGItemCreateView implements CAGViewType
   private final CAGItemDetailsControllerType controller;
   private final Stage stage;
 
+  @FXML private Parent root;
   @FXML private Button create;
   @FXML private Button cancel;
   @FXML private Button generate;
@@ -71,8 +74,18 @@ public final class CAGItemCreateView implements CAGViewType
   @FXML
   private void onCreateSelected()
   {
-    this.controller.itemCreate(this.itemIdSelected, this.itemNameSelected);
-    this.stage.close();
+    this.root.setDisable(true);
+
+    this.controller.itemCreate(this.itemIdSelected, this.itemNameSelected)
+      .whenComplete((_, exception) -> {
+        Platform.runLater(() -> this.root.setDisable(false));
+
+        if (exception == null) {
+          Platform.runLater(this.stage::close);
+        } else {
+          Platform.runLater(() -> CAGErrors.showThrowableAndWait(exception));
+        }
+      });
   }
 
   @FXML

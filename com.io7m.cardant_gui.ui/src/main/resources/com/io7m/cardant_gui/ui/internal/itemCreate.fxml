@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefWidth="500.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGItemCreateView">
+<VBox fx:id="root" prefWidth="500.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.io7m.cardant_gui.ui.internal.CAGItemCreateView">
    <children>
       <GridPane VBox.vgrow="ALWAYS">
         <columnConstraints>
