@@ -152,4 +152,17 @@ public interface CAGItemDetailsControllerType
   CompletableFuture<CAItem> itemTypeAssign(
     CAItemID item,
     CATypeRecordIdentifier type);
+
+  /**
+   * Unassign a type to an item.
+   *
+   * @param item The item
+   * @param type The type
+   *
+   * @return The operation in progress
+   */
+
+  CompletableFuture<CAItem> itemTypeUnassign(
+    CAItemID item,
+    CATypeRecordIdentifier type);
 }

@@ -50,6 +50,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_ITEMMETADATA_DELETE;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_TYPEUNASSIGN_CONFIRM;
 
 /**
  * The main item details view.
@@ -450,6 +451,29 @@ public final class CAGItemDetailsView
   @FXML
   private void onTypeUnassignSelected()
   {
+    final var alert =
+      new Alert(
+        Alert.AlertType.CONFIRMATION,
+        this.strings.format(CARDANT_TYPEUNASSIGN_CONFIRM)
+      );
 
+    CAGCSS.setCSS(alert.getDialogPane());
+    final var r = alert.showAndWait();
+    if (r.isPresent()) {
+      if (r.get().equals(ButtonType.OK)) {
+        final var type =
+          this.types.getSelectionModel()
+            .getSelectedItem();
+
+        final var item =
+          this.itemDetailsController.itemSelected()
+            .summary()
+            .getValue()
+            .get()
+            .id();
+
+        this.itemDetailsController.itemTypeUnassign(item, type);
+      }
+    }
   }
 }

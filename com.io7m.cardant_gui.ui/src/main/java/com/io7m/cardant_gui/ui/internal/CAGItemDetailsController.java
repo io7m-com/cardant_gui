@@ -31,12 +31,14 @@ import com.io7m.cardant.protocol.inventory.CAICommandItemMetadataPut;
 import com.io7m.cardant.protocol.inventory.CAICommandItemMetadataRemove;
 import com.io7m.cardant.protocol.inventory.CAICommandItemSetName;
 import com.io7m.cardant.protocol.inventory.CAICommandItemTypesAssign;
+import com.io7m.cardant.protocol.inventory.CAICommandItemTypesRevoke;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemCreate;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemDelete;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemMetadataPut;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemMetadataRemove;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemSetName;
 import com.io7m.cardant.protocol.inventory.CAIResponseItemTypesAssign;
+import com.io7m.cardant.protocol.inventory.CAIResponseItemTypesRevoke;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -306,5 +308,26 @@ public final class CAGItemDetailsController
     });
 
     return future.thenApply(CAIResponseItemTypesAssign::data);
+  }
+
+  @Override
+  public CompletableFuture<CAItem> itemTypeUnassign(
+    final CAItemID item,
+    final CATypeRecordIdentifier type)
+  {
+    Objects.requireNonNull(item, "item");
+    Objects.requireNonNull(type, "type");
+
+    final var future =
+      this.client.execute(
+        new CAICommandItemTypesRevoke(item, Set.of(type))
+      );
+
+    future.thenAccept(r -> {
+      Platform.runLater(() -> this.itemUpdateReceived(r.data()));
+      this.events.publish(new CAGEventItemUpdated(r.data()));
+    });
+
+    return future.thenApply(CAIResponseItemTypesRevoke::data);
   }
 }
