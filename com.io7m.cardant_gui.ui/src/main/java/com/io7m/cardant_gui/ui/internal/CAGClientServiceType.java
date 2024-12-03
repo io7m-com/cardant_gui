@@ -49,9 +49,11 @@ public interface CAGClientServiceType extends RPServiceType
    * @param https    {@code true} if HTTPS is enabled
    * @param username The username
    * @param password The password
+   *
+   * @return A future representing the operation in progress
    */
 
-  void login(
+  CompletableFuture<Void> login(
     String host,
     int port,
     boolean https,

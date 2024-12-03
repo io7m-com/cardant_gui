@@ -25,6 +25,7 @@ import com.io7m.darco.api.DDatabaseException;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -66,6 +67,7 @@ public final class CAGLoginView
   private final CAGStringsType strings;
   private final CAGClientServiceType clientService;
 
+  @FXML private Parent root;
   @FXML private Button bookmarkCreate;
   @FXML private Button bookmarkDelete;
   @FXML private Button cancelButton;
@@ -135,18 +137,29 @@ public final class CAGLoginView
   @FXML
   private void onLogin()
   {
+    this.root.setDisable(true);
+
     final var connect =
       this.validate().orElseThrow();
 
-    this.clientService.login(
-      connect.host(),
-      connect.port(),
-      connect.isHTTPs(),
-      connect.username(),
-      connect.password()
-    );
+    final var future =
+      this.clientService.login(
+        connect.host(),
+        connect.port(),
+        connect.isHTTPs(),
+        connect.username(),
+        connect.password()
+      );
 
-    this.stage.close();
+    future.whenComplete((_, exception) -> {
+      Platform.runLater(() -> this.root.setDisable(false));
+
+      if (exception == null) {
+        Platform.runLater(this.stage::close);
+      } else {
+        Platform.runLater(() -> CAGErrors.showThrowableAndWait(exception));
+      }
+    });
   }
 
   private void bookmarkDeleteNow(

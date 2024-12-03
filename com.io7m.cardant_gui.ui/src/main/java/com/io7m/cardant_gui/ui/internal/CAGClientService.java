@@ -145,7 +145,7 @@ public final class CAGClientService
   }
 
   @Override
-  public void login(
+  public CompletableFuture<Void> login(
     final String host,
     final int port,
     final boolean https,
@@ -158,6 +158,7 @@ public final class CAGClientService
     Objects.requireNonNull(username, "username");
     Objects.requireNonNull(password, "password");
 
+    final var future = new CompletableFuture<Void>();
     this.executor.execute(() -> {
       try {
         this.commandSemaphore.acquire();
@@ -195,14 +196,17 @@ public final class CAGClientService
           this.strings.format(CARDANT_LOGIN_CONNECTED, host)
         );
 
+        future.complete(null);
       } catch (final Exception e) {
         LOG.debug("Login: Exception: ", e);
         this.status.set(NOT_CONNECTED);
         this.statusService.publish(ERROR, e.getMessage());
+        future.completeExceptionally(e);
       } finally {
         this.commandSemaphore.release();
       }
     });
+    return future;
   }
 
   @Override
