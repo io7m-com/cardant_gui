@@ -36,12 +36,14 @@
       <groupId>com.io7m.jaffirm</groupId>
       <artifactId>com.io7m.jaffirm.core</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>com.io7m.jxe</groupId>
+      <artifactId>com.io7m.jxe.core</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.io7m.seltzer</groupId>
       <artifactId>com.io7m.seltzer.api</artifactId>
     </dependency>
-
     <dependency>
       <groupId>com.io7m.miscue</groupId>
       <artifactId>com.io7m.miscue.fx.seltzer</artifactId>

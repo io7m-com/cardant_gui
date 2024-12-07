@@ -60,6 +60,7 @@ open module com.io7m.cardant_gui.ui
   requires org.slf4j;
   requires org.xerial.sqlitejdbc;
   requires com.io7m.miscue.fx.seltzer;
+  requires com.io7m.jxe.core;
 
   uses CAGDatabaseQueryProviderType;
 

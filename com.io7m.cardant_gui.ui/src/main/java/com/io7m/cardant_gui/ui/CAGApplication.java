@@ -85,6 +85,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * The main application class responsible for starting up the "main" view.
@@ -125,6 +126,7 @@ public final class CAGApplication extends Application
         .open(
           new CAGDatabaseConfiguration(
             DDatabaseTelemetryNoOp.get(),
+            Optional.empty(),
             DDatabaseCreate.CREATE_DATABASE,
             DDatabaseUpgrade.UPGRADE_DATABASE,
             this.directories.configurationDirectory()
