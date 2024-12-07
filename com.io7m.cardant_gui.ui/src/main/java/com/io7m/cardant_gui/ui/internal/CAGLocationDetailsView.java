@@ -66,6 +66,8 @@ public final class CAGLocationDetailsView
   @FXML private TextField idField;
   @FXML private TextField nameField;
   @FXML private ImageView thumbnail;
+  @FXML private TextField timeCreatedField;
+  @FXML private TextField timeUpdatedField;
   @FXML private ProgressBar thumbnailLoading;
   @FXML private TableView<CAMetadataType> meta;
   @FXML private TableColumn<CAMetadataType, RDottedName> colPkg;
@@ -188,6 +190,8 @@ public final class CAGLocationDetailsView
       this.mainItemDetails.setDisable(true);
       this.idField.setText("");
       this.nameField.setText("");
+      this.timeUpdatedField.setText("");
+      this.timeCreatedField.setText("");
       this.clearThumbnail();
       return;
     }
@@ -196,6 +200,8 @@ public final class CAGLocationDetailsView
     this.mainItemDetails.setDisable(false);
     this.idField.setText(newValue.id().toString());
     this.nameField.setText(newValue.name().value());
+    this.timeCreatedField.setText(newValue.timeCreated().toString());
+    this.timeUpdatedField.setText(newValue.timeUpdated().toString());
     this.clearThumbnail();
   }
 

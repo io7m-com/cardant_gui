@@ -75,6 +75,8 @@ public final class CAGItemDetailsView
   @FXML private TabPane mainItemDetails;
   @FXML private TextField idField;
   @FXML private TextField nameField;
+  @FXML private TextField timeCreatedField;
+  @FXML private TextField timeUpdatedField;
   @FXML private ImageView thumbnail;
   @FXML private ProgressBar thumbnailLoading;
   @FXML private ListView<CAAttachment> attachments;
@@ -262,6 +264,8 @@ public final class CAGItemDetailsView
       this.mainItemDetails.setDisable(true);
       this.idField.setText("");
       this.nameField.setText("");
+      this.timeUpdatedField.setText("");
+      this.timeCreatedField.setText("");
       this.clearThumbnail();
       return;
     }
@@ -271,6 +275,8 @@ public final class CAGItemDetailsView
     this.metaAdd.setDisable(false);
     this.idField.setText(newValue.id().toString());
     this.nameField.setText(newValue.name());
+    this.timeCreatedField.setText(newValue.timeCreated().toString());
+    this.timeUpdatedField.setText(newValue.timeUpdated().toString());
     this.clearThumbnail();
   }
 

@@ -35,11 +35,14 @@ import javafx.scene.control.TreeItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
+import static java.time.ZoneOffset.UTC;
 
 /**
  * A location tree controller.
@@ -58,7 +61,9 @@ public final class CAGLocationTreeController
     new CALocationSummary(
       ROOT_LOCATION,
       Optional.empty(),
-      CALocationPath.singleton("Everywhere")
+      CALocationPath.singleton("Everywhere"),
+      OffsetDateTime.now(UTC),
+      OffsetDateTime.now(UTC)
     );
 
   private final ObservableList<CALocationSummary> locationsView;
@@ -195,6 +200,8 @@ public final class CAGLocationTreeController
           CALocationID.random(),
           Optional.empty(),
           CALocationPath.singleton(name),
+          OffsetDateTime.now(UTC),
+          OffsetDateTime.now(UTC),
           new TreeMap<>(),
           new TreeMap<>(),
           new TreeSet<>()
@@ -221,6 +228,8 @@ public final class CAGLocationTreeController
               source.id(),
               Optional.of(newParent),
               source.path(),
+              OffsetDateTime.now(UTC),
+              OffsetDateTime.now(UTC),
               source.metadata(),
               source.attachments(),
               source.types()
