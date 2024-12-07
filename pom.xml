@@ -322,6 +322,11 @@
       <!-- JavaFX -->
       <dependency>
         <groupId>org.openjfx</groupId>
+        <artifactId>javafx-base</artifactId>
+        <version>${org.javafx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
         <artifactId>javafx-fxml</artifactId>
         <version>${org.javafx.version}</version>
       </dependency>
@@ -333,6 +338,56 @@
       <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-graphics</artifactId>
+        <version>${org.javafx.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-base</artifactId>
+        <classifier>linux</classifier>
+        <version>${org.javafx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-fxml</artifactId>
+        <classifier>linux</classifier>
+        <version>${org.javafx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-controls</artifactId>
+        <classifier>linux</classifier>
+        <version>${org.javafx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-graphics</artifactId>
+        <classifier>linux</classifier>
+        <version>${org.javafx.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-base</artifactId>
+        <classifier>win</classifier>
+        <version>${org.javafx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-fxml</artifactId>
+        <classifier>win</classifier>
+        <version>${org.javafx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-controls</artifactId>
+        <classifier>win</classifier>
+        <version>${org.javafx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-graphics</artifactId>
+        <classifier>win</classifier>
         <version>${org.javafx.version}</version>
       </dependency>
 
@@ -403,6 +458,12 @@
           <groupId>com.io7m.jxtrand</groupId>
           <artifactId>com.io7m.jxtrand.maven_plugin</artifactId>
           <version>${com.io7m.jxtrand.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>com.io7m.montarre</groupId>
+          <artifactId>com.io7m.montarre.maven_plugin</artifactId>
+          <version>0.0.6</version>
         </plugin>
       </plugins>
     </pluginManagement>

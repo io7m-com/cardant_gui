@@ -27,6 +27,10 @@
 
     <dependency>
       <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
     </dependency>
     <dependency>
@@ -36,6 +40,48 @@
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-graphics</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+      <classifier>linux</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <classifier>linux</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <classifier>linux</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>linux</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <classifier>win</classifier>
     </dependency>
 
     <dependency>
@@ -120,6 +166,139 @@
             </ignoredUsedUndeclaredDependency>
           </ignoredUsedUndeclaredDependencies>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.io7m.montarre</groupId>
+        <artifactId>com.io7m.montarre.maven_plugin</artifactId>
+        <executions>
+          <execution>
+            <id>make-distribution</id>
+            <goals>
+              <goal>package</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <validationWarningsAreErrors>true</validationWarningsAreErrors>
+
+              <applicationKind>GRAPHICAL</applicationKind>
+
+              <categories>
+                <category>Office</category>
+                <category>Database</category>
+              </categories>
+
+              <copyright>Copyright © 2024 Mark Raynsford &lt;code@io7m.com> https://www.io7m.com</copyright>
+
+              <humanName>Cardant GUI</humanName>
+              <packageName>com.io7m.cardant_gui</packageName>
+              <shortName>cardant-gui</shortName>
+
+              <description>Cardant inventory GUI</description>
+
+              <version>
+                <number>${project.version}</number>
+                <date>2024-12-07</date>
+              </version>
+
+              <vendor>
+                <id>com.io7m</id>
+                <name>io7m</name>
+              </vendor>
+
+              <mainModule>com.io7m.cardant_gui.main/com.io7m.cardant_gui.main.CAGMain</mainModule>
+
+              <requiredJDKVersion>${io7m.java.targetJavaVersion}</requiredJDKVersion>
+
+              <libraries>
+                <excludes>
+                  <exclude>.*-sources\.jar</exclude>
+                  <exclude>com\.io7m\.immutables-style-.*\.jar</exclude>
+                  <exclude>org\.osgi\.annotation\.bundle-.*\.jar</exclude>
+                  <exclude>org\.osgi\.annotation\.versioning-.*\.jar</exclude>
+                  <exclude>value-.*\.jar</exclude>
+                  <exclude>javafx-.*.jar</exclude>
+                </excludes>
+              </libraries>
+
+              <platformLibraries>
+                <platformLibrary>
+                  <architecture>x86_64</architecture>
+                  <operatingSystem>linux</operatingSystem>
+                  <includes>
+                    <include>javafx-.*-linux\.jar</include>
+                  </includes>
+                </platformLibrary>
+                <platformLibrary>
+                  <architecture>x86_64</architecture>
+                  <operatingSystem>windows</operatingSystem>
+                  <includes>
+                    <include>javafx-.*-win\.jar</include>
+                  </includes>
+                </platformLibrary>
+              </platformLibraries>
+
+              <resources>
+                <resource>
+                  <role>BOM</role>
+                  <file>${project.build.directory}/bom.xml</file>
+                  <entryName>bom.xml</entryName>
+                </resource>
+                <resource>
+                  <role>ICON_16</role>
+                  <file>${project.basedir}/src/main/meta/icon16.png</file>
+                  <entryName>icon16.png</entryName>
+                </resource>
+                <resource>
+                  <role>ICON_24</role>
+                  <file>${project.basedir}/src/main/meta/icon24.png</file>
+                  <entryName>icon24.png</entryName>
+                </resource>
+                <resource>
+                  <role>ICON_32</role>
+                  <file>${project.basedir}/src/main/meta/icon32.png</file>
+                  <entryName>icon32.png</entryName>
+                </resource>
+                <resource>
+                  <role>ICON_48</role>
+                  <file>${project.basedir}/src/main/meta/icon48.png</file>
+                  <entryName>icon48.png</entryName>
+                </resource>
+                <resource>
+                  <role>ICON_64</role>
+                  <file>${project.basedir}/src/main/meta/icon64.png</file>
+                  <entryName>icon64.png</entryName>
+                </resource>
+                <resource>
+                  <role>ICON_128</role>
+                  <file>${project.basedir}/src/main/meta/icon128.png</file>
+                  <entryName>icon128.png</entryName>
+                </resource>
+                <resource>
+                  <role>SCREENSHOT</role>
+                  <file>${project.basedir}/src/main/meta/screenshot.png</file>
+                  <entryName>screenshot.png</entryName>
+                  <captions>
+                    <caption>
+                      <language>en</language>
+                      <text>The main window.</text>
+                    </caption>
+                  </captions>
+                </resource>
+                <resource>
+                  <role>ICO_WINDOWS</role>
+                  <file>${project.basedir}/src/main/meta/icon.ico</file>
+                  <entryName>icon.ico</entryName>
+                </resource>
+                <resource>
+                  <role>LICENSE</role>
+                  <file>${project.basedir}/../README-LICENSE.txt</file>
+                  <entryName>license.txt</entryName>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
