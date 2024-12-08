@@ -5,6 +5,8 @@
 The `cardant_gui` package provides a JavaFX UI for the
 [cardant](https://www.io7m.com/software/cardant) inventory server.
 
+![com.io7m.cardant_gui](./com.io7m.cardant_gui.main/src/main/meta/screenshot.png?raw=true)
+
 ## Features
 
 * [OSGi](https://www.osgi.org/)-ready.
