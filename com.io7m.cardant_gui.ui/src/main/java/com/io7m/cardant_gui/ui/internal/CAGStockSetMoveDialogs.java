@@ -17,8 +17,6 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
-import com.io7m.cardant.model.CALocationID;
-import com.io7m.cardant_gui.ui.internal.CAGLocationReparentDialogs.Arguments;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -26,49 +24,27 @@ import javafx.stage.Stage;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_LOCATIONREPARENT_TITLE;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_STOCKMOVE_TITLE;
 
 /**
- * A location reparent dialog.
+ * A stock move dialog.
  */
 
-public final class CAGLocationReparentDialogs
-  extends CAGDialogFactoryAbstract<Arguments, CAGLocationReparentView>
+public final class CAGStockSetMoveDialogs
+  extends CAGDialogFactoryAbstract<CAGStockSetMoveDialogArguments, CAGStockSetMoveView>
 {
   /**
-   * The arguments.
-   *
-   * @param controller The location tree controller
-   * @param locationID The location ID
-   */
-
-  public record Arguments(
-    CAGLocationTreeControllerType controller,
-    CALocationID locationID)
-  {
-    /**
-     * The arguments.
-     */
-
-    public Arguments
-    {
-      Objects.requireNonNull(controller, "controller");
-      Objects.requireNonNull(locationID, "locationID");
-    }
-  }
-
-  /**
-   * A location reparent dialog.
+   * A stock move dialog.
    *
    * @param services The service directory
    */
 
-  public CAGLocationReparentDialogs(
+  public CAGStockSetMoveDialogs(
     final RPServiceDirectoryType services)
   {
     super(
-      CAGLocationReparentView.class,
-      "/com/io7m/cardant_gui/ui/internal/locationReparent.fxml",
+      CAGStockSetMoveView.class,
+      "/com/io7m/cardant_gui/ui/internal/stockSetMove.fxml",
       services,
       Modality.NONE
     );
@@ -76,16 +52,16 @@ public final class CAGLocationReparentDialogs
 
   @Override
   protected String createStageTitle(
-    final Arguments arguments)
+    final CAGStockSetMoveDialogArguments arguments)
   {
     Objects.requireNonNull(arguments, "arguments");
 
-    return this.strings().format(CARDANT_LOCATIONREPARENT_TITLE);
+    return this.strings().format(CARDANT_STOCKMOVE_TITLE);
   }
 
   @Override
   protected CAGControllerFactoryType<CAGViewType> controllerFactory(
-    final Arguments arguments,
+    final CAGStockSetMoveDialogArguments arguments,
     final Stage stage)
   {
     Objects.requireNonNull(arguments, "arguments");
@@ -94,29 +70,23 @@ public final class CAGLocationReparentDialogs
     return CAGControllerFactoryMapped.create(
       this.getClass(),
       Map.entry(
-        CAGLocationReparentView.class,
-        () -> {
-          return new CAGLocationReparentView(
-            stage,
-            this.services(),
-            arguments.locationID,
-            arguments.controller
-          );
-        })
+        CAGStockSetMoveView.class,
+        () -> new CAGStockSetMoveView(stage, arguments)
+      )
     );
   }
 
   @Override
   public String description()
   {
-    return "Location reparent dialogs.";
+    return "Stock set move dialogs.";
   }
 
   @Override
   public String toString()
   {
     return String.format(
-      "[CAGLocationReparentDialogs 0x%08x]",
+      "[CAGStockSetMoveDialogs 0x%08x]",
       Integer.valueOf(this.hashCode())
     );
   }

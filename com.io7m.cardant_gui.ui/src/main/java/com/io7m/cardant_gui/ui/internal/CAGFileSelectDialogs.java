@@ -65,6 +65,7 @@ public final class CAGFileSelectDialogs
     final Stage stage)
   {
     return CAGControllerFactoryMapped.create(
+      this.getClass(),
       Map.entry(
         CAGFileSelectView.class,
         () -> new CAGFileSelectView(stage, arguments)

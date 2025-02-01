@@ -56,7 +56,9 @@ import com.io7m.cardant_gui.ui.internal.CAGMetadataAddDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGStatusService;
 import com.io7m.cardant_gui.ui.internal.CAGStockAddDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGStockSearchView;
+import com.io7m.cardant_gui.ui.internal.CAGStockSelectDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGStockSerialAddDialogs;
+import com.io7m.cardant_gui.ui.internal.CAGStockSetMoveDialogs;
 import com.io7m.cardant_gui.ui.internal.CAGStockTableView;
 import com.io7m.cardant_gui.ui.internal.CAGStringConstants;
 import com.io7m.cardant_gui.ui.internal.CAGStrings;
@@ -173,6 +175,14 @@ public final class CAGApplication extends Application
       new CAGStockAddDialogs(services)
     );
     services.register(
+      CAGStockSelectDialogs.class,
+      new CAGStockSelectDialogs(services)
+    );
+    services.register(
+      CAGStockSetMoveDialogs.class,
+      new CAGStockSetMoveDialogs(services)
+    );
+    services.register(
       CAGStockSerialAddDialogs.class,
       new CAGStockSerialAddDialogs(services)
     );
@@ -227,6 +237,7 @@ public final class CAGApplication extends Application
 
     final var controllers =
       CAGControllerFactoryMapped.create(
+        this.getClass(),
         Map.entry(
           CAGMainView.class,
           () -> new CAGMainView(services)

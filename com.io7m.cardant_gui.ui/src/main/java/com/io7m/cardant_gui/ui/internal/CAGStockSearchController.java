@@ -23,17 +23,20 @@ import com.io7m.cardant.model.CALocationID;
 import com.io7m.cardant.model.CAStockInstanceID;
 import com.io7m.cardant.model.CAStockOccurrenceSerial;
 import com.io7m.cardant.model.CAStockOccurrenceType;
+import com.io7m.cardant.model.CAStockRepositRemove;
 import com.io7m.cardant.model.CAStockRepositSerialIntroduce;
 import com.io7m.cardant.model.CAStockRepositSerialMove;
 import com.io7m.cardant.model.CAStockRepositSerialNumberAdd;
 import com.io7m.cardant.model.CAStockRepositSerialNumberRemove;
 import com.io7m.cardant.model.CAStockRepositSetIntroduce;
+import com.io7m.cardant.model.CAStockRepositSetMove;
 import com.io7m.cardant.model.CAStockSearchParameters;
 import com.io7m.cardant.protocol.inventory.CAICommandStockReposit;
 import com.io7m.cardant.protocol.inventory.CAICommandStockSearchBegin;
 import com.io7m.cardant.protocol.inventory.CAIResponseStockReposit;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -42,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -59,6 +63,7 @@ public final class CAGStockSearchController
   private final ObservableList<CAStockOccurrenceType> stock;
   private final SimpleObjectProperty<CAGPageRange> stockPages;
   private final CAGClientServiceType client;
+  private final SimpleObjectProperty<Optional<CAStockOccurrenceType>> stockSelected;
 
   private CAGStockSearchController(
     final CAGClientServiceType inClient)
@@ -75,6 +80,8 @@ public final class CAGStockSearchController
 
     this.stockPages =
       new SimpleObjectProperty<>(CAGPageRange.zero());
+    this.stockSelected =
+      new SimpleObjectProperty<>(Optional.empty());
   }
 
   /**
@@ -97,6 +104,25 @@ public final class CAGStockSearchController
   {
     this.stock.clear();
     this.stockPages.set(CAGPageRange.zero());
+  }
+
+  @Override
+  public ObservableValue<Optional<CAStockOccurrenceType>> stockSelected()
+  {
+    return this.stockSelected;
+  }
+
+  @Override
+  public void stockSelect(
+    final CAStockOccurrenceType item)
+  {
+    this.stockSelected.set(Optional.of(item));
+  }
+
+  @Override
+  public void stockSelectNone()
+  {
+    this.stockSelected.set(Optional.empty());
   }
 
   @Override
@@ -141,7 +167,7 @@ public final class CAGStockSearchController
   }
 
   @Override
-  public void stockSerialMove(
+  public CompletableFuture<CAGUnit> stockSerialMove(
     final CAStockOccurrenceSerial serial,
     final CALocationID location)
   {
@@ -156,8 +182,30 @@ public final class CAGStockSearchController
       );
 
     future.thenAccept(response -> {
-      Platform.runLater(() -> this.updateStockOccurrence(response.data()));
+      Platform.runLater(() -> {
+        response.data().ifPresent(this::updateStockOccurrence);
+      });
     });
+
+    return future.thenApply(_ -> CAGUnit.UNIT);
+  }
+
+  @Override
+  public CompletableFuture<CAGUnit> stockSetMove(
+    final CAStockRepositSetMove move)
+  {
+    Objects.requireNonNull(move, "move");
+
+    final var future =
+      this.client.execute(new CAICommandStockReposit(move));
+
+    future.thenAccept(response -> {
+      Platform.runLater(() -> {
+        response.data().ifPresent(this::updateStockOccurrence);
+      });
+    });
+
+    return future.thenApply(_ -> CAGUnit.UNIT);
   }
 
   private void updateStockOccurrence(
@@ -219,7 +267,7 @@ public final class CAGStockSearchController
   }
 
   @Override
-  public CompletableFuture<CAStockOccurrenceType> stockSerialAdd(
+  public CompletableFuture<Optional<CAStockOccurrenceType>> stockSerialAdd(
     final CAStockInstanceID instance,
     final CAItemSerial serial)
   {
@@ -237,14 +285,16 @@ public final class CAGStockSearchController
       );
 
     future.thenAccept(response -> {
-      Platform.runLater(() -> this.updateStockOccurrence(response.data()));
+      Platform.runLater(() -> {
+        response.data().ifPresent(this::updateStockOccurrence);
+      });
     });
 
     return future.thenApply(CAIResponseStockReposit::data);
   }
 
   @Override
-  public CompletableFuture<CAStockOccurrenceType> stockSerialRemove(
+  public CompletableFuture<Optional<CAStockOccurrenceType>> stockSerialRemove(
     final CAStockInstanceID instance,
     final CAItemSerial serial)
   {
@@ -262,9 +312,33 @@ public final class CAGStockSearchController
       );
 
     future.thenAccept(response -> {
-      Platform.runLater(() -> this.updateStockOccurrence(response.data()));
+      Platform.runLater(() -> {
+        response.data().ifPresent(this::updateStockOccurrence);
+      });
     });
 
     return future.thenApply(CAIResponseStockReposit::data);
+  }
+
+  @Override
+  public CompletableFuture<CAGUnit> stockRemoveAll(
+    final CAStockInstanceID instance)
+  {
+    Objects.requireNonNull(instance, "instance");
+
+    final var future =
+      this.client.execute(
+        new CAICommandStockReposit(new CAStockRepositRemove(instance))
+      );
+
+    future.thenAccept(_ -> {
+      Platform.runLater(() -> {
+        this.stock.removeIf(
+          existing -> Objects.equals(existing.instance(), instance)
+        );
+      });
+    });
+
+    return future.thenApply(_ -> CAGUnit.UNIT);
   }
 }

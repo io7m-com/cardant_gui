@@ -65,6 +65,7 @@ public final class CAGItemSelectDialogs
     final Stage stage)
   {
     return CAGControllerFactoryMapped.create(
+      this.getClass(),
       Map.entry(
         CAGItemSearchView.class,
         () -> new CAGItemSearchView(this.services())

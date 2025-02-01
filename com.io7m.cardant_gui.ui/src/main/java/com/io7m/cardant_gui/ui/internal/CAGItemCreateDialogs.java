@@ -65,6 +65,7 @@ public final class CAGItemCreateDialogs
     final Stage stage)
   {
     return CAGControllerFactoryMapped.create(
+      this.getClass(),
       Map.entry(
         CAGItemCreateView.class,
         () -> new CAGItemCreateView(arguments, stage)

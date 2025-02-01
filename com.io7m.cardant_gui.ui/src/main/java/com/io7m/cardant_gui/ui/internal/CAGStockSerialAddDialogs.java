@@ -68,6 +68,7 @@ public final class CAGStockSerialAddDialogs
     Objects.requireNonNull(stage, "stage");
 
     return CAGControllerFactoryMapped.create(
+      this.getClass(),
       Map.entry(
         CAGStockSerialAddView.class,
         () -> new CAGStockSerialAddView(stage, arguments)

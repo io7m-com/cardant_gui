@@ -68,6 +68,7 @@ public final class CAGTypeAssignDialogs
     Objects.requireNonNull(stage, "stage");
 
     return CAGControllerFactoryMapped.create(
+      this.getClass(),
       Map.entry(
         CAGTypeAssignView.class,
         () -> new CAGTypeAssignView(stage, this.services(), arguments)

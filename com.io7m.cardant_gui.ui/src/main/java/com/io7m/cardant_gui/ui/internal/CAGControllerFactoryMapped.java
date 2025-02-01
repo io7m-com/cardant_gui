@@ -38,10 +38,14 @@ public final class CAGControllerFactoryMapped<T>
     LoggerFactory.getLogger(CAGControllerFactoryMapped.class);
 
   private final Map<Class<? extends T>, Supplier<? extends T>> controllers;
+  private final Class<?> owner;
 
   private CAGControllerFactoryMapped(
+    final Class<?> inOwner,
     final Map<Class<? extends T>, Supplier<? extends T>> inControllers)
   {
+    this.owner =
+      Objects.requireNonNull(inOwner, "owner");
     this.controllers =
       Objects.requireNonNull(inControllers, "controllers");
   }
@@ -49,6 +53,7 @@ public final class CAGControllerFactoryMapped<T>
   /**
    * A controller factory based on an immutable map of controllers.
    *
+   * @param owner        The owner, for error messages
    * @param <T>          The base type of controllers.
    * @param constructors The constructors
    *
@@ -57,11 +62,13 @@ public final class CAGControllerFactoryMapped<T>
 
   @SafeVarargs
   public static <T> CAGControllerFactoryType<T> create(
+    final Class<?> owner,
     final Map.Entry<Class<? extends T>, Supplier<? extends T>>... constructors)
   {
     Objects.requireNonNull(constructors, "constructors");
 
     return new CAGControllerFactoryMapped<>(
+      owner,
       Map.ofEntries(constructors)
     );
   }
@@ -70,12 +77,12 @@ public final class CAGControllerFactoryMapped<T>
   public T call(
     final Class<? extends T> clazz)
   {
-    LOG.debug("Resolving controller: {}", clazz);
+    LOG.debug("{}: Resolving controller: {}", this.owner, clazz);
 
     final var supplier = this.controllers.get(clazz);
     if (supplier == null) {
       throw new IllegalStateException(
-        "No controller available for %s".formatted(clazz)
+        "%s: No controller available for %s".formatted(this.owner, clazz)
       );
     }
 

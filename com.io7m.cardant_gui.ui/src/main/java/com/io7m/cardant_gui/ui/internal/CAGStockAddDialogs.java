@@ -68,6 +68,7 @@ public final class CAGStockAddDialogs
     Objects.requireNonNull(stage, "stage");
 
     return CAGControllerFactoryMapped.create(
+      this.getClass(),
       Map.entry(
         CAGStockAddView.class,
         () -> new CAGStockAddView(stage, this.services(), arguments)

@@ -75,6 +75,7 @@ public final class CAGLocationSelectDialogs
     final Stage stage)
   {
     return CAGControllerFactoryMapped.create(
+      this.getClass(),
       Map.entry(
         CAGLocationTreeView.class,
         () -> new CAGLocationTreeView(this.services())

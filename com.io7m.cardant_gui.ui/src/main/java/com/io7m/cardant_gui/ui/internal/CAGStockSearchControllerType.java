@@ -23,10 +23,13 @@ import com.io7m.cardant.model.CALocationID;
 import com.io7m.cardant.model.CAStockInstanceID;
 import com.io7m.cardant.model.CAStockOccurrenceSerial;
 import com.io7m.cardant.model.CAStockOccurrenceType;
+import com.io7m.cardant.model.CAStockRepositSetMove;
 import com.io7m.cardant.model.CAStockSearchParameters;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -35,6 +38,26 @@ import java.util.concurrent.CompletableFuture;
 
 public interface CAGStockSearchControllerType
 {
+  /**
+   * @return The currently selected file
+   */
+
+  ObservableValue<Optional<CAStockOccurrenceType>> stockSelected();
+
+  /**
+   * Select a stock occurrence.
+   *
+   * @param item The item
+   */
+
+  void stockSelect(CAStockOccurrenceType item);
+
+  /**
+   * Select nothing.
+   */
+
+  void stockSelectNone();
+
   /**
    * @return The stock for the current search query
    */
@@ -61,11 +84,25 @@ public interface CAGStockSearchControllerType
    *
    * @param serial   The stock
    * @param location The target location
+   *
+   * @return The operation in progress
    */
 
-  void stockSerialMove(
+  CompletableFuture<CAGUnit> stockSerialMove(
     CAStockOccurrenceSerial serial,
     CALocationID location
+  );
+
+  /**
+   * Move the given set stock occurrence to the given location.
+   *
+   * @param move The move
+   *
+   * @return The operation in progress
+   */
+
+  CompletableFuture<CAGUnit> stockSetMove(
+    CAStockRepositSetMove move
   );
 
   /**
@@ -113,7 +150,7 @@ public interface CAGStockSearchControllerType
    * @return The operation in progress
    */
 
-  CompletableFuture<CAStockOccurrenceType> stockSerialAdd(
+  CompletableFuture<Optional<CAStockOccurrenceType>> stockSerialAdd(
     CAStockInstanceID instance,
     CAItemSerial serial
   );
@@ -127,8 +164,20 @@ public interface CAGStockSearchControllerType
    * @return The operation in progress
    */
 
-  CompletableFuture<CAStockOccurrenceType> stockSerialRemove(
+  CompletableFuture<Optional<CAStockOccurrenceType>> stockSerialRemove(
     CAStockInstanceID instance,
     CAItemSerial serial
+  );
+
+  /**
+   * Remove the given stock instance entirely.
+   *
+   * @param instance The stock instance
+   *
+   * @return The operation in progress
+   */
+
+  CompletableFuture<CAGUnit> stockRemoveAll(
+    CAStockInstanceID instance
   );
 }

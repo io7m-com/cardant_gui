@@ -68,6 +68,7 @@ public final class CAGItemAttachmentAddDialogs
     Objects.requireNonNull(stage, "stage");
 
     return CAGControllerFactoryMapped.create(
+      this.getClass(),
       Map.entry(
         CAGItemAttachmentAddView.class,
         () -> new CAGItemAttachmentAddView(stage, this.services(), arguments)

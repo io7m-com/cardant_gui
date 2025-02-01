@@ -68,6 +68,7 @@ public final class CAGItemNameSetDialogs
     Objects.requireNonNull(stage, "stage");
 
     return CAGControllerFactoryMapped.create(
+      this.getClass(),
       Map.entry(
         CAGItemNameSetView.class,
         () -> new CAGItemNameSetView(stage, arguments)

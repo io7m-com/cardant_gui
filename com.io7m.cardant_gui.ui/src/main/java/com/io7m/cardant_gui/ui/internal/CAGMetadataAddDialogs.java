@@ -68,6 +68,7 @@ public final class CAGMetadataAddDialogs
     Objects.requireNonNull(stage, "stage");
 
     return CAGControllerFactoryMapped.create(
+      this.getClass(),
       Map.entry(
         CAGMetadataAddView.class,
         () -> new CAGMetadataAddView(stage, this.services(), arguments)

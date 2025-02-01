@@ -68,6 +68,7 @@ public final class CAGFileViewDialogs
     Objects.requireNonNull(stage, "stage");
 
     return CAGControllerFactoryMapped.create(
+      this.getClass(),
       Map.entry(
         CAGFileCreateView.class,
         () -> new CAGFileCreateView(this.services(), stage)

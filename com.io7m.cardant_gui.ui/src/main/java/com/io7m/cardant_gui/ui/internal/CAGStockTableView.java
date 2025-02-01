@@ -38,6 +38,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
@@ -56,7 +57,7 @@ import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_STOCKS
 public final class CAGStockTableView
   implements CAGViewType
 {
-  private CAGStockSearchControllerType controller;
+  private final CAGStockSetMoveDialogs stockSetMoveDialogs;
   private final CAGClientServiceType client;
   private final CAGEventServiceType events;
   private final CAGLocationSelectDialogs locationDialogs;
@@ -66,7 +67,10 @@ public final class CAGStockTableView
   private final MenuItem contextItemOpen;
   private final MenuItem contextLocationOpen;
   private final ObservableList<CAItemSerial> serials;
+  private final RPServiceDirectoryType services;
+  private CAGStockSearchControllerType controller;
 
+  @FXML private final ContextMenu contextMenu;
   @FXML private Button serialAdd;
   @FXML private Button serialRemove;
   @FXML private Button stockAdd;
@@ -81,7 +85,7 @@ public final class CAGStockTableView
   @FXML private TableColumn<CAStockOccurrenceType, String> colName;
   @FXML private TableColumn<CAStockOccurrenceType, String> colSerial;
   @FXML private TableView<CAStockOccurrenceType> stockTable;
-  @FXML private final ContextMenu contextMenu;
+  @FXML private TextField instanceField;
 
   /**
    * The table of stock.
@@ -92,7 +96,8 @@ public final class CAGStockTableView
   public CAGStockTableView(
     final RPServiceDirectoryType inServices)
   {
-    Objects.requireNonNull(inServices, "services");
+    this.services =
+      Objects.requireNonNull(inServices, "services");
 
     this.strings =
       inServices.requireService(CAGStringsType.class);
@@ -104,6 +109,8 @@ public final class CAGStockTableView
       inServices.requireService(CAGStockAddDialogs.class);
     this.stockSerialAddDialogs =
       inServices.requireService(CAGStockSerialAddDialogs.class);
+    this.stockSetMoveDialogs =
+      inServices.requireService(CAGStockSetMoveDialogs.class);
     this.client =
       inServices.requireService(CAGClientServiceType.class);
 
@@ -123,6 +130,35 @@ public final class CAGStockTableView
       );
 
     this.serials = FXCollections.observableArrayList();
+  }
+
+  private static Long stockCount(
+    final CAStockOccurrenceType value)
+  {
+    return switch (value) {
+      case final CAStockOccurrenceSerial _ -> Long.valueOf(1L);
+      case final CAStockOccurrenceSet set -> Long.valueOf(set.count());
+    };
+  }
+
+  private static String stockSerialText(
+    final CAStockOccurrenceType value)
+  {
+    return switch (value) {
+      case final CAStockOccurrenceSerial serial -> {
+        final var serials = serial.serials();
+        if (serials.isEmpty()) {
+          yield "";
+        }
+        final var text = new StringBuilder();
+        text.append(serials.getFirst().value());
+        if (serials.size() > 1) {
+          text.append(", …");
+        }
+        yield text.toString();
+      }
+      case final CAStockOccurrenceSet _ -> "";
+    };
   }
 
   /**
@@ -217,6 +253,8 @@ public final class CAGStockTableView
       this.stockRemove.setDisable(true);
       this.stockMove.setDisable(true);
       this.serials.clear();
+      this.instanceField.setText("");
+      this.controller.stockSelectNone();
       return;
     }
 
@@ -224,6 +262,8 @@ public final class CAGStockTableView
     this.stockDetails.setDisable(false);
     this.stockMove.setDisable(false);
     this.stockRemove.setDisable(false);
+    this.instanceField.setText(occurrence.instance().displayId());
+    this.controller.stockSelect(occurrence);
 
     switch (occurrence) {
       case final CAStockOccurrenceSerial serial -> {
@@ -236,35 +276,6 @@ public final class CAGStockTableView
         this.serials.clear();
       }
     }
-  }
-
-  private static Long stockCount(
-    final CAStockOccurrenceType value)
-  {
-    return switch (value) {
-      case final CAStockOccurrenceSerial _ -> Long.valueOf(1L);
-      case final CAStockOccurrenceSet set -> Long.valueOf(set.count());
-    };
-  }
-
-  private static String stockSerialText(
-    final CAStockOccurrenceType value)
-  {
-    return switch (value) {
-      case final CAStockOccurrenceSerial serial -> {
-        final var serials = serial.serials();
-        if (serials.isEmpty()) {
-          yield "";
-        }
-        final var text = new StringBuilder();
-        text.append(serials.getFirst().value());
-        if (serials.size() > 1) {
-          text.append(", …");
-        }
-        yield text.toString();
-      }
-      case final CAStockOccurrenceSet _ -> "";
-    };
   }
 
   private void onStocksViewChanged(
@@ -332,8 +343,15 @@ public final class CAGStockTableView
 
         this.controller.stockSerialMove(serial, summaryOpt.get().id());
       }
-      case final CAStockOccurrenceSet set -> {
 
+      case final CAStockOccurrenceSet set -> {
+        this.stockSetMoveDialogs.openDialogAndWait(
+          new CAGStockSetMoveDialogArguments(
+            this.services,
+            set,
+            this.controller
+          )
+        );
       }
     }
   }
@@ -341,14 +359,25 @@ public final class CAGStockTableView
   @FXML
   private void onStockRemoveSelected()
   {
+    final var existing =
+      this.stockTable.getSelectionModel()
+        .getSelectedItem();
+
     final var alert =
       new Alert(
         Alert.AlertType.CONFIRMATION,
         this.strings.format(CARDANT_STOCKSEARCH_CONFIRMDELETE)
       );
 
-    CAGCSS.setCSS(alert.getDialogPane());
-    alert.showAndWait();
+    final var r = alert.showAndWait();
+    if (r.isEmpty()) {
+      return;
+    }
+
+    final var button = r.get();
+    if (button.equals(ButtonType.OK)) {
+      this.controller.stockRemoveAll(existing.instance());
+    }
   }
 
   @FXML

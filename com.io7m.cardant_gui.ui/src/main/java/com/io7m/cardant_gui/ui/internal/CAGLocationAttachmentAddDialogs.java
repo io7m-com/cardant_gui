@@ -68,6 +68,7 @@ public final class CAGLocationAttachmentAddDialogs
     Objects.requireNonNull(stage, "stage");
 
     return CAGControllerFactoryMapped.create(
+      this.getClass(),
       Map.entry(
         CAGLocationAttachmentAddView.class,
         () -> {

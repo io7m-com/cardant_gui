@@ -32,7 +32,7 @@
     <io7m.java.targetJavaVersion>22</io7m.java.targetJavaVersion>
 
     <!-- io7m dependencies. -->
-    <com.io7m.cardant.version>1.0.0-beta0001</com.io7m.cardant.version>
+    <com.io7m.cardant.version>1.0.0-SNAPSHOT</com.io7m.cardant.version>
     <com.io7m.darco.version>2.0.1</com.io7m.darco.version>
     <com.io7m.idstore.version>2.0.1</com.io7m.idstore.version>
     <com.io7m.jade.version>1.0.3</com.io7m.jade.version>

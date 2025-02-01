@@ -17,8 +17,6 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
-import com.io7m.cardant.model.CALocationID;
-import com.io7m.cardant_gui.ui.internal.CAGLocationReparentDialogs.Arguments;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -26,49 +24,27 @@ import javafx.stage.Stage;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_LOCATIONREPARENT_TITLE;
+import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_LOCATIONS_SELECTTITLE;
 
 /**
- * A location reparent dialog.
+ * A stock selection dialog.
  */
 
-public final class CAGLocationReparentDialogs
-  extends CAGDialogFactoryAbstract<Arguments, CAGLocationReparentView>
+public final class CAGStockSelectDialogs
+  extends CAGDialogFactoryAbstract<CAGStockSelectDialogArguments, CAGStockSelectView>
 {
   /**
-   * The arguments.
-   *
-   * @param controller The location tree controller
-   * @param locationID The location ID
-   */
-
-  public record Arguments(
-    CAGLocationTreeControllerType controller,
-    CALocationID locationID)
-  {
-    /**
-     * The arguments.
-     */
-
-    public Arguments
-    {
-      Objects.requireNonNull(controller, "controller");
-      Objects.requireNonNull(locationID, "locationID");
-    }
-  }
-
-  /**
-   * A location reparent dialog.
+   * A stock selection dialog.
    *
    * @param services The service directory
    */
 
-  public CAGLocationReparentDialogs(
+  public CAGStockSelectDialogs(
     final RPServiceDirectoryType services)
   {
     super(
-      CAGLocationReparentView.class,
-      "/com/io7m/cardant_gui/ui/internal/locationReparent.fxml",
+      CAGStockSelectView.class,
+      "/com/io7m/cardant_gui/ui/internal/stockSelect.fxml",
       services,
       Modality.NONE
     );
@@ -76,47 +52,74 @@ public final class CAGLocationReparentDialogs
 
   @Override
   protected String createStageTitle(
-    final Arguments arguments)
+    final CAGStockSelectDialogArguments arguments)
   {
     Objects.requireNonNull(arguments, "arguments");
 
-    return this.strings().format(CARDANT_LOCATIONREPARENT_TITLE);
+    return this.strings().format(CARDANT_LOCATIONS_SELECTTITLE);
   }
 
-  @Override
-  protected CAGControllerFactoryType<CAGViewType> controllerFactory(
-    final Arguments arguments,
+  protected CAGStockSelectView createController(
+    final CAGStockSelectDialogArguments arguments,
     final Stage stage)
   {
     Objects.requireNonNull(arguments, "arguments");
     Objects.requireNonNull(stage, "stage");
 
+    return new CAGStockSelectView(
+      stage,
+      arguments.stockController(),
+      arguments.selectRestriction()
+    );
+  }
+
+  @Override
+  protected CAGControllerFactoryType<CAGViewType> controllerFactory(
+    final CAGStockSelectDialogArguments arguments,
+    final Stage stage)
+  {
     return CAGControllerFactoryMapped.create(
       this.getClass(),
       Map.entry(
-        CAGLocationReparentView.class,
+        CAGLocationTreeView.class,
+        () -> new CAGLocationTreeView(this.services())
+      ),
+      Map.entry(
+        CAGMainStockView.class,
+        () -> new CAGMainStockView(this.services())
+      ),
+      Map.entry(
+        CAGStockSearchView.class,
+        () -> new CAGStockSearchView(this.services())
+      ),
+      Map.entry(
+        CAGStockTableView.class,
+        () -> new CAGStockTableView(this.services())
+      ),
+      Map.entry(
+        CAGStockSelectView.class,
         () -> {
-          return new CAGLocationReparentView(
+          return new CAGStockSelectView(
             stage,
-            this.services(),
-            arguments.locationID,
-            arguments.controller
+            arguments.stockController(),
+            arguments.selectRestriction()
           );
-        })
+        }
+      )
     );
   }
 
   @Override
   public String description()
   {
-    return "Location reparent dialogs.";
+    return "Stock selection dialogs.";
   }
 
   @Override
   public String toString()
   {
     return String.format(
-      "[CAGLocationReparentDialogs 0x%08x]",
+      "[CAGStockSelectDialogs 0x%08x]",
       Integer.valueOf(this.hashCode())
     );
   }
