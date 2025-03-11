@@ -122,6 +122,16 @@ public final class CAGMetadataAddView
       CAMetadataValueKind.INTEGRAL);
 
     this.valueIntegerField.setValueFactory(new CAGSpinnerSignedLongFactory());
+    this.valueIntegerField.focusedProperty()
+      .addListener((_, _, _) -> {
+        try {
+          this.valueIntegerField.getValueFactory().setValue(
+            Long.parseLong(this.valueIntegerField.getEditor().getText())
+          );
+        } catch (final Exception e) {
+          // Nothing.
+        }
+      });
 
     this.packageField.textProperty()
       .addListener(_ -> this.validate());
