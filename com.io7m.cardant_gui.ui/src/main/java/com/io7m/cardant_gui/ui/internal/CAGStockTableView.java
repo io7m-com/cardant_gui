@@ -17,7 +17,6 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
-import com.io7m.cardant.model.CAItemID;
 import com.io7m.cardant.model.CAItemSerial;
 import com.io7m.cardant.model.CAStockOccurrenceSerial;
 import com.io7m.cardant.model.CAStockOccurrenceSet;
