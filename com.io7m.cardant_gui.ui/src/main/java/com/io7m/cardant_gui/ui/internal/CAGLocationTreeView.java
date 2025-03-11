@@ -34,7 +34,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.stream.Stream;
 
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_CANCEL;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_LOCATIONS_REMOVECONFIRM;
