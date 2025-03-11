@@ -70,7 +70,6 @@ public final class CAGItemDetailsView
   private final CAGItemNameSetDialogs itemNameSetDialogs;
   private final CAGTypeAssignDialogs typeAssignDialogs;
   private CAGItemDetailsControllerType itemDetailsController;
-  private CAGViewAndStage<CAGItemAttachmentAddView> attachmentAddDialog;
 
   @FXML private TabPane mainItemDetails;
   @FXML private TextField idField;
@@ -397,22 +396,19 @@ public final class CAGItemDetailsView
   private void onAttachmentAddSelected()
     throws IOException
   {
-    if (this.attachmentAddDialog == null) {
-      this.attachmentAddDialog =
-        this.attachmentAddDialogs.createDialog(
-          new CAGItemAttachmentAddDialogArguments(
-            this.itemDetailsController,
-            this.itemDetailsController.itemSelected()
-              .summary()
-              .getValue()
-              .orElseThrow()
-              .id()
-          )
-        );
-    }
+    final var dialog =
+      this.attachmentAddDialogs.createDialog(
+        new CAGItemAttachmentAddDialogArguments(
+          this.itemDetailsController,
+          this.itemDetailsController.itemSelected()
+            .summary()
+            .getValue()
+            .orElseThrow()
+            .id()
+        )
+      );
 
-    this.attachmentAddDialog.stage()
-      .show();
+    dialog.stage().show();
   }
 
   @FXML

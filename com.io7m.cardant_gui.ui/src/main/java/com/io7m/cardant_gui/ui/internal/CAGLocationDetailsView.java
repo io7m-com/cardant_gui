@@ -60,7 +60,6 @@ public final class CAGLocationDetailsView
   private final CAGStringsType strings;
   private final CAGLocationAttachmentAddDialogs attachmentAddDialogs;
   private final CAGClientServiceType client;
-  private CAGViewAndStage<CAGLocationAttachmentAddView> attachmentAddDialog;
 
   @FXML private TabPane mainItemDetails;
   @FXML private TextField idField;
@@ -285,18 +284,15 @@ public final class CAGLocationDetailsView
   private void onAttachmentAddSelected()
     throws IOException
   {
-    if (this.attachmentAddDialog == null) {
-      this.attachmentAddDialog =
-        this.attachmentAddDialogs.createDialog(
-          new CAGLocationAttachmentAddDialogArguments(
-            this.controller,
-            CALocationID.of(this.idField.getText())
-          )
-        );
-    }
+    final var dialog =
+      this.attachmentAddDialogs.createDialog(
+        new CAGLocationAttachmentAddDialogArguments(
+          this.controller,
+          CALocationID.of(this.idField.getText())
+        )
+      );
 
-    this.attachmentAddDialog.stage()
-      .show();
+    dialog.stage().show();
   }
 
   @FXML

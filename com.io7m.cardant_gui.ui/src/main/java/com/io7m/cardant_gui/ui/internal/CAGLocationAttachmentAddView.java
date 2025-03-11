@@ -97,6 +97,7 @@ public final class CAGLocationAttachmentAddView
     final URL url,
     final ResourceBundle resourceBundle)
   {
+    this.relationField.setText("image");
     this.locationField.setText(this.location.displayId());
 
     this.fileSearchController.fileSelected()
