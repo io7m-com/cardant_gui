@@ -79,13 +79,13 @@ public final class CAGStockTableView
   @FXML private Label resultsLabel;
   @FXML private ListView<CAItemSerial> serialList;
   @FXML private Pane stockDetails;
-  @FXML private TableColumn<CAStockOccurrenceType, CAItemID> colItem;
   @FXML private TableColumn<CAStockOccurrenceType, Long> colCount;
   @FXML private TableColumn<CAStockOccurrenceType, String> colLocation;
   @FXML private TableColumn<CAStockOccurrenceType, String> colName;
   @FXML private TableColumn<CAStockOccurrenceType, String> colSerial;
   @FXML private TableView<CAStockOccurrenceType> stockTable;
   @FXML private TextField instanceField;
+  @FXML private TextField itemField;
 
   /**
    * The table of stock.
@@ -212,11 +212,6 @@ public final class CAGStockTableView
       );
     });
 
-    this.colItem.setReorderable(false);
-    this.colItem.setCellValueFactory(param -> {
-      return new ReadOnlyObjectWrapper<>(param.getValue().item().id());
-    });
-
     this.colName.setReorderable(false);
     this.colName.setCellValueFactory(param -> {
       return new ReadOnlyStringWrapper(param.getValue().item().name());
@@ -254,6 +249,7 @@ public final class CAGStockTableView
       this.stockMove.setDisable(true);
       this.serials.clear();
       this.instanceField.setText("");
+      this.itemField.setText("");
       this.controller.stockSelectNone();
       return;
     }
@@ -263,6 +259,7 @@ public final class CAGStockTableView
     this.stockMove.setDisable(false);
     this.stockRemove.setDisable(false);
     this.instanceField.setText(occurrence.instance().displayId());
+    this.itemField.setText(occurrence.item().id().displayId());
     this.controller.stockSelect(occurrence);
 
     switch (occurrence) {

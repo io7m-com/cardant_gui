@@ -68,7 +68,6 @@
           <TableView fx:id="stockTable" styleClass="itemTable">
             <columns>
               <TableColumn fx:id="colLocation" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="288.0" resizable="false" style="-fx-size: 32;" text="%cardant.location" />
-                  <TableColumn fx:id="colItem" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="288.0" resizable="false" style="-fx-size: 32;" text="%cardant.item" />
               <TableColumn fx:id="colName" editable="false" prefWidth="75.0" text="%cardant.itemSearch.itemName" />
                   <TableColumn fx:id="colSerial" editable="false" prefWidth="75.0" text="%cardant.stockSearch.serial" />
                   <TableColumn fx:id="colCount" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="96.0" resizable="false" text="%cardant.stockSearch.count" />
@@ -79,13 +78,14 @@
           </TableView>
             <VBox fx:id="stockDetails">
                <children>
-                  <GridPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0">
+                  <GridPane>
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="128.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Label text="%cardant.instance">
@@ -94,6 +94,12 @@
                            </GridPane.margin>
                         </Label>
                         <TextField fx:id="instanceField" editable="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" styleClass="dataField" GridPane.columnIndex="1" />
+                        <Label text="%cardant.item" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="16.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <TextField fx:id="itemField" editable="false" layoutX="138.0" layoutY="10.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" styleClass="dataField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <Separator prefWidth="200.0" />
