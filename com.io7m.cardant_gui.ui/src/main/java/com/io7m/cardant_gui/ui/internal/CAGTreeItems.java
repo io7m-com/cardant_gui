@@ -15,50 +15,56 @@
  */
 
 
-package com.io7m.cardant_gui.ui;
+package com.io7m.cardant_gui.ui.internal;
 
-import com.io7m.jade.api.ApplicationDirectoriesType;
-import javafx.stage.Stage;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 
-import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
- * Functions to start the GUI.
+ * Functions over tree items.
  */
 
-public final class CAGUI
+public final class CAGTreeItems
 {
-  private final CAGApplication app;
-
-  private CAGUI(
-    final CAGApplication inApp)
+  private CAGTreeItems()
   {
-    this.app = Objects.requireNonNull(inApp, "app");
+
   }
 
   /**
-   * Start a new UI.
+   * @param tree The tree view
+   * @param <T>  The type of item values
    *
-   * @param configuration The configuration
-   *
-   * @return A new UI
-   *
-   * @throws Exception On startup failures
+   * @return The tree nodes
    */
 
-  public static CAGUI start(
-    final ApplicationDirectoriesType configuration)
-    throws Exception
+  public static <T> Stream<TreeItem<T>> treeViewNodes(
+    final TreeView<T> tree)
   {
-    final var stage = new Stage();
-    stage.setWidth(1200.0);
-    stage.setHeight(700.0);
+    return treeNodes(tree.getRoot());
+  }
 
-    stage.setMinWidth(800.0);
-    stage.setMinHeight(600.0);
+  /**
+   * @param root The root item
+   * @param <T>  The type of item values
+   *
+   * @return The tree nodes
+   */
 
-    final var app = new CAGApplication(configuration);
-    app.start(stage);
-    return new CAGUI(app);
+  public static <T> Stream<TreeItem<T>> treeNodes(
+    final TreeItem<T> root)
+  {
+    if (root == null) {
+      return Stream.of();
+    }
+
+    return Stream.concat(
+      Stream.of(root),
+      root.getChildren()
+        .stream()
+        .flatMap(CAGTreeItems::treeNodes)
+    );
   }
 }

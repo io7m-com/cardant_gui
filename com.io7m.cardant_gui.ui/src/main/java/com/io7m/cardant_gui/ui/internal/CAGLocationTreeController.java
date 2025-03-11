@@ -167,6 +167,15 @@ public final class CAGLocationTreeController
           parentItem.getChildren().add(locationItem);
         }
 
+        CAGTreeItems.treeNodes(newRoot)
+          .forEach(item -> {
+            item.getChildren().sort((o1, o2) -> {
+              final var name0 = o1.getValue().name().value();
+              final var name1 = o2.getValue().name().value();
+              return name0.compareTo(name1);
+            });
+          });
+
         this.locationTree.set(newRoot);
       });
     });

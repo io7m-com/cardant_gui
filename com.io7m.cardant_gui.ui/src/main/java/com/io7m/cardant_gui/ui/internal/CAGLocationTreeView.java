@@ -17,6 +17,7 @@
 
 package com.io7m.cardant_gui.ui.internal;
 
+import com.io7m.cardant.model.CALocationID;
 import com.io7m.cardant.model.CALocationSummary;
 import com.io7m.repetoir.core.RPServiceDirectoryType;
 import javafx.application.Platform;
@@ -30,8 +31,10 @@ import javafx.scene.control.TreeView;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Stream;
 
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_CANCEL;
 import static com.io7m.cardant_gui.ui.internal.CAGStringConstants.CARDANT_LOCATIONS_REMOVECONFIRM;
@@ -52,6 +55,7 @@ public final class CAGLocationTreeView
   private final CAGStringsType strings;
   private final CAGClientServiceType clients;
   private final CAGLocationReparentDialogs reparentDialogs;
+  private final HashMap<CALocationID, Boolean> expanded;
 
   @FXML private TreeView<CALocationSummary> mainLocationTree;
   @FXML private Button locationAdd;
@@ -77,6 +81,8 @@ public final class CAGLocationTreeView
       inServices.requireService(CAGClientServiceType.class);
     this.reparentDialogs =
       inServices.requireService(CAGLocationReparentDialogs.class);
+    this.expanded =
+      new HashMap<>();
   }
 
   /**
@@ -91,14 +97,17 @@ public final class CAGLocationTreeView
     this.controller =
       Objects.requireNonNull(inController, "controller");
 
+    this.treeSaveNodeExpansions();
     this.mainLocationTree.setRoot(
       this.controller.locationTree()
         .getValue()
     );
 
     this.controller.locationTree()
-      .addListener((observable, oldValue, newValue) -> {
+      .addListener((_, _, newValue) -> {
+        this.treeSaveNodeExpansions();
         this.mainLocationTree.setRoot(newValue);
+        this.treeRestoreNodeExpansions();
       });
 
     this.clients.status()
@@ -107,6 +116,28 @@ public final class CAGLocationTreeView
           this.onClientStatusChanged(oldStatus, newStatus);
         });
       });
+  }
+
+  private void treeSaveNodeExpansions()
+  {
+    final var stream =
+      CAGTreeItems.treeViewNodes(this.mainLocationTree);
+
+    stream.forEach(item -> {
+      this.expanded.put(item.getValue().id(), item.isExpanded());
+    });
+  }
+
+  private void treeRestoreNodeExpansions()
+  {
+    final var stream =
+      CAGTreeItems.treeViewNodes(this.mainLocationTree);
+
+    stream.forEach(item -> {
+      item.setExpanded(
+        this.expanded.getOrDefault(item.getValue().id(), true)
+      );
+    });
   }
 
   @Override
@@ -123,7 +154,7 @@ public final class CAGLocationTreeView
 
     this.mainLocationTree.getSelectionModel()
       .selectedItemProperty()
-      .addListener((observable, oldValue, newValue) -> {
+      .addListener((_, _, newValue) -> {
         this.onLocationSelectionChanged(newValue);
       });
   }
