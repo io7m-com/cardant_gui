@@ -48,7 +48,7 @@
 
     <!-- Third-party dependencies. -->
     <io.opentelemetry.version>1.48.0</io.opentelemetry.version>
-    <org.apache.tika.version>2.9.2</org.apache.tika.version>
+    <org.apache.tika.version>2.9.3</org.apache.tika.version>
     <org.javafx.version>23-ea+20</org.javafx.version>
     <org.jooq.version>3.20.1</org.jooq.version>
     <org.junit.version>5.11.4</org.junit.version>
