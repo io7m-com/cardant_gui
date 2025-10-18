@@ -84,6 +84,7 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Files;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -122,6 +123,8 @@ public final class CAGApplication extends Application
       new CAGStrings(Locale.getDefault());
     final var services =
       new RPServiceDirectory();
+
+    Files.createDirectories(this.directories.configurationDirectory());
 
     final var database =
       new CAGDatabaseFactory()
