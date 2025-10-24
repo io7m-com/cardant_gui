@@ -4,7 +4,7 @@ cardant_gui
 [![Maven Central](https://img.shields.io/maven-central/v/com.io7m.cardant_gui/com.io7m.cardant_gui.svg?style=flat-square)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.cardant_gui%22)
 [![Maven Central (snapshot)](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fcentral.sonatype.com%2Frepository%2Fmaven-snapshots%2Fcom%2Fio7m%2Fcardant_gui%2Fcom.io7m.cardant_gui%2Fmaven-metadata.xml&style=flat-square)](https://central.sonatype.com/repository/maven-snapshots/com/io7m/cardant_gui/)
 [![Codecov](https://img.shields.io/codecov/c/github/io7m-com/cardant_gui.svg?style=flat-square)](https://codecov.io/gh/io7m-com/cardant_gui)
-![Java Version](https://img.shields.io/badge/22-java?label=java&color=d4e65c)
+![Java Version](https://img.shields.io/badge/25-java?label=java&color=5ce67e)
 
 ![com.io7m.cardant_gui](./src/site/resources/cardant_gui.jpg?raw=true)
 
