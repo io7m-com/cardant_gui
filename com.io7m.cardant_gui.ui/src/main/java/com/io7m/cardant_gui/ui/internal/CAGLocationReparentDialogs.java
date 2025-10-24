@@ -48,6 +48,9 @@ public final class CAGLocationReparentDialogs
   {
     /**
      * The arguments.
+     *
+     * @param controller The location tree controller
+     * @param locationID The location ID
      */
 
     public Arguments

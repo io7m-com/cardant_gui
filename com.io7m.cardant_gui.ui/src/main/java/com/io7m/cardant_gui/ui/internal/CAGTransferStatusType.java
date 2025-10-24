@@ -52,6 +52,8 @@ public sealed interface CAGTransferStatusType
   {
     /**
      * Something is uploading.
+     *
+     * @param statistics The transfer statistics
      */
 
     public Uploading
@@ -72,6 +74,8 @@ public sealed interface CAGTransferStatusType
   {
     /**
      * Something is downloading.
+     *
+     * @param statistics The transfer statistics
      */
 
     public Downloading
